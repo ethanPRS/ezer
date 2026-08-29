@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Flujo Simplificado — Empresas Voluntarias</title>
+<style>
+  @page { size: letter landscape; margin: 1.6cm; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 22px; margin-bottom: 2px; color: #1A2E6C; }
+  .subtitle { color: #555; font-size: 12px; margin-bottom: 20px; }
+  h2 {
+    font-size: 15px;
+    margin-top: 28px;
+    padding: 7px 12px;
+    background: #eef2f7;
+    border-left: 4px solid #1A2E6C;
+    color: #1A2E6C;
+  }
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin: 16px 0; page-break-inside: avoid; }
+  .box {
+    min-width: 118px;
+    max-width: 140px;
+    padding: 10px 10px;
+    border-radius: 8px;
+    background: #1A2E6C;
+    color: #fff;
+    font-weight: 700;
+    font-size: 11px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .box.alt { background: #E8401C; }
+  .box.gray { background: #6B7280; }
+  .box.small { font-size: 10px; font-weight: 600; padding: 7px 8px; min-width: 90px; }
+  .arrow { font-size: 20px; color: #94A3B8; padding: 0 4px; font-weight: bold; }
+  .branch-label {
+    font-size: 9.5px;
+    color: #555;
+    text-align: center;
+    max-width: 130px;
+    margin: 2px 4px 0;
+  }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .branch-row { display: flex; align-items: flex-start; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 10.5px; }
+  th, td { border: 1px solid #ccc; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #f5f5f5; }
+  .note { background: #fff8e1; border-left: 4px solid #b8860b; padding: 8px 12px; border-radius: 6px; font-size: 11px; margin: 10px 0; }
+  footer { margin-top: 30px; font-size: 9.5px; color: #888; border-top: 1px solid #ddd; padding-top: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Flujo Simplificado — Empresas Voluntarias</h1>
+<div class="subtitle">Vista general de rutas, sin detalle técnico de Make/Airtable · Complementa Plan-Sprints-Empresas-EZER.pdf y Guia-Ejecucion-Empresas-EZER.pdf</div>
+
+<h2>Ruta principal (camino feliz)</h2>
+<div class="flow">
+  <div class="box">01<br>Contacto</div><div class="arrow">→</div>
+  <div class="box">02<br>Reunión</div><div class="arrow">→</div>
+  <div class="box">03<br>Captura de<br>Datos</div><div class="arrow">→</div>
+  <div class="box">04<br>Conectar<br>Asociación</div><div class="arrow">→</div>
+  <div class="box">05<br>Cotización<br>Enviada</div><div class="arrow">→</div>
+  <div class="box">06<br>Pago<br>Confirmado</div><div class="arrow">→</div>
+  <div class="box">08<br>Recordatorios</div><div class="arrow">→</div>
+  <div class="box">09<br>Evento<br>Realizado</div><div class="arrow">→</div>
+  <div class="box">10<br>Cerrado</div>
+</div>
+<p style="font-size:10.5px; color:#555;">Cada flecha representa un correo o una acción del equipo (ver tabla al final). La Fase 07 (Curso) se salta en el camino feliz sin curso — ver la ruta de decisión abajo.</p>
+
+<h2>Ruta de decisión 1 — ¿Ya conocíamos a este contacto?</h2>
+<div class="branch-row">
+  <div class="col">
+    <div class="box small gray">Alguien se registra<br>(Empresa)</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="col">
+    <div class="box small" style="background:#F5C200; color:#1A2E6C;">¿Ya existe<br>el correo?</div>
+  </div>
+</div>
+<div class="branch-row" style="margin-left:100px;">
+  <div class="col">
+    <div class="branch-label">Sí existe</div>
+    <div class="box small">Actualiza el<br>registro existente</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="col">
+    <div class="branch-label">No existe</div>
+    <div class="box small alt">Crea Organización<br>+ Contacto nuevo</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="box small">Se le asigna<br>Responsable (Mia/Adri)<br>por turnos</div>
+  <div class="arrow">→</div>
+  <div class="box small">Correo #1<br>Bienvenida</div>
+</div>
+
+<h2>Ruta de decisión 2 — ¿Incluye curso de sensibilización?</h2>
+<div class="branch-row">
+  <div class="box small">Fase 06<br>Pago confirmado</div>
+  <div class="arrow">→</div>
+  <div class="col">
+    <div class="box small" style="background:#F5C200; color:#1A2E6C;">¿Incluye<br>curso?</div>
+  </div>
+</div>
+<div class="branch-row" style="margin-left:150px;">
+  <div class="col">
+    <div class="branch-label">Sí</div>
+    <div class="box small">Correo #9 + Calendly<br>del curso</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="box small">Se marca<br>Curso realizado</div>
+  <div class="arrow">→</div>
+  <div class="box small">08 Recordatorios</div>
+</div>
+<div class="branch-row" style="margin-left:150px;">
+  <div class="col">
+    <div class="branch-label">No</div>
+    <div class="box small">Pasa directo,<br>sin pasos extra</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="box small">08 Recordatorios</div>
+</div>
+
+<h2>Ruta de decisión 3 — Cancelaciones (no es el camino feliz)</h2>
+<div class="branch-row">
+  <div class="col">
+    <div class="branch-label">Cancela la EMPRESA</div>
+    <div class="box small alt">Botón<br>Cancelar/Reprogramar</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="box small">Se borra el evento<br>de Calendar</div>
+  <div class="arrow">→</div>
+  <div class="col">
+    <div class="branch-label">¿Ya tenía asociación asignada?</div>
+    <div class="box small" style="background:#F5C200; color:#1A2E6C;">Sí →</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="box small">Correo #15 avisando<br>a la asociación</div>
+</div>
+<div class="branch-row">
+  <div class="col">
+    <div class="branch-label">Cancela la ASOCIACIÓN</div>
+    <div class="box small alt">Botón<br>Asociación canceló</div>
+  </div>
+  <div class="arrow">→</div>
+  <div class="box small">La Fase NO cambia —<br>sigue en 05</div>
+  <div class="arrow">→</div>
+  <div class="box small">Se vuelven a generar<br>sugerencias (Fase 04)</div>
+  <div class="arrow">→</div>
+  <div class="box small">Correo #16 a la empresa<br>("buscando reemplazo" /<br>"ya se encontró")</div>
+</div>
+
+<h2>Qué dispara cada flecha de la ruta principal</h2>
+<table>
+  <tr><th>De</th><th>A</th><th>Qué lo dispara</th><th>Correo/acción</th></tr>
+  <tr><td>—</td><td>01 Contacto</td><td>Se registra en el sitio o hace click en "Me interesa"</td><td>Correo #1 Bienvenida</td></tr>
+  <tr><td>01</td><td>02 Reunión</td><td>Agenda por Calendly</td><td>Correo #3 (interno, link del formulario)</td></tr>
+  <tr><td>02</td><td>03 Captura de Datos</td><td>El equipo llena el formulario interno después de la reunión</td><td>Se generan Ficha Técnica y Cotización</td></tr>
+  <tr><td>03</td><td>04 Conectar Asociación</td><td>Automático al terminar la captura</td><td>Sistema sugiere hasta 3 asociaciones; el equipo liga una a mano</td></tr>
+  <tr><td>04</td><td>05 Cotización Enviada</td><td>El equipo aprieta "Enviar cotización" (solo posible si ya hay asociación ligada)</td><td>Correo #4 (cotización + convenio)</td></tr>
+  <tr><td>05</td><td>06 Pago Confirmado</td><td>El equipo aprieta "Confirmar pago" tras recibir el comprobante</td><td>Correo #6 (pasos a seguir) + Correo #8 (interno, contabilidad)</td></tr>
+  <tr><td>06</td><td>08 Recordatorios</td><td>Automático (directo si no hay curso, o después del curso si sí lo hay)</td><td>Correo #10 ×3 (7/3/1 días antes)</td></tr>
+  <tr><td>08</td><td>09 Evento Realizado</td><td>Llega la fecha del evento</td><td>Carpeta de fotos (Correo #11) + Correo #12 (feedback)</td></tr>
+  <tr><td>09</td><td>10 Cerrado</td><td>La empresa responde el feedback</td><td>Correo #13 (agradecimiento + reporte de impacto)</td></tr>
+</table>
+
+<div class="note">
+  <strong>Fuera de la ruta principal:</strong> si nadie agenda en 5 días → Correo #2 (recordatorio); si pasan 20 días sin agendar → Fase "Inactivo". Si no llega el comprobante de pago en 7 días → Correo #5 (seguimiento). 5 meses después del cierre → Correo #14 (reactivación). El detalle completo de cada correo está en <code>Delegable-Correos-y-Formularios-Empresas.pdf</code>.
+</div>
+
+<footer>
+  Diagrama de flujo simplificado, elaborado con Claude Code, basado en el alcance oficial de Plan-Empresas-EZER.pdf.
+</footer>
+
+</body>
+</html>

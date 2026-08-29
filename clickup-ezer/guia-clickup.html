@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía de Workspace en ClickUp — EZER Voluntariado Corporativo</title>
+<style>
+  @page { size: letter; margin: 1.8cm 1.6cm; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1c1c1e;
+    font-size: 11.5px;
+    line-height: 1.55;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero {
+    background: linear-gradient(135deg, #2b1a5e 0%, #4a2fa8 100%);
+    color: #fff;
+    padding: 22px 26px;
+    border-radius: 10px;
+    margin-bottom: 26px;
+  }
+  .hero .eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    opacity: .78;
+    font-weight: 600;
+  }
+  .hero h1 { font-size: 23px; margin: 5px 0 4px 0; letter-spacing: -.3px; }
+  .hero p { margin: 0; font-size: 12px; opacity: .9; }
+  h2 {
+    font-size: 15px;
+    margin-top: 30px;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #e3e0f0;
+    color: #2b1a5e;
+  }
+  h3 {
+    font-size: 12.5px;
+    margin: 16px 0 5px 0;
+    color: #4a2fa8;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 14px 0;
+    font-size: 10.5px;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #ddd9ea;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: #f4f2fb; font-weight: 600; color: #2b1a5e; }
+  code {
+    background: #f4f2fb;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+  }
+  ol, ul { margin: 6px 0; padding-left: 20px; }
+  li { margin-bottom: 4px; }
+  .callout {
+    background: #f8f7fd;
+    border-left: 4px solid #4a2fa8;
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 0 6px 6px 0;
+    page-break-inside: avoid;
+  }
+  .callout.warn {
+    background: #fffaf0;
+    border-left-color: #d99a1e;
+  }
+  .callout .t {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 3px;
+    font-size: 11px;
+  }
+  .pill {
+    display: inline-block;
+    padding: 1.5px 9px;
+    border-radius: 11px;
+    font-size: 9.5px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .p-todo   { background:#eceff3; color:#525a66; }
+  .p-prog   { background:#e0edff; color:#1a5fb4; }
+  .p-block  { background:#fdecea; color:#b3261e; }
+  .p-rev    { background:#fff4d6; color:#8a6100; }
+  .p-done   { background:#e4f5e7; color:#1a7f37; }
+  .p-urg    { background:#fdecea; color:#b3261e; }
+  .p-high   { background:#fff0e6; color:#b35309; }
+  .p-norm    { background:#e0edff; color:#1a5fb4; }
+  .p-low    { background:#eceff3; color:#525a66; }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .card {
+    border: 1px solid #ddd9ea;
+    border-radius: 8px;
+    padding: 11px 14px;
+    page-break-inside: avoid;
+  }
+  .card h4 { margin: 0 0 5px 0; font-size: 11.5px; color: #2b1a5e; }
+  .card p { margin: 0; font-size: 10.5px; color: #444; }
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 14px 0 18px 0;
+  }
+  .stat {
+    background: #f8f7fd;
+    border-radius: 8px;
+    padding: 11px 13px;
+    text-align: center;
+  }
+  .stat .n { font-size: 21px; font-weight: 700; color: #4a2fa8; line-height: 1.1; }
+  .stat .l { font-size: 9.5px; color: #666; text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+  footer {
+    margin-top: 34px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd9ea;
+    font-size: 9.5px;
+    color: #8b8b90;
+    text-align: center;
+  }
+  .step-num {
+    display: inline-block;
+    width: 17px; height: 17px;
+    background: #4a2fa8; color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 17px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-right: 5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">EZER A.B.P. — La Casa del Voluntario</div>
+  <h1>Workspace de ClickUp: Voluntariado Corporativo</h1>
+  <p>Guía de configuración y uso · Preparada el 29 de julio de 2026</p>
+</div>
+
+<p>Este documento describe el workspace de seguimiento del proyecto: <strong>33 tareas reales</strong> — las 6 que ya se completaron y las 27 que quedan pendientes, cada una con fecha de inicio, fecha límite, prioridad, responsable y etiquetas. No son ejemplos genéricos: es el plan de trabajo real.</p>
+
+<div class="callout">
+  <span class="t">Estado actual — ya está creado en ClickUp</span>
+  El folder <strong>📋 EZER VOLUNTARIADO CORPORATIVO</strong> con sus <strong>6 listas</strong> y las primeras <strong>20 tareas</strong> ya existen en el Space "Team Space". Faltan 13 tareas (las de Empresas, Legal y Evento) que se cargan importando <code>tareas-pendientes-import.csv</code> — ver sección 4.<br><br>
+  Lo que <strong>no</strong> se puede crear por API y hay que configurar a mano: los estatus personalizados (sección 2), los campos personalizados (sección 3) y las vistas (sección 5).
+</div>
+
+<div class="stat-row">
+  <div class="stat"><div class="n">33</div><div class="l">Tareas</div></div>
+  <div class="stat"><div class="n">6</div><div class="l">Listas</div></div>
+  <div class="stat"><div class="n">6</div><div class="l">Ya completadas</div></div>
+  <div class="stat"><div class="n">Oct</div><div class="l">Cierre estimado</div></div>
+</div>
+
+<h2>1. Estructura del workspace</h2>
+<p>ClickUp organiza el trabajo en cuatro niveles: <strong>Workspace → Space → Lista → Tarea</strong>. Para este proyecto basta con un solo Space y seis listas temáticas.</p>
+
+<table>
+  <tr><th style="width:30%">Nivel</th><th>Nombre propuesto</th></tr>
+  <tr><td><strong>Workspace</strong></td><td>EZER A.B.P.</td></tr>
+  <tr><td><strong>Space</strong></td><td>Voluntariado Corporativo</td></tr>
+  <tr><td><strong>Listas</strong></td><td>
+    1. Asociaciones — Cierre de Pruebas<br>
+    2. Airtable y Drive — Config y Limpieza<br>
+    3. Migración de Datos Reales<br>
+    4. Flujo Empresas<br>
+    5. Legal y Seguros<br>
+    6. Evento Octubre 2026
+  </td></tr>
+</table>
+
+<div class="callout">
+  <span class="t">Por qué seis listas y no una sola</span>
+  Cada lista agrupa trabajo que se puede avanzar de forma independiente y que normalmente involucra a distintas personas. Así, quien lleva el tema legal no tiene que navegar entre tareas técnicas de Make, y el Gantt muestra con claridad qué frentes corren en paralelo.
+</div>
+
+<h2>2. Estatus personalizados</h2>
+<p>Antes de importar, configura estos cinco estatus en el Space (<em>Space settings → Statuses</em>). El orden importa: es el que define las columnas del Kanban.</p>
+
+<table>
+  <tr><th style="width:20%">Estatus</th><th style="width:16%">Tipo en ClickUp</th><th>Cuándo se usa</th></tr>
+  <tr><td><span class="pill p-todo">Por hacer</span></td><td>Not started</td><td>Tarea definida pero sin empezar.</td></tr>
+  <tr><td><span class="pill p-prog">En progreso</span></td><td>Active</td><td>Alguien está trabajando en ella ahora.</td></tr>
+  <tr><td><span class="pill p-block">Bloqueado</span></td><td>Active</td><td>No se puede avanzar por algo externo. <strong>Siempre debe decir en el campo "Bloqueado por" qué lo detiene.</strong></td></tr>
+  <tr><td><span class="pill p-rev">En revisión</span></td><td>Active</td><td>Terminada técnicamente, esperando validación del equipo.</td></tr>
+  <tr><td><span class="pill p-done">Listo</span></td><td>Closed</td><td>Terminada y verificada.</td></tr>
+</table>
+
+<h2>3. Campos personalizados</h2>
+<p>Tres campos adicionales que hacen la diferencia entre una lista de pendientes y un tablero que de verdad se puede gestionar (<em>Lista → + → Custom Field</em>):</p>
+
+<table>
+  <tr><th style="width:22%">Campo</th><th style="width:18%">Tipo</th><th>Para qué sirve</th></tr>
+  <tr>
+    <td><strong>Escenario Make</strong></td>
+    <td>Dropdown</td>
+    <td>Vincula la tarea con el escenario correspondiente en Make (A-1, A-2.1, A-2.2, A-3, A-4, A-5, A-6, E-1…). Permite filtrar todo lo relacionado a un escenario cuando algo se rompe.</td>
+  </tr>
+  <tr>
+    <td><strong>Tipo</strong></td>
+    <td>Dropdown</td>
+    <td>Automatización · Configuración · Pruebas · Mejora · Datos · Limpieza · Diseño · Legal · Evento. Sirve para saber de un vistazo si el proyecto está construyendo o sólo apagando fuegos.</td>
+  </tr>
+  <tr>
+    <td><strong>Bloqueado por</strong></td>
+    <td>Texto corto</td>
+    <td>Obligatorio en toda tarea con estatus <span class="pill p-block">Bloqueado</span>. Evita el clásico "¿y esto por qué llevaba tres semanas parado?".</td>
+  </tr>
+</table>
+
+<h2>4. Cómo importar las 13 tareas faltantes</h2>
+<ol>
+  <li><span class="step-num">1</span> Confirma que existan las 6 listas dentro del folder 📋 EZER VOLUNTARIADO CORPORATIVO.</li>
+  <li><span class="step-num">2</span> Ve a <em>Settings → Import/Export → Import → CSV</em>.</li>
+  <li><span class="step-num">3</span> Sube <code>tareas-pendientes-import.csv</code> y elige el Space "Team Space" como destino.</li>
+  <li><span class="step-num">4</span> En el mapeo de columnas, conecta cada una con su campo de ClickUp:
+    <table style="margin-top:6px">
+      <tr><th style="width:34%">Columna del CSV</th><th>Campo en ClickUp</th></tr>
+      <tr><td>List</td><td>List (crea las 6 listas automáticamente)</td></tr>
+      <tr><td>Task Name</td><td>Task Name</td></tr>
+      <tr><td>Task Description</td><td>Description</td></tr>
+      <tr><td>Status</td><td>Status</td></tr>
+      <tr><td>Assignee</td><td>Assignee (por correo)</td></tr>
+      <tr><td>Responsable sugerido</td><td>Custom Field de texto, o ignorar</td></tr>
+      <tr><td>Priority</td><td>Priority</td></tr>
+      <tr><td>Start Date / Due Date</td><td>Start Date / Due Date</td></tr>
+      <tr><td>Tags</td><td>Tags</td></tr>
+      <tr><td>Time Estimate (h)</td><td>Time Estimate</td></tr>
+      <tr><td>Escenario Make / Tipo / Bloqueado por</td><td>Los 3 campos personalizados de la sección 3</td></tr>
+    </table>
+  </li>
+  <li><span class="step-num">5</span> Confirma la importación y verifica que el total llegue a 33 tareas (20 ya creadas + 13 importadas).</li>
+</ol>
+
+<div class="callout warn">
+  <span class="t">Por qué no se cargaron las 33 por API</span>
+  La API de ClickUp tiene un límite de operaciones por hora en el plan actual. Se alcanzó después de crear 20 tareas, así que las 13 restantes se cargan por CSV — que además no consume ese límite. Si prefieres esperar, el límite se libera en aproximadamente 24 horas y se pueden crear por API igual que las primeras.
+</div>
+
+<div class="callout warn">
+  <span class="t">Dos detalles que suelen fallar en la importación</span>
+  <strong>Fechas:</strong> el CSV usa formato <code>AAAA-MM-DD</code>. Si ClickUp las interpreta mal, vuelve a importar indicando el formato o cambia las columnas a <code>MM/DD/AAAA</code>.<br>
+  <strong>Responsables:</strong> sólo se asignan automáticamente si esos correos ya son miembros del Workspace. Invítalos <em>antes</em> de importar. Las tareas de Dirección y las compartidas quedan sin asignar a propósito — hay que asignarlas a mano según quién las tome.
+</div>
+
+<h2>5. Vistas que hay que crear</h2>
+<p>ClickUp permite varias vistas sobre las mismas tareas. Estas cinco cubren las necesidades reales del proyecto; se crean con el botón <strong>+ View</strong> en la parte superior del Space.</p>
+
+<h3>Vista 1 — Gantt: "Cronograma general"</h3>
+<ul>
+  <li>Tipo: <strong>Gantt</strong>, a nivel Space (para ver las 6 listas juntas).</li>
+  <li>Agrupar por: <strong>Lista</strong> — cada frente de trabajo se ve como un bloque independiente.</li>
+  <li>Escala de tiempo: <strong>Semanas</strong> (el proyecto abarca de julio a octubre).</li>
+  <li>Activa <em>Show Dependencies</em> y <em>Highlight Critical Path</em>.</li>
+  <li>Dependencias clave que conviene dibujar a mano después de importar:
+    <ul>
+      <li>"Resolver plan de Calendly" → bloquea → "Probar escenario A-3"</li>
+      <li>"Revisar y normalizar los 9 CSV" → bloquea → "Importar asociaciones reales"</li>
+      <li>"Definir fecha, sede y aforo" → bloquea → "Revisar contenido de la página" y "Cotizar seguro"</li>
+      <li>"Revisión legal" → bloquea → "Integrar carta de deslinde"</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Vista 2 — Kanban: "Tablero de avance"</h3>
+<ul>
+  <li>Tipo: <strong>Board</strong>, a nivel Space.</li>
+  <li>Agrupar por: <strong>Status</strong> → las 5 columnas quedan en el orden de la sección 2.</li>
+  <li>En la configuración de la tarjeta, muestra: Responsable, Fecha límite, Prioridad y el campo Escenario Make.</li>
+  <li>Uso diario: se arrastra la tarjeta de columna a columna. Es la vista para la junta semanal.</li>
+</ul>
+
+<div class="grid2">
+  <div class="card">
+    <h4>Vista 3 — Lista por prioridad</h4>
+    <p>Tipo <strong>List</strong>, agrupada por <strong>Priority</strong>. Responde a la pregunta "si sólo puedo hacer tres cosas esta semana, ¿cuáles son?". Ordena por fecha límite dentro de cada grupo.</p>
+  </div>
+  <div class="card">
+    <h4>Vista 4 — Calendario</h4>
+    <p>Tipo <strong>Calendar</strong>, por fecha límite. Útil para el equipo de voluntariado, que piensa en términos de calendario de eventos más que de tareas.</p>
+  </div>
+  <div class="card">
+    <h4>Vista 5 — Bloqueados</h4>
+    <p>Tipo <strong>List</strong> filtrada por <code>Status = Bloqueado</code>. Debería estar casi siempre vacía. Si tiene tres o más tareas por varios días, algo se está atorando y hay que escalarlo.</p>
+  </div>
+  <div class="card">
+    <h4>Extra — Carga de trabajo</h4>
+    <p>Tipo <strong>Workload</strong>, usando el campo Time Estimate. Muestra si una sola persona está cargando con la mayoría del proyecto. En este caso lo revela de inmediato.</p>
+  </div>
+</div>
+
+<h2>6. Lectura del plan: qué corre y cuándo</h2>
+<table>
+  <tr><th style="width:16%">Periodo</th><th style="width:30%">Frente principal</th><th>Objetivo</th></tr>
+  <tr>
+    <td><strong>Jul 29 – Ago 5</strong></td>
+    <td>Cierre de pruebas + config urgente</td>
+    <td>Destrabar Calendly, compartir la carpeta de Drive, cerrar los dos casos de prueba pendientes de A-4.</td>
+  </tr>
+  <tr>
+    <td><strong>Ago 5 – Ago 19</strong></td>
+    <td>Robustez y limpieza</td>
+    <td>Aplicar el patrón multi-contacto a A-2.1, limpiar campos y registros de prueba, blindar A-1.</td>
+  </tr>
+  <tr>
+    <td><strong>Ago 12 – Ago 26</strong></td>
+    <td>Migración de datos reales</td>
+    <td>Normalizar, importar y validar las asociaciones reales de los 9 archivos.</td>
+  </tr>
+  <tr>
+    <td><strong>Ago 26 – Sep 30</strong></td>
+    <td>Flujo Empresas</td>
+    <td>Diseñar y construir el flujo espejo, reutilizando todo lo ya validado en Asociaciones.</td>
+  </tr>
+  <tr>
+    <td><strong>Jul 29 – Sep 28</strong></td>
+    <td>Legal y seguros <em>(en paralelo)</em></td>
+    <td>Revisión de abogado, cotización de pólizas y contratación del seguro del evento.</td>
+  </tr>
+  <tr>
+    <td><strong>Jul 29 – Ago 19</strong></td>
+    <td>Evento de octubre <em>(en paralelo)</em></td>
+    <td>Definir logística, publicar la página y conectar el registro a Airtable.</td>
+  </tr>
+</table>
+
+<h2>7. Tres reglas para que el tablero no se muera</h2>
+<p>La mayoría de los tableros se abandonan en la tercera semana. Estas tres reglas lo evitan:</p>
+<ol>
+  <li><strong>Una junta semanal de 15 minutos frente al Kanban.</strong> No se revisa tarea por tarea: sólo se mueven tarjetas y se revisa la columna de Bloqueados.</li>
+  <li><strong>Nada se queda en "Bloqueado" sin dueño ni motivo.</strong> Si una tarea se bloquea, se llena el campo "Bloqueado por" y se asigna a quien puede destrabarla — no a quien la iba a ejecutar.</li>
+  <li><strong>Si una tarea no cabe en una semana, se parte en subtareas.</strong> Las tareas de varias semanas se vuelven invisibles: nunca cambian de estatus y dejan de generar información.</li>
+</ol>
+
+<div class="callout">
+  <span class="t">Sobre las tareas ya marcadas como "Listo"</span>
+  Las seis tareas de escenarios completados (A-1, A-2.1, A-2.2, A-4, A-5 y A-6) se incluyen a propósito con fechas de julio. Sirven para dos cosas: que el Gantt muestre de dónde viene el proyecto, y que quede registro de qué se probó y cómo se resolvió cada falla encontrada. El detalle completo de esas pruebas está en el reporte <code>Reporte-Pruebas-Asociaciones.pdf</code>.
+</div>
+
+<footer>
+  Preparado para EZER A.B.P. — La Casa del Voluntario · voluntariadocorporativo@ezer.org.mx · ezer.org.mx<br>
+  Documento de trabajo interno. Las fechas son una propuesta de planeación y deben ajustarse con el equipo.
+</footer>
+
+</body>
+</html>

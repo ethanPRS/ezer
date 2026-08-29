@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruta de Empresas EZER</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --ground:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F7;
+  --ink:#151A2B; --ink-2:#4A5468; --ink-3:#78839A;
+  --line:#DCE2EC; --line-2:#BFC9D9;
+  --navy:#1A2E6C; --navy-soft:#E5EAF6;
+  --flame:#C3371A; --flame-soft:#FBE8E3;
+  --ok:#17683D; --ok-soft:#E1F0E7;
+  --warn:#835500; --warn-soft:#FAEFD8;
+  --shadow:0 1px 2px rgba(21,26,43,.05), 0 6px 18px rgba(21,26,43,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+    --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+    --line:#293147; --line-2:#39435E;
+    --navy:#93A9EE; --navy-soft:#1A2340;
+    --flame:#FF8963; --flame-soft:#3A2019;
+    --ok:#6ED498; --ok-soft:#12301F;
+    --warn:#E5B75A; --warn-soft:#332708;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+  --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+  --line:#293147; --line-2:#39435E;
+  --navy:#93A9EE; --navy-soft:#1A2340;
+  --flame:#FF8963; --flame-soft:#3A2019;
+  --ok:#6ED498; --ok-soft:#12301F;
+  --warn:#E5B75A; --warn-soft:#332708;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:960px;margin:0 auto;padding:56px 28px 96px}
+p{margin:0 0 14px;max-width:68ch}
+ul,ol{margin:0 0 14px;padding-left:22px;max-width:70ch}
+li{margin-bottom:7px}
+strong{font-weight:600}
+a{color:var(--navy)}
+
+h1,h2,h3,h4,.eyebrow,.mono,th,.pill,.btn{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+h1{font-size:clamp(31px,4.6vw,46px);line-height:1.06;letter-spacing:-.022em;font-weight:800;margin:0 0 10px;text-wrap:balance}
+h2{font-size:25px;line-height:1.16;letter-spacing:-.015em;font-weight:700;margin:0 0 8px;text-wrap:balance}
+h3{font-size:18px;line-height:1.25;letter-spacing:-.008em;font-weight:700;margin:26px 0 8px;text-wrap:balance}
+h4{font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin:22px 0 8px}
+
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--flame);margin:0 0 12px;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* ---- masthead ---- */
+.masthead{border-bottom:3px solid var(--navy);padding-bottom:26px;margin-bottom:34px}
+.lede{font-size:19px;line-height:1.5;color:var(--ink-2);max-width:62ch;margin:0 0 22px}
+.facts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;
+}
+.fact{background:var(--surface);padding:13px 15px}
+.fact .k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+.fact .v{font-family:Archivo,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.2;font-variant-numeric:tabular-nums}
+.fact .v small{display:block;font-size:11.5px;font-weight:500;color:var(--ink-2);letter-spacing:0;margin-top:2px}
+
+/* ---- sections ---- */
+section{margin-top:56px}
+.sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line-2);padding-bottom:9px;margin-bottom:22px}
+.sec-head .n{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;font-weight:600;
+  color:var(--flame);letter-spacing:.08em;flex:none;
+}
+.sec-head h2{margin:0;flex:1}
+
+/* ---- callouts ---- */
+.note{
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--navy);
+  border-radius:0 8px 8px 0;padding:15px 18px;margin:0 0 20px;box-shadow:var(--shadow);
+}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft);border-color:var(--line)}
+.note.flame{border-left-color:var(--flame);background:var(--flame-soft);border-color:var(--line)}
+.note.good{border-left-color:var(--ok);background:var(--ok-soft);border-color:var(--line)}
+.note p:last-child,.note ul:last-child,.note ol:last-child{margin-bottom:0}
+.note .t{font-family:Archivo,sans-serif;font-weight:700;font-size:13.5px;display:block;margin-bottom:5px;letter-spacing:-.005em}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin:0 0 22px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+th{
+  font-size:11px;font-weight:700;letter-spacing:.075em;text-transform:uppercase;color:var(--ink-3);
+  text-align:left;padding:11px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);white-space:nowrap;
+}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13px}
+
+/* ---- pills ---- */
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.04em;white-space:nowrap;text-transform:uppercase}
+.pill.tu{background:var(--flame-soft);color:var(--flame)}
+.pill.ag{background:var(--navy-soft);color:var(--navy)}
+.pill.cl{background:var(--warn-soft);color:var(--warn)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.new{background:var(--flame-soft);color:var(--flame)}
+.pill.re{background:var(--navy-soft);color:var(--navy)}
+
+/* ---- sprint rail ---- */
+.rail{position:relative;padding-left:0}
+.sprint{
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  margin-bottom:20px;box-shadow:var(--shadow);overflow:hidden;
+  break-inside:avoid;page-break-inside:avoid;
+}
+.sprint > .body{padding:18px 22px 20px}
+.sprint-head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;
+  padding:14px 22px;background:var(--surface-2);border-bottom:1px solid var(--line);
+}
+.sprint-head .code{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;font-weight:600;
+  color:#fff;background:var(--navy);padding:3px 10px;border-radius:5px;letter-spacing:.04em;flex:none;
+}
+:root[data-theme="dark"] .sprint-head .code,
+:root:not([data-theme="light"]) .sprint-head .code{color:#0D1120}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .sprint-head .code{color:#fff}}
+.sprint-head .name{font-family:Archivo,sans-serif;font-weight:700;font-size:16.5px;letter-spacing:-.012em;flex:1 1 240px;line-height:1.25}
+.sprint-head .when{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.goal{
+  font-size:15.5px;line-height:1.5;color:var(--ink);margin:0 0 16px;
+  padding-left:14px;border-left:2px solid var(--flame);max-width:68ch;
+}
+.goal b{font-weight:600}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0 0 16px;max-width:none}
+.steps > li{
+  counter-increment:s;position:relative;padding-left:34px;margin-bottom:12px;
+  font-size:15px;line-height:1.55;max-width:70ch;
+}
+.steps > li::before{
+  content:counter(s);position:absolute;left:0;top:1px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;font-weight:600;
+  width:22px;height:22px;line-height:22px;text-align:center;border-radius:6px;
+  background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line);
+}
+.steps ul{margin:6px 0 0;font-size:14px;color:var(--ink-2)}
+.steps .h{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--ink-3);margin-left:6px;white-space:nowrap}
+.dod{background:var(--surface-2);border-radius:8px;padding:13px 17px;margin:0 0 14px}
+.dod ul{list-style:none;padding:0;margin:0}
+.dod li{position:relative;padding-left:22px;font-size:14px;margin-bottom:5px;color:var(--ink-2)}
+.dod li::before{content:"";position:absolute;left:2px;top:8px;width:8px;height:8px;border:1.5px solid var(--ok);border-radius:2px}
+.dod li:last-child{margin-bottom:0}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:13px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px}
+.meta-row b{font-family:Archivo,sans-serif;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:700;display:block;margin-bottom:2px}
+.meta-row > div{flex:1 1 200px}
+
+/* ---- milestone strip ---- */
+.miles{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.mile{background:var(--surface);padding:14px 17px;display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:start}
+.mile .d{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;font-weight:600;color:var(--flame);font-variant-numeric:tabular-nums;padding-top:2px}
+.mile .t{font-family:Archivo,sans-serif;font-weight:700;font-size:15px;letter-spacing:-.01em;margin-bottom:2px}
+.mile .s{font-size:14px;color:var(--ink-2);line-height:1.5}
+
+.cad{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:0 0 20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:15px 17px;box-shadow:var(--shadow)}
+.card h5{font-family:Archivo,sans-serif;font-size:13.5px;font-weight:700;margin:0 0 5px;letter-spacing:-.005em}
+.card p{font-size:13.5px;color:var(--ink-2);margin:0;line-height:1.5}
+
+footer{margin-top:72px;padding-top:16px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-3);font-family:Archivo,sans-serif}
+
+@media (max-width:640px){
+  .wrap{padding:36px 18px 64px}
+  .mile{grid-template-columns:1fr;gap:4px}
+  body{font-size:15.5px}
+}
+@media print{
+  @page{size:letter;margin:1.7cm 1.5cm}
+  body{background:#fff;font-size:10.5pt}
+  .wrap{padding:0;max-width:none}
+  .sprint,.note,.tw,.miles,.card{box-shadow:none}
+  section{margin-top:30px}
+  h2{font-size:16pt}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">EZER A.B.P. · La Casa del Voluntario</p>
+  <h1>Ruta de Empresas</h1>
+  <p class="lede">Plan de trabajo SCRUM para construir el flujo completo de Empresas Voluntarias &mdash; de la captación al cierre del evento &mdash; con un equipo de una persona y una dedicación real de 6 horas por semana.</p>
+  <div class="facts">
+    <div class="fact"><div class="k">Arranque</div><div class="v">26 ago 2026<small>Sprint 0 · esta semana</small></div></div>
+    <div class="fact"><div class="k">Entrega final</div><div class="v">28 feb 2027<small>Sprint 12 · acta de cierre</small></div></div>
+    <div class="fact"><div class="k">Esfuerzo</div><div class="v">96&ndash;116 h<small>13 sprints · 123 h de capacidad</small></div></div>
+    <div class="fact"><div class="k">Cadencia</div><div class="v">2 semanas<small>14 h por sprint · 7 h/semana</small></div></div>
+  </div>
+</header>
+
+<div class="note flame">
+  <span class="t">Lo primero, sin adornos: a 6 horas por semana esto cierra en febrero, no en octubre</span>
+  <p>El plan anterior (<span class="mono">Plan-Sprints-Empresas-EZER.pdf</span>, 4 de agosto) asumía 12&ndash;15 h/semana y proyectaba cierre a finales de septiembre. Con 6 h/semana la misma cantidad de trabajo &mdash;entre 96 y 116 horas, incluyendo cerrar los pendientes de Asociaciones&mdash; ocupa unas 20 semanas de calendario. No es que el alcance haya crecido: es que la capacidad se redujo a la mitad. La sección 8 propone dos recortes de alcance concretos por si la fecha manda sobre el alcance.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<section>
+  <div class="sec-head"><span class="n">01</span><h2>Cómo se aplica SCRUM con un equipo de uno</h2></div>
+
+  <p>SCRUM con una sola persona no se trata de imitar ceremonias de equipo, sino de conservar las tres cosas que de verdad aportan: <strong>un objetivo por sprint</strong>, <strong>una definición de terminado que no se negocia</strong>, y <strong>un punto de corte fijo donde se mide y se le reporta a alguien más</strong>. Lo demás se recorta sin culpa.</p>
+
+  <h3>Cadencia y capacidad</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Concepto</th><th class="num">Valor</th><th>Por qué así</th></tr></thead>
+    <tbody>
+      <tr><td>Duración del sprint</td><td class="num">2 semanas</td><td>A 6 h/semana, un sprint de 1 semana son 6 horas: no alcanza para terminar ni un bloque completo, y cerrarías sprints sin nada entregable. Dos semanas dan 12 horas, que sí cubren un bloque.</td></tr>
+      <tr><td>Capacidad bruta</td><td class="num">14 h</td><td>7 h/semana × 2 semanas: miércoles 17&ndash;19 h, viernes 16&ndash;19 h y sábado 17&ndash;19 h.</td></tr>
+      <tr><td>Ceremonias</td><td class="num">1 h</td><td>Planning 20 min + Review 30 min + Retro 10 min.</td></tr>
+      <tr><td>Arranque de sesión</td><td class="num">2.5 h</td><td>Seis sesiones por sprint × ~25 min de cargar contexto en Make. No es tiempo perdido: es el costo real de trabajar en sesiones cortas, y se descuenta antes de comprometer.</td></tr>
+      <tr><td>Compromiso de construcción</td><td class="num">10 h</td><td>Es lo que se promete al cliente y lo que se carga en ClickUp. Con la capacidad real de ~10.5 h efectivas, el compromiso queda ajustado y honesto.</td></tr>
+      <tr><td>Reserva</td><td class="num">0.5 h</td><td>Para el bug que siempre aparece. Si no se usa, se adelanta trabajo del siguiente sprint &mdash; nunca se usa para meter alcance nuevo a media marcha.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="t">Tres sesiones por semana: el bloque del viernes es el que carga el trabajo pesado</span>
+    <p>Horario real confirmado el 28 de agosto: <strong>miércoles 17:00&ndash;19:00, viernes 16:00&ndash;19:00 y sábado 17:00&ndash;19:00</strong> &mdash; 7 horas por semana, ya agendadas como evento recurrente. Son 3 horas más de capacidad por sprint que las 12 previstas originalmente.</p>
+    <p>Pero el reparto tiene una consecuencia que hay que trabajar a favor. Construir en Make exige cargar contexto &mdash;abrir el escenario, recordar qué campo mapea a qué, tener Airtable y Drive abiertos&mdash; y ese arranque cuesta entre 20 y 30 minutos <em>por sesión</em>. Con seis sesiones por sprint en vez de cuatro, el costo de arranque sube de ~1.7 h a ~2.5 h. <strong>La capacidad efectiva de construcción queda en ~10.5 h por sprint</strong>, apenas por encima de las 10 h comprometidas: la hora extra por semana no sobra, paga el arranque de la tercera sesión y deja el compromiso bien calibrado en vez de optimista.</p>
+    <p><strong>Regla práctica:</strong> de las 74 tareas del plan, <strong>26 no caben en una sesión de 2 horas</strong> y van marcadas con la etiqueta <span class="mono">sesion-viernes</span> en ClickUp. El viernes es tu único bloque de 3 horas, así que ahí van los escenarios completos y los recorridos de prueba; el miércoles y el sábado son para correos, plantillas, formularios, error handlers y casos de prueba sueltos. Empezar un escenario grande un miércoles casi garantiza dejarlo a medias y pagar el arranque otra vez el viernes.</p></div>
+
+  <h3>Las cuatro ceremonias, adaptadas</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Ceremonia</th><th class="num">Cuándo</th><th class="num">Dura</th><th>Qué haces exactamente</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sprint Planning</strong></td><td class="num">Lunes, inicio</td><td class="num">20 min</td><td>Abres ClickUp, filtras por el sprint que empieza, relees el objetivo escrito abajo, confirmas que las horas estimadas suman ≤10 h y que ninguna tarea está bloqueada por algo externo. Si algo está bloqueado, lo sacas del sprint y jalas la siguiente tarea de la lista.</td></tr>
+      <tr><td><strong>Revisión diaria</strong></td><td class="num">Cada sesión</td><td class="num">3 min</td><td>Sustituye al daily standup. Antes de empezar a construir escribes un comentario en la tarea activa de ClickUp: qué quedó la sesión pasada, con qué sigues hoy. Es tu propia memoria, y es lo que te salva cuando pasan cuatro días entre sesión y sesión.</td></tr>
+      <tr><td><strong>Sprint Review</strong></td><td class="num">Domingo, cierre</td><td class="num">30 min</td><td>Corres las pruebas del Definition of Done del sprint, actualizas el reporte de pruebas vivo, y generas el reporte de sprint de una página para el cliente. Es el único momento en que se declara algo &ldquo;terminado&rdquo;.</td></tr>
+      <tr><td><strong>Retrospectiva</strong></td><td class="num">Domingo, cierre</td><td class="num">10 min</td><td>Dos líneas en la bitácora: qué te frenó y qué vas a hacer distinto. Con un equipo de uno la retro sirve para calibrar la velocidad real &mdash; si dos sprints seguidos se desbordan, el problema no fue el sprint: fue tu estimación, y hay que bajar el compromiso de 10 h a 8 h.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Definition of Done &mdash; no se negocia</h3>
+  <p>Es el mismo estándar con el que se cerró Asociaciones. Una historia no está terminada hasta que cumple los seis puntos:</p>
+  <div class="dod"><ul>
+    <li>Escenario construido en Make y <strong>activado</strong>, no dejado en borrador.</li>
+    <li><strong>Candado de idempotencia</strong> donde exista riesgo de envío o creación duplicada (casilla de control, campo de fecha o verificación previa del ID guardado).</li>
+    <li><strong>Error handler</strong> configurado en cada módulo de Airtable, Gmail, Drive y Docs &mdash; criterio base: <span class="mono">Retry, 3 intentos, 5 min</span>; <span class="mono">Ignore</span> + alerta interna donde reintentar duplicaría un envío.</li>
+    <li>Probado con <strong>al menos un caso mínimo y un caso límite o de falla deliberada</strong> (ID inexistente, campo vacío, reenvío del mismo formulario).</li>
+    <li>Documentado en la <strong>ficha técnica del escenario</strong> y en el reporte de pruebas vivo.</li>
+    <li>Tarea movida a <strong>Listo</strong> en ClickUp con las horas reales capturadas.</li>
+  </ul></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section>
+  <div class="sec-head"><span class="n">02</span><h2>Punto de partida &mdash; qué ya está resuelto</h2></div>
+
+  <div class="note good">
+    <span class="t">El modelo de datos ya no es trabajo pendiente</span>
+    <p>Las 7 tablas de Airtable (Organizaciones, Contactos, Eventos, Cotizaciones, Recibos, Config, Feedback) ya existen con prácticamente todos los campos que pide el Bloque 1: <span class="mono">Responsable</span>, <span class="mono">Fase</span> con sus 12 etapas, <span class="mono">Asociación asignada</span>, <span class="mono">Sugerencias de asociación</span>, <span class="mono">Recordatorio 7d/3d/1d</span>, <span class="mono">RFC / Razón social / Uso CFDI</span>, y <span class="mono">Config</span> con el turno Mia/Adri. El webhook de <span class="mono">api/interest.js</span> ya manda <span class="mono">tipo: registro_empresa</span> sin condicionarlo, y está desplegado. Lo que falta es Make, Fillout, las plantillas de Docs y el panel.</p>
+  </div>
+
+  <h3>Lo que sí bloquea el arranque</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Pendiente</th><th>Por qué bloquea a Empresas</th><th class="num">Se resuelve en</th></tr></thead>
+    <tbody>
+      <tr><td>Prueba end-to-end de <span class="mono">A-3</span> (Reunión agendada, Asociaciones)</td><td>El Bloque 2 de Empresas es una copia de este patrón, incluyendo el truco de Google Tasks en vez de editar el evento de Calendly. Construir Empresas sobre un patrón sin probar es copiar un bug dos veces.</td><td class="num">Sprint 1</td></tr>
+      <tr><td>Re-prueba de <span class="mono">A4-4</span> (contacto_id vacío) y <span class="mono">A4-5</span> (reenvío del mismo formulario)</td><td>Quedaron en cola cuando Make desactivó el escenario. <span class="mono">A4-5</span> define el patrón de idempotencia que el Bloque 3 de Empresas reusa tal cual.</td><td class="num">Sprint 1</td></tr>
+      <tr><td>Patrón multi-contacto en <span class="mono">A-2.1</span></td><td>Riesgo conocido: usa el rollup de correo directo, así que una organización con 2+ contactos truena el módulo de Gmail. Empresas tendrá el mismo problema en todos sus correos si no se corrige el patrón antes de replicarlo.</td><td class="num">Sprint 1</td></tr>
+      <tr><td>Carpeta raíz de Drive compartida con el equipo</td><td>Los links de carpeta que llegan por correo no abren. Empresas generará muchos más links de carpeta que Asociaciones.</td><td class="num">Sprint 0</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Tres decisiones que hay que cerrar antes de construir</h3>
+  <p>Cada una cambia el diseño de un escenario. Resolverlas a mitad de construcción cuesta rehacer módulos.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Decisión</th><th>Opciones</th><th>Recomendación</th><th class="num">Afecta</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Calendly: ¿compartido o separado?</strong></td><td>(a) El mismo tipo de evento para Asociaciones y Empresas. (b) Uno dedicado a Empresas.</td><td><strong>Separado.</strong> Compartirlo obliga a meter un Router adicional que averigüe si quien agendó es empresa o asociación, y ese Router se equivoca en cuanto un correo exista en ambas tablas. Un tipo de evento extra es gratis; el Router mal resuelto cuesta horas de depuración.</td><td class="num">Bloque 2</td></tr>
+      <tr><td><strong>Filtro de asociaciones activas</strong></td><td>(a) Revivir el campo <span class="mono">Estatus</span> marcado como legacy. (b) Usar <span class="mono">Fase de asociación = Activa</span>.</td><td><strong>Fase de asociación.</strong> Es el campo real y ya renombrado; el otro exigiría mantener dos fuentes de verdad sincronizadas a mano, que es exactamente el tipo de deuda que revienta seis meses después.</td><td class="num">Bloque 4</td></tr>
+      <tr><td><strong>Botón &ldquo;Regenerar documento&rdquo;</strong></td><td>(a) Sobrescribe el Doc existente. (b) Crea uno nuevo y archiva el viejo en una subcarpeta.</td><td><strong>Sobrescribir.</strong> Mantiene un solo link válido en Airtable, que es lo que el equipo comparte. La variante (b) obliga a actualizar el link guardado y deja al equipo enviando URLs viejas.</td><td class="num">Bloque 3</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note warn">
+    <span class="t">Además, un pendiente de definición que no es técnico</span>
+    <p>El Bloque 8 tiene una pregunta abierta con el equipo de voluntariado: <strong>qué significa exactamente &ldquo;vincular el feedback de las empresas&rdquo;</strong>. ¿Se refleja en el registro de la asociación del evento, alimenta un reporte conjunto, o ambas? Hay que resolverlo con el equipo <strong>antes del Sprint 9</strong> (4 de enero), no en el Sprint 9. Ponlo como tarea con fecha límite en la lista de Legal/Definiciones para que no llegue a bloquear.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section>
+  <div class="sec-head"><span class="n">03</span><h2>Calendario de sprints y hitos</h2></div>
+
+  <div class="miles">
+    <div class="mile"><div class="d">27 sep</div><div><div class="t">Hito 1 &mdash; Captación automática</div><div class="s">Una empresa que se registra en el sitio entra sola a Airtable, sin duplicarse, con Responsable asignado por turnos y correo de bienvenida enviado.</div></div></div>
+    <div class="mile"><div class="d">11 oct</div><div><div class="t">Hito 2 &mdash; Agenda y seguimiento</div><div class="s">Agendar por Calendly dispara el aviso interno; quien no agenda recibe recordatorio a los 5 días y se inactiva a los 20. <strong>Es el último hito antes del evento de octubre.</strong></div></div></div>
+    <div class="mile"><div class="d">8 nov</div><div><div class="t">Hito 3 &mdash; Documentos y asociación conectada</div><div class="s">El formulario interno genera Ficha Técnica y Cotización como Docs editables, y el sistema sugiere hasta 3 asociaciones del sector correcto.</div></div></div>
+    <div class="mile"><div class="d">6 dic</div><div><div class="t">Hito 4 &mdash; Ciclo de cobro completo</div><div class="s">De cotización a pago confirmado, con convenio, seguimiento, comprobante, evento en Calendar y aviso a contabilidad. <strong>Es el hito de valor de negocio: aquí el flujo ya cobra.</strong></div></div></div>
+    <div class="mile"><div class="d">31 ene</div><div><div class="t">Hito 5 &mdash; Ciclo del evento completo</div><div class="s">Recibo fiscal, curso de sensibilización, recordatorios 7/3/1, fotos, feedback, cierre, reactivación a 5 meses y las dos rutas de cancelación.</div></div></div>
+    <div class="mile"><div class="d">28 feb</div><div><div class="t">Hito 6 &mdash; Entrega</div><div class="s">Panel compartido operando, checklist de 11 puntos corrido end-to-end, reporte de pruebas, manual de operación y acta de cierre.</div></div></div>
+  </div>
+
+  <h3>Los 13 sprints</h3>
+  <div class="tw"><table>
+    <thead><tr><th class="num">Sprint</th><th class="num">Fechas</th><th>Objetivo</th><th class="num">Horas</th></tr></thead>
+    <tbody>
+      <tr><td class="num">S0</td><td class="num">26&ndash;30 ago</td><td>Preparación: decisiones, accesos, tablero listo</td><td class="num">3</td></tr>
+      <tr><td class="num">S1</td><td class="num">31 ago &ndash; 13 sep</td><td>Cerrar los pendientes de Asociaciones que bloquean Empresas</td><td class="num">10</td></tr>
+      <tr><td class="num">S2</td><td class="num">14&ndash;27 sep</td><td>Bloque 1 &mdash; Webhook, Router, turnos y bienvenida</td><td class="num">10</td></tr>
+      <tr><td class="num">S3</td><td class="num">28 sep &ndash; 11 oct</td><td>Bloque 2 &mdash; Calendly y recordatorios de agenda</td><td class="num">10</td></tr>
+      <tr><td class="num">S4</td><td class="num">12&ndash;25 oct</td><td>Bloque 3 &mdash; Formulario interno y documentos</td><td class="num">10</td></tr>
+      <tr><td class="num">S5</td><td class="num">26 oct &ndash; 8 nov</td><td>Cola del Bloque 3 + Bloque 4 &mdash; Sugerencias y desbloqueo</td><td class="num">10</td></tr>
+      <tr><td class="num">S6</td><td class="num">9&ndash;22 nov</td><td>Bloque 5A &mdash; Cotización y convenio</td><td class="num">10</td></tr>
+      <tr><td class="num">S7</td><td class="num">23 nov &ndash; 6 dic</td><td>Bloque 5B &mdash; Comprobante, pago y registro de voluntarios</td><td class="num">10</td></tr>
+      <tr><td class="num">S8</td><td class="num">7&ndash;20 dic</td><td>Bloques 6 y 7 &mdash; Recibo fiscal y curso de sensibilización</td><td class="num">10</td></tr>
+      <tr><td class="num">&mdash;</td><td class="num">21 dic &ndash; 3 ene</td><td><em>Receso. No se planea trabajo: dos semanas de baja disponibilidad arruinan la velocidad medida.</em></td><td class="num">0</td></tr>
+      <tr><td class="num">S9</td><td class="num">4&ndash;17 ene</td><td>Bloque 8 &mdash; Recordatorios, fotos y asistencia</td><td class="num">10</td></tr>
+      <tr><td class="num">S10</td><td class="num">18&ndash;31 ene</td><td>Bloque 9 &mdash; Feedback y cierre + Bloque 10 &mdash; Cancelaciones</td><td class="num">10</td></tr>
+      <tr><td class="num">S11</td><td class="num">1&ndash;14 feb</td><td>Panel compartido + pruebas end-to-end</td><td class="num">10</td></tr>
+      <tr><td class="num">S12</td><td class="num">15&ndash;28 feb</td><td>Endurecimiento, documentación de entrega y capacitación</td><td class="num">10</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note warn">
+    <span class="t">El evento de octubre 2026 no va a correr sobre el flujo automatizado</span>
+    <p>Para el 11 de octubre solo estarán listos los Bloques 1 y 2 &mdash; captación, bienvenida, agenda y recordatorios. Todo lo que va de la cotización en adelante se opera a mano para ese evento. <strong>No es un problema del plan, es una consecuencia aritmética de 6 h/semana</strong>, pero hay que decírselo al cliente ahora y no en septiembre. La mitigación es que la parte automatizada es justo la que más volumen tiene (captación), y la manual es la que menos empresas alcanzan en un primer evento.</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section>
+  <div class="sec-head"><span class="n">04</span><h2>Sprint por sprint, paso a paso</h2></div>
+
+  <p>Cada tarea lleva una etiqueta de quién la ejecuta: <span class="pill tu">Tú</span> son los clics reales en Make, Fillout, Calendly y Airtable &mdash; nadie más los puede dar. <span class="pill ag">Agente</span> es contenido que se prepara en paralelo mientras construyes (correos, plantillas, casos de prueba, estructura de interfaces por API), para que nunca te frenes esperando redacción. <span class="pill cl">Cliente</span> es lo que depende de EZER y hay que pedir con anticipación.</p>
+
+  <div class="rail">
+
+  <!-- S0 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S0</span><span class="name">Preparación</span><span class="when">26&ndash;30 ago · 3 h</span></div>
+    <div class="body">
+      <p class="goal">Al terminar la semana <b>no hay ninguna decisión abierta ni ningún acceso sin verificar</b>, y el tablero refleja el plan completo. Este sprint no produce automatización: produce ausencia de excusas.</p>
+      <ol class="steps">
+        <li><span class="pill cl">Cliente</span> <span class="h">30 min</span> Presentar este plan a Dirección EZER y obtener el acuerdo explícito sobre la fecha de cierre (28 de febrero) o sobre uno de los dos recortes de alcance de la sección 8. <strong>No arranques el Sprint 1 sin esta conversación</strong>: es la que evita que en noviembre te pregunten por qué no estaba listo en octubre.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">30 min</span> Cerrar las tres decisiones técnicas de la sección 2 y escribirlas en la bitácora de decisiones (fecha, qué se decidió, qué se descartó, por qué). Son 3 párrafos, no un documento.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">30 min</span> <s>Verificar planes activos.</s> <strong>Hecho el 28 de agosto</strong> &mdash; ver la verificación completa en <span class="mono">bitacora-decisiones-empresas.md</span>. Resultado: Calendly Standard y Make Core sin bloqueo, Fillout permite subir archivos, y <strong>Airtable resultó estar en plan Free</strong>, no Team, lo que cambió el diseño del panel del Sprint 11.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">15 min</span> Compartir la carpeta raíz de Drive de Asociaciones y Empresas como Editor con <span class="mono">voluntariadocorporativo@ezer.org.mx</span> y <span class="mono">sistemas@encuentromundialdevalores.org</span>. Los permisos se heredan a las subcarpetas existentes y futuras.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">45 min</span> Cargar los sprints al tablero de ClickUp: importar el CSV de la sección 6, crear el campo personalizado <strong>Sprint</strong>, y armar las dos vistas nuevas (Board agrupado por Sprint, y el Dashboard del cliente).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">15 min</span> Bloquear en tu calendario personal las 26 sesiones de trabajo hasta el 28 de febrero, como evento recurrente martes 19&ndash;22 h y sábado 9&ndash;12 h. Recurrente, no una por una.</li>
+        <li><span class="pill cl">Cliente</span> <span class="h">15 min</span> Agendar con el equipo de voluntariado la definición de &ldquo;vincular feedback de empresas&rdquo; para algún punto antes de diciembre. Solo agendar, no resolver ahora.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Las tres decisiones técnicas están escritas, no solo pensadas.</li>
+        <li>Los cuatro planes están confirmados por escrito (captura de pantalla de la pantalla de facturación en la bitácora).</li>
+        <li>El tablero de ClickUp muestra los 13 sprints con fechas y horas.</li>
+        <li>Existe el acuerdo del cliente sobre fecha o recorte.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Bitácora de decisiones (v1) · Registro de riesgos (v1) · Definition of Done fijado en ClickUp</div>
+        <div><b>Riesgo del sprint</b> Que Dirección posponga la conversación de la fecha. Mitigación: mándales el plan por escrito con la fecha propuesta y una línea de &ldquo;si no hay observaciones antes del lunes, arranco con esta base&rdquo;.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S1 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S1</span><span class="name">Cerrar Asociaciones</span><span class="when">31 ago &ndash; 13 sep · 10 h</span></div>
+    <div class="body">
+      <p class="goal">El flujo de Asociaciones queda <b>completamente probado y sin patrones frágiles</b>, para que Empresas se construya copiando código sano. Cada hora invertida aquí ahorra dos de depuración en noviembre.</p>
+      <ol class="steps">
+        <li><span class="pill tu">Tú</span> <span class="h">3 h</span> <strong>Probar <span class="mono">A-3</span> (Reunión agendada) end-to-end.</strong> Agenda una reunión real en Calendly con una cuenta de correo de prueba y verifica las tres rutas del Router: contacto existente <em>con</em> organización, contacto existente <em>sin</em> organización, y contacto totalmente nuevo. Confirma que el deep-link al formulario llega con <span class="mono">record_id</span> y <span class="mono">contacto_id</span> correctos, y que la tarea de Google Tasks se crea con el link (en vez de editar el evento compartido, que lo vería el invitado externo).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Re-probar <span class="mono">A4-4</span>:</strong> envía el formulario con <span class="mono">record_id</span> válido pero <span class="mono">contacto_id</span> vacío. El <span class="mono">Update Record</span> de Contactos no debe tronar; debe saltarse el módulo y avisar internamente.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Re-probar <span class="mono">A4-5</span> (idempotencia):</strong> reenvía el mismo <span class="mono">record_id</span> dos veces. Si duplica la carpeta de Drive o el Convenio, agrega el filtro <span class="mono">si Convenio Doc ID no está vacío → no crear</span>. Este filtro es el patrón exacto que reusarás en el Bloque 3 de Empresas, así que déjalo bien documentado.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">3 h</span> <strong>Aplicar el patrón multi-contacto a <span class="mono">A-2.1</span>.</strong> Reemplaza el rollup de correo directo por el patrón ya validado en <span class="mono">A-1</span>: <span class="mono">Search Records</span> sobre Contactos → <span class="mono">Iterator</span> → envío individual por contacto → <span class="mono">Aggregator</span> antes de marcar la casilla de enviado. Prueba con una organización de 2 contactos y otra de 0 contactos.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Agregar el campo <span class="mono">Convenio firmado</span></strong> a la vista de interfaz &ldquo;Revisión de Convenios&rdquo; y publicar, para que el equipo pueda disparar <span class="mono">A-6</span>.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> En paralelo: preparar los casos de prueba en Airtable (registros mínimos, extremos y multi-contacto) para que llegues a la sesión con los datos ya sembrados, y actualizar el reporte de pruebas vivo con cada hallazgo.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">0.5 h</span> Cerrar el <strong>reporte de pruebas de Asociaciones</strong> como versión final y marcar las 6 tareas de la lista 1 de ClickUp como Listo.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Las 3 rutas del Router de <span class="mono">A-3</span> probadas con reserva real de Calendly.</li>
+        <li>Reenviar el mismo formulario ya no duplica carpeta ni documento.</li>
+        <li><span class="mono">A-2.1</span> envía correctamente a una organización con 2 contactos.</li>
+        <li>La lista &ldquo;1. Asociaciones — Cierre de Pruebas&rdquo; queda vacía de pendientes.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Reporte de pruebas de Asociaciones (final) · Fichas técnicas de <span class="mono">A-2.1</span>, <span class="mono">A-3</span> y <span class="mono">A-4</span> actualizadas</div>
+        <div><b>Riesgo del sprint</b> Que la reserva de Calendly requiera esperar disponibilidad. Mitigación: agenda la reunión de prueba el primer día del sprint, no el último.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S2</span><span class="name">Bloque 1 — Webhook, Router, turnos y bienvenida</span><span class="when">14&ndash;27 sep · 10 h · Hito 1</span></div>
+    <div class="body">
+      <p class="goal">Una empresa que se registra en el sitio o hace clic en &ldquo;Me interesa&rdquo; <b>entra sola a Airtable, sin duplicarse, con Responsable asignado por turnos y su correo de bienvenida en la bandeja</b>.</p>
+      <ol class="steps">
+        <li><span class="pill tu">Tú</span> <span class="h">0.5 h</span> Crear el escenario <span class="mono">E-1: Registro de Empresa</span> en Make: nuevo escenario → módulo <span class="mono">Webhooks → Custom webhook</span>. Copiar la URL generada.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Comparar esa URL contra la que ya está en <span class="mono">api/interest.js</span> y ajustar el código si no coinciden. Es el único cambio de código del proyecto.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">0.5 h</span> Agregar un <strong>filtro inmediatamente después del trigger</strong>: <span class="mono">tipo = registro_empresa</span>. Sin este filtro, el escenario también procesaría los webhooks de tipo &ldquo;evento&rdquo; y ensuciaría la tabla.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Búsqueda y Router.</strong> <span class="mono">Airtable → Search Records</span> en Organizaciones por correo (rollup &ldquo;Correo del contacto principal&rdquo;) → <span class="mono">Router</span> con dos rutas: <em>existe</em> / <em>no existe</em>. Ruta &ldquo;no existe&rdquo;: <span class="mono">Create a Record</span> en Organizaciones con <span class="mono">Tipo = Empresa</span> + <span class="mono">Create a Record</span> en Contactos, vinculado a la organización recién creada. Ruta &ldquo;existe&rdquo;: <span class="mono">Update Record</span>, por si cambió algún dato de contacto.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Lógica de reparto por turnos.</strong> <span class="mono">Get a Record</span> sobre la tabla Config → leer <span class="mono">Último responsable asignado</span> → si dice Mia, asignar Adri; si dice Adri, asignar Mia → <span class="mono">Update</span> del campo Responsable en Eventos <em>y</em> <span class="mono">Update</span> de Config con el nuevo valor. <strong>El orden importa</strong>: actualiza Config al final, para que si el escenario truena a la mitad no se pierda un turno.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">0.5 h</span> Fijar la Fase del Evento nuevo en <span class="mono">01 Contacto</span>.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>Correo #1 &mdash; Bienvenida</strong>: flyer del catálogo, link de Calendly, mismo estilo visual de Asociaciones (botones con degradado, nada de texto plano), copia a <span class="mono">voluntariadocorporativo@ezer.org.mx</span>. Se prepara mientras construyes los pasos 4 y 5.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> Pegar el correo en el módulo de Gmail, mapear los campos dinámicos (nombre del contacto, nombre de la empresa, nombre del Responsable asignado) y enviar una prueba a tu propio correo.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Candado y error handlers.</strong> Casilla <span class="mono">Bienvenida enviada</span> como candado; <span class="mono">Retry, 3, 5 min</span> en todos los módulos de Airtable y Gmail (criterio de Asociaciones: en el primer contacto el fallo es transitorio y el riesgo de duplicado es bajo).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Pruebas.</strong> Tres casos obligatorios: (a) registro sin correo capturado &mdash; no debe tronar, debe avisar internamente; (b) dos registros seguidos &mdash; verificar que alternan Mia y Adri; (c) reenvío del mismo correo &mdash; no debe crear una segunda organización.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Escenario <span class="mono">E-1</span> activo, no en borrador.</li>
+        <li>Los 3 casos de prueba pasan y están documentados.</li>
+        <li>La alternancia Mia/Adri verificada con al menos 4 registros seguidos.</li>
+        <li>Ficha técnica de <span class="mono">E-1</span> escrita.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Ficha técnica <span class="mono">E-1</span> · Casos de prueba E1-1 a E1-3 · Correo #1 en el catálogo de plantillas · Reporte de sprint para el cliente</div>
+        <div><b>Riesgo del sprint</b> Que el rollup de correo no encuentre coincidencias por diferencias de mayúsculas o espacios. Mitigación: normalizar a minúsculas y aplicar <span class="mono">trim</span> antes del <span class="mono">Search Records</span>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S3</span><span class="name">Bloque 2 — Calendly y recordatorios de agenda</span><span class="when">28 sep &ndash; 11 oct · 10 h · Hito 2</span></div>
+    <div class="body">
+      <p class="goal">Agendar la reunión <b>dispara el aviso interno con el link del formulario</b>, y quien no agenda recibe recordatorio a los 5 días y se marca inactivo a los 20 &mdash; sin que nadie lo revise a mano.</p>
+      <ol class="steps">
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> Crear en Calendly el tipo de evento <strong>&ldquo;Reunión de voluntariado corporativo &mdash; Empresas&rdquo;</strong>, separado del de Asociaciones (decisión cerrada en S0). Configurar el campo oculto <span class="mono">record_id</span> y un mínimo de 1 día de anticipación.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Escenario <span class="mono">E-2: Reunión agendada</span>.</strong> <span class="mono">Watch Events (Invitee Created)</span> → <span class="mono">Update Record</span> (Fase → <span class="mono">02 Reunión</span>, guardar la fecha agendada) → <span class="mono">Get a Record</span> para leer el Responsable asignado.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>Correo #3 &mdash; aviso interno</strong> al Responsable con el link del Fillout interno y <span class="mono">record_id</span> precargado, más el texto exacto (título y notas) de la tarea de Google Tasks.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> Módulo de Gmail con el Correo #3, enviado <strong>de inmediato al agendar</strong>, no al terminar la reunión. Mapear el deep-link con <span class="mono">record_id</span>.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Reusar el patrón de Google Tasks</strong> ya probado en <span class="mono">A-3</span>: crear una tarea con el link del Fillout en vez de editar el evento de Calendly (que el invitado externo vería).</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>Correo #2 &mdash; recordatorio de agenda</strong> (5 días sin agendar).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2.5 h</span> <strong>Escenario diario <span class="mono">E-3: Seguimiento e inactividad</span>.</strong> Trigger programado a hora fija. Ruta A: Fase = <span class="mono">01 Contacto</span> y han pasado exactamente 5 días desde el registro y no se ha enviado el recordatorio → Correo #2 + marcar la casilla. Ruta B: 20 días → Fase = <span class="mono">Inactivo</span> + aviso interno. Aplicar el mismo criterio que en Asociaciones: <strong>la ruta de inactividad depende de que el recordatorio de 5 días sí se haya enviado</strong>.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Carpetas de Drive por ID</strong> (una para la empresa, una para el evento), verificando siempre el ID guardado en Airtable <em>antes</em> de crear, para que no se recreen.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Pruebas.</strong> (a) Reserva real de Calendly, igual que en <span class="mono">A-3</span>. (b) Casos límite de fecha: registro de hace exactamente 4 días y de 5 días; de 19 y de 20. (c) Carpeta que ya existe: no debe duplicarse.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Una reserva real de Calendly dispara el correo y la tarea de Google Tasks.</li>
+        <li>Los cuatro casos límite de fecha se comportan como se espera.</li>
+        <li>Correr el escenario diario dos veces el mismo día no reenvía el recordatorio.</li>
+        <li>Fichas técnicas de <span class="mono">E-2</span> y <span class="mono">E-3</span> escritas.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Fichas <span class="mono">E-2</span> y <span class="mono">E-3</span> · Correos #2 y #3 · <strong>Reporte de avance para el evento de octubre</strong>: qué queda automatizado y qué se opera a mano</div>
+        <div><b>Riesgo del sprint</b> Que Calendly Standard no soporte el segundo tipo de evento con campo oculto. Se verificó en S0; si falla, el respaldo es compartir el tipo de evento y agregar el Router de discriminación (+2 h).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S4</span><span class="name">Bloque 3 — Formulario interno y documentos</span><span class="when">12&ndash;25 oct · 10 h</span></div>
+    <div class="body">
+      <p class="goal">Llenar el formulario interno después de la reunión <b>genera la Ficha Técnica y la Cotización como Docs editables</b>, ya movidos a la carpeta del evento, con sus links guardados en Airtable.</p>
+      <ol class="steps">
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Preparar la <strong>lista completa de preguntas del Fillout</strong> en el orden recomendado: evento, fecha estimada, municipio, coordinador, número de asistentes, duración, RFC, razón social, uso de CFDI, casilla de curso de sensibilización, y <span class="mono">record_id</span> oculto. Llega lista para que solo la captures.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> Construir el formulario en Fillout con esa lista. Es captura, no diseño: no deberías tener que decidir redacción sobre la marcha.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar las <strong>3 plantillas de Google Docs</strong> con los marcadores <span class="mono">{{...}}</span> correctos: Ficha Técnica, Cotización, y Convenio EZER&ndash;Empresa (este último con su propio deslinde de responsabilidad, adaptado del Convenio de Asociaciones).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> Pegar las 3 plantillas en Google Docs dentro de una <strong>carpeta &ldquo;Plantillas&rdquo; separada</strong> de las carpetas de eventos, para que nadie las edite por accidente. Verificar que cada marcador coincida exactamente con el nombre del campo en Airtable.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">3 h</span> <strong>Escenario <span class="mono">E-4: Captura de datos</span>.</strong> Trigger de Fillout → <strong>validación defensiva del <span class="mono">record_id</span> antes de tocar nada</strong> (<span class="mono">Search Records</span> + <span class="mono">Router</span> + alerta interna si no existe &mdash; el mismo patrón que resolvió el incidente de <span class="mono">A-4</span>, donde un ID inválido apagaba el escenario completo) → <span class="mono">Update</span> Airtable con Fase = <span class="mono">03 Captura de datos</span> → <span class="mono">Create a Document from Template</span> ×2 → <span class="mono">Move a File</span> a la carpeta del evento → guardar los dos links en Airtable.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Candado de idempotencia:</strong> si el campo <span class="mono">Ficha Doc ID</span> ya tiene valor, no volver a crear documentos. Es el mismo filtro que validaste en <span class="mono">A4-5</span>.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Botón &ldquo;Regenerar documento&rdquo;</strong> con la decisión de S0: sobrescribe el Doc existente para conservar un solo link válido.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Pruebas.</strong> (a) <span class="mono">record_id</span> inexistente &mdash; el escenario no debe apagarse, debe avisar. (b) <span class="mono">contacto_id</span> vacío. (c) Reenvío del mismo formulario &mdash; no debe duplicar documentos. (d) Un campo numérico vacío (asistentes) &mdash; el Doc debe generarse con el marcador vacío, no tronar.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Los 2 Docs se generan con todos los marcadores sustituidos correctamente.</li>
+        <li>Los 4 casos de prueba pasan, incluyendo el <span class="mono">record_id</span> inválido.</li>
+        <li>Reenviar el formulario no duplica documentos ni carpetas.</li>
+        <li>Ficha técnica de <span class="mono">E-4</span> escrita y las 3 plantillas registradas en el catálogo.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Ficha <span class="mono">E-4</span> · Especificación del formulario Fillout · Las 3 plantillas de Docs en el catálogo · Entrada de bitácora sobre &ldquo;Regenerar documento&rdquo;</div>
+        <div><b>Riesgo del sprint</b> Es el primer bloque sin equivalente probado en Asociaciones (3 Docs simultáneos). Estimado en 10&ndash;13 h; si se desborda, la cola pasa al Sprint 5, que ya tiene ese espacio previsto.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S5</span><span class="name">Cola del Bloque 3 + Bloque 4 — Sugerencias y desbloqueo</span><span class="when">26 oct &ndash; 8 nov · 10 h · Hito 3</span></div>
+    <div class="body">
+      <p class="goal">El sistema <b>sugiere hasta 3 asociaciones activas del sector correcto</b>, y la cotización <b>no se puede enviar</b> hasta que alguien liga una a mano. Este candado es un requisito explícito del plan original, no una mejora opcional.</p>
+      <ol class="steps">
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> Terminar lo que haya quedado pendiente del Bloque 3. Si no quedó nada, adelantar el paso 5 de este sprint.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">3 h</span> <strong>Escenario <span class="mono">E-5: Sugerencias de asociación</span>.</strong> <span class="mono">Search Records</span> en Organizaciones filtrando por <span class="mono">Tipo = Asociación</span>, <span class="mono">Fase de asociación = Activa</span> (decisión de S0) y sector de apoyo relacionado con la causa del evento → escribir hasta 3 resultados en el campo de solo lectura <span class="mono">Sugerencias de asociación</span> → Fase = <span class="mono">04 Conectar asociación</span>.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Escenario <span class="mono">E-6: Desbloqueo de cotización</span>.</strong> <span class="mono">Watch Records</span> sobre el campo <span class="mono">Asociación asignada</span>: en cuanto deja de estar vacío, habilitar la Fase 05.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Condición de visibilidad en el panel de Airtable:</strong> el botón &ldquo;Enviar cotización&rdquo; solo aparece si <span class="mono">Asociación asignada</span> no está vacío. Esto es lo que hace el candado infalible &mdash; no basta con que el escenario lo verifique, el botón no debe estar ahí.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Pruebas.</strong> (a) Un evento cuyo sector no tenga <em>ninguna</em> asociación activa &mdash; el campo de sugerencias queda vacío y el escenario no truena. (b) Un sector con 5+ asociaciones &mdash; debe cortar en 3. (c) Intentar enviar la cotización sin asociación ligada &mdash; <strong>debe ser imposible desde el panel</strong>. (d) Ligar una asociación y verificar que la Fase avanza sola.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Las sugerencias respetan sector, tipo y fase activa.</li>
+        <li>Cero asociaciones del sector no rompe el escenario.</li>
+        <li>El botón de cotización está oculto mientras no haya asociación ligada.</li>
+        <li>Fichas <span class="mono">E-5</span> y <span class="mono">E-6</span> escritas.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Fichas <span class="mono">E-5</span> y <span class="mono">E-6</span> · Casos de prueba del candado · Reporte de sprint (cierra el Hito 3)</div>
+        <div><b>Riesgo del sprint</b> Que el campo de sector no tenga valores consistentes entre Empresas y Asociaciones, y las sugerencias salgan vacías siempre. Verifícalo con datos reales <em>antes</em> de construir el escenario: 15 minutos de revisión ahorran una tarde.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S6 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S6</span><span class="name">Bloque 5A — Cotización y convenio</span><span class="when">9&ndash;22 nov · 10 h</span></div>
+    <div class="body">
+      <p class="goal">Apretar un botón <b>manda cotización y convenio juntos en PDF</b> al coordinador de la empresa, y quien no responde en 7 días recibe seguimiento automático. El Bloque 5 se parte en dos sprints a propósito: es el más grande y el de mayor riesgo de envío duplicado.</p>
+      <ol class="steps">
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>Correo #4</strong> (cotización + convenio adjuntos) y el <strong>Correo #5</strong> (seguimiento sin respuesta), en el mismo estilo visual del resto.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">3.5 h</span> <strong>Botón &ldquo;Enviar cotización&rdquo;</strong> (automatización nativa de Airtable → webhook a Make): exportar a PDF los dos Docs (Cotización y Convenio) → adjuntarlos al Correo #4 dirigido al coordinador, con copia a voluntariado → Fase = <span class="mono">05 Cotización enviada</span> → guardar la fecha de envío.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Candado reforzado.</strong> Este es el punto de mayor riesgo del flujo: si el equipo aprieta el botón dos veces, la empresa recibe dos cotizaciones. Verificar <span class="mono">Fecha de cotización enviada</span> antes de enviar, y usar <span class="mono">Ignore</span> + alerta interna en el módulo de Gmail en vez de <span class="mono">Retry</span> &mdash; aquí reintentar es peor que fallar.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2.5 h</span> <strong>Escenario diario de seguimiento.</strong> Fase = <span class="mono">05</span> + 7 días desde el envío + comprobante no recibido → Correo #5 + marcar casilla para no repetir.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Formulario Fillout de comprobante de pago</strong> → marca la casilla <span class="mono">Comprobante recibido</span> en el evento correspondiente.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Pruebas.</strong> (a) Doble clic en el botón &mdash; solo debe salir un correo. (b) Cotización sin convenio generado &mdash; debe avisar, no enviar un PDF vacío. (c) Casos límite de 6 y 7 días para el seguimiento. (d) Comprobante subido con <span class="mono">record_id</span> inválido.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Los 2 PDF llegan adjuntos y legibles al coordinador.</li>
+        <li>Doble clic en el botón produce exactamente un envío.</li>
+        <li>El seguimiento de 7 días respeta el límite exacto y no se repite.</li>
+        <li>Fichas de los 3 escenarios escritas.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Fichas <span class="mono">E-7</span>, <span class="mono">E-8</span>, <span class="mono">E-9</span> · Correos #4 y #5 · Nota de riesgo sobre el doble envío en el runbook</div>
+        <div><b>Riesgo del sprint</b> La exportación de Docs a PDF pierde formato si la plantilla usa tablas anidadas. Prueba la exportación desde la primera sesión, no al final.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S7</span><span class="name">Bloque 5B — Pago, calendario y voluntarios</span><span class="when">23 nov &ndash; 6 dic · 10 h · Hito 4</span></div>
+    <div class="body">
+      <p class="goal">Confirmar el pago <b>dispara los pasos a seguir con la asociación ya incluida</b>, crea el evento en Google Calendar y avisa a contabilidad. Al cerrar este sprint el flujo ya cobra de punta a punta.</p>
+      <ol class="steps">
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>Correo #6</strong> (pasos a seguir para el coordinador, con los datos de la asociación asignada) y el <strong>Correo #8</strong> (aviso interno a contabilidad).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">3.5 h</span> <strong>Botón &ldquo;Confirmar pago&rdquo;:</strong> registrar <span class="mono">Fecha de transferencia</span> → <span class="mono">Google Calendar → Create an Event</span> con la fecha del evento y los invitados correspondientes → Correo #6 al coordinador → Correo #8 a contabilidad → Fase = <span class="mono">06 Pago confirmado</span>.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> Guardar el <span class="mono">Event ID</span> de Calendar en Airtable. <strong>Sin este ID no se puede cancelar el evento en el Bloque 10</strong>, y recuperarlo después es doloroso.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Formulario Fillout de registro de voluntarios + carta de deslinde.</strong> El link va <strong>en el Correo #6 de pasos a seguir, no en los recordatorios</strong> &mdash; esto es una corrección ya hecha en el plan original; no regreses a la versión anterior.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> Candado y error handlers en cada paso. Igual que en S6: <span class="mono">Ignore</span> + alerta en los Gmail, <span class="mono">Retry</span> en Airtable y Calendar.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Pruebas.</strong> Probar cada correo por separado y luego el flujo completo de principio a fin con un caso realista. Verificar explícitamente que el link de registro de voluntarios sale en &ldquo;pasos a seguir&rdquo;, que el evento aparece en Calendar con la fecha correcta, y que el Correo #6 trae los datos de la asociación ligada &mdash; no vacíos.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>El evento se crea en Calendar y su ID queda guardado en Airtable.</li>
+        <li>El Correo #6 incluye nombre y datos de contacto de la asociación asignada.</li>
+        <li>Recorrido completo de registro → pago confirmado sin intervención manual fuera de los dos botones.</li>
+        <li>Fichas escritas y reporte de pruebas actualizado.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Fichas <span class="mono">E-10</span> y <span class="mono">E-11</span> · Correos #6 y #8 · <strong>Demostración grabada del ciclo de cobro</strong> para el cliente (5 min de pantalla; vale más que el reporte escrito)</div>
+        <div><b>Riesgo del sprint</b> Que la carta de deslinde no esté revisada legalmente para esta fecha. Es tarea de Dirección desde julio &mdash; recuérdala en el Sprint 5 para que no bloquee aquí.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S8 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S8</span><span class="name">Bloques 6 y 7 — Recibo fiscal y curso de sensibilización</span><span class="when">7&ndash;20 dic · 10 h</span></div>
+    <div class="body">
+      <p class="goal">El recibo fiscal <b>queda archivado y notificado</b>, y el curso de sensibilización <b>se agenda solo si la empresa lo contrató</b>; si no, el flujo lo salta sin dejar rastro.</p>
+      <ol class="steps">
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>Correo #7</strong> (envío del recibo) y el <strong>Correo #9</strong> (invitación al curso con link de Calendly).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Botón &ldquo;Adjuntar recibo&rdquo;</strong>, visible solo a partir de la Fase 06 → crea un registro nuevo en la tabla Recibos, ligado al Evento.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Escenario <span class="mono">E-12</span>:</strong> <span class="mono">Watch Records</span> sobre Recibos → Correo #7 con el recibo adjunto al coordinador.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> Crear en Calendly el <strong>tipo de evento separado para el curso</strong> de sensibilización, con su propio <span class="mono">record_id</span> oculto.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2.5 h</span> <strong>Escenario <span class="mono">E-13</span> con Router condicional</strong> sobre el campo <span class="mono">Incluye curso de sensibilización</span>. Rama SÍ: Correo #9 con el link del Calendly del curso → al agendarse, marcar <span class="mono">Curso realizado</span> → Fase 08. Rama NO: saltar directo a Fase <span class="mono">08 Recordatorios</span>, sin correo intermedio.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2.5 h</span> <strong>Pruebas.</strong> (a) Ambas ramas del Router, con dos eventos de prueba distintos. (b) Recibo subido sin Evento ligado &mdash; no debe tronar. (c) Recibo adjuntado dos veces &mdash; ¿manda dos correos? Si sí, agregar candado. (d) Empresa con curso que nunca lo agenda &mdash; ¿se queda atorada en Fase 07? Definir y construir la salida.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Las dos ramas del Router probadas por separado.</li>
+        <li>Una empresa sin curso llega a Fase 08 sin recibir el Correo #9.</li>
+        <li>El caso &ldquo;curso nunca agendado&rdquo; tiene una salida definida, no un limbo.</li>
+        <li>Fichas <span class="mono">E-12</span> y <span class="mono">E-13</span> escritas.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Fichas <span class="mono">E-12</span> y <span class="mono">E-13</span> · Correos #7 y #9 · Diagrama actualizado de la ruta de decisión del curso</div>
+        <div><b>Riesgo del sprint</b> Sprint partido por el puente del 12 de diciembre y el arranque de festividades. Si prevés perder una sesión, mueve la prueba de las dos ramas a la primera semana y deja el Correo #7 para la segunda.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="t">Receso: 21 de diciembre al 3 de enero</span>
+    <p>No se planea trabajo. Planear un sprint sobre dos semanas de disponibilidad impredecible contamina la velocidad medida y te deja arrancando enero con un sprint fallido en el tablero. Márcalo en ClickUp como periodo sin sprint, no como sprint vacío.</p>
+  </div>
+
+  <!-- S9 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S9</span><span class="name">Bloque 8 — Recordatorios, fotos y asistencia</span><span class="when">4&ndash;17 ene · 10 h</span></div>
+    <div class="body">
+      <p class="goal">El ciclo del evento <b>se recuerda solo</b> a 7, 3 y 1 día, y el día del evento el Responsable recibe su carpeta de fotos sin pedirla.</p>
+      <ol class="steps">
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>Correo #10</strong> (recordatorio, con tres variantes de tono según falten 7, 3 o 1 día) y el <strong>Correo #11</strong> (carpeta de fotos al Responsable).</li>
+        <li><span class="pill tu">Tú</span> <span class="h">3.5 h</span> <strong>Escenario diario de recordatorios.</strong> Trigger a hora fija → buscar eventos con fecha = hoy+7, hoy+3, hoy+1 → enviar el Correo #10 correspondiente → marcar la casilla <span class="mono">Recordatorio 7d/3d/1d enviado</span> para no repetir. Es el mismo patrón de <span class="mono">A-2.1</span>/<span class="mono">A-2.2</span>, ya muy probado: cópialo, no lo rediseñes.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Carpeta de fotos.</strong> El día del evento, crear la subcarpeta en Drive dentro de la carpeta del evento → Correo #11 al Responsable con el link. Verificar el ID guardado antes de crear.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Plantilla de hoja de asistencia.</strong> Es un proceso manual, no automatizado &mdash; pero se documenta con el mismo detalle: dónde vive la plantilla, quién la imprime, dónde se archiva la firmada.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">3.5 h</span> <strong>Pruebas de fecha, que son las más traicioneras.</strong> Sembrar eventos con fecha a exactamente 7, 6 y 8 días; a 3, 2 y 4; a 1, 0 y 2. Verificar que solo disparan los exactos. Probar además: correr el escenario dos veces el mismo día (no debe reenviar), y un evento con la casilla de 7d ya marcada.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Los nueve casos de fecha se comportan exactamente como se espera.</li>
+        <li>Correr el escenario dos veces el mismo día no duplica correos.</li>
+        <li>La carpeta de fotos no se recrea si ya existe.</li>
+        <li>El proceso manual de asistencia está documentado.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Ficha <span class="mono">E-14</span> · Correos #10 y #11 · Procedimiento manual de hoja de asistencia · Matriz de 9 casos de fecha en el reporte de pruebas</div>
+        <div><b>Riesgo del sprint</b> Diferencias de zona horaria entre Make, Airtable y Calendly desplazan los cálculos de días un día completo. Fija la zona horaria explícitamente en el escenario y verifica con un evento a 7 días exactos.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S10 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S10</span><span class="name">Bloque 9 — Feedback y cierre · Bloque 10 — Cancelaciones</span><span class="when">18&ndash;31 ene · 10 h · Hito 5</span></div>
+    <div class="body">
+      <p class="goal">El evento <b>se cierra solo con el feedback de la empresa</b> y se reactiva a los 5 meses; y ninguna cancelación, venga de la empresa o de la asociación, deja cabos sueltos.</p>
+      <ol class="steps">
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar los <strong>Correos #12</strong> (feedback), <strong>#13</strong> (agradecimiento con mini reporte de impacto), <strong>#14</strong> (reactivación a 5 meses), <strong>#15</strong> (aviso de cancelación a la asociación) y <strong>#16</strong> en sus dos variantes: &ldquo;buscando reemplazo&rdquo; y &ldquo;ya se encontró asociación&rdquo;.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Feedback a hora fija:</strong> a las 19:00 del día del evento → Correo #12 con el Fillout precargado con los datos del evento.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Cierre:</strong> el envío del formulario de feedback dispara Fase = <span class="mono">10 Cerrado</span> → Correo #13 con el mini reporte de impacto.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> <strong>Reactivación:</strong> escenario programado que a los 5 meses del evento cerrado manda el Correo #14.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Cancelación por la empresa:</strong> botón → <span class="mono">Google Calendar → Delete an Event</span> usando el ID guardado en S7 → desmarcar las casillas de recordatorio 7d/3d/1d → si ya había asociación ligada, Correo #15 avisándole.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Cancelación por la asociación:</strong> botón &ldquo;Asociación canceló&rdquo; → <strong>la Fase NO cambia</strong>, se queda en 05 → vaciar <span class="mono">Asociación asignada</span> → volver a correr el escenario de sugerencias del Bloque 4 → Correo #16 a la empresa en la variante que corresponda.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Pruebas.</strong> (a) Cancelar un evento sin asociación ligada &mdash; no debe intentar mandar el #15. (b) Cancelar un evento sin ID de Calendar guardado &mdash; no debe tronar. (c) Cancelación por asociación &mdash; verificar que la Fase se queda en 05 y que las sugerencias se regeneran. (d) Feedback enviado dos veces &mdash; no debe mandar dos Correos #13.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>El ciclo completo evento → feedback → cierre corre sin intervención.</li>
+        <li>Las dos rutas de cancelación probadas con sus casos de dato faltante.</li>
+        <li>La cancelación por asociación regenera sugerencias sin retroceder la Fase.</li>
+        <li>Los 16 correos del flujo existen y están en el catálogo.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Fichas <span class="mono">E-15</span> a <span class="mono">E-19</span> · Correos #12 a #16 · Catálogo de correos completo (16 de 16) · Reporte de sprint (cierra el Hito 5)</div>
+        <div><b>Riesgo del sprint</b> Es el sprint con más piezas (5 escenarios, 6 correos). Si a mitad del sprint llevas menos de la mitad, mueve las cancelaciones al Sprint 11 y usa el 12 como colchón &mdash; para eso existe.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S11 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S11</span><span class="name">Panel de trabajo y pruebas end-to-end</span><span class="when">1&ndash;14 feb · 10 h</span></div>
+    <div class="body">
+      <p class="goal">El equipo tiene <b>su panel de trabajo diario</b>, y el flujo completo se recorre de principio a fin con un caso realista, siguiendo el checklist de 11 puntos del plan original.</p>
+      <ol class="steps">
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Armar por API la estructura del <strong>panel compartido</strong>: una página operativa que usan Mia, Adri, Ana Cris y Gabi desde el login de voluntariado, con un <strong>filtro manual por Responsable</strong> (menú desplegable), más una vista de control sin filtro. <em>Cambio respecto de la versión original del plan: el equipo comparte cuenta, así que el filtro por usuario conectado no distingue a nadie &mdash; ver D-005 en la bitácora.</em></li>
+        <li><span class="pill tu">Tú</span> <span class="h">2.5 h</span> Configurar los <strong>botones de automatización nativa</strong> &mdash; esto se hace mejor a mano en el editor de interfaces que por API: Ligar asociación, Enviar cotización, Confirmar pago, Adjuntar recibo, Cancelar/Reprogramar, Asociación canceló. Verificar las condiciones de visibilidad de cada uno, que son por campo y no por usuario, así que siguen funcionando igual con login compartido.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1 h</span> Agregar el control de Fase y los filtros rápidos por etapa, y publicar el panel. Dejar el filtro de Responsable como <strong>lo primero que se ve</strong>: con cuenta compartida, es el gesto que sustituye al &ldquo;mis empresas&rdquo; automático.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Sembrar en Airtable los registros de prueba del recorrido completo: una empresa nueva con todos los datos, una empresa que ya existe, una sin correo, y un evento cuyo sector no tiene asociaciones activas.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">4 h</span> <strong>Recorrido end-to-end del checklist de 11 puntos</strong>, de registro a cierre, con un caso realista y sin atajos: registro → bienvenida → agenda → formulario → documentos → sugerencias → ligar asociación → cotización → comprobante → pago → recibo → curso → recordatorios → fotos → feedback → cierre. Documentar cada desviación en el momento en que aparece.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> Corregir los hallazgos del recorrido. En Asociaciones, cada bloque reveló entre 1 y 4 fallas reales antes de estabilizarse &mdash; espera lo mismo aquí y no lo tomes como un imprevisto.</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>El panel publicado y probado con al menos una persona del equipo operándolo en vivo.</li>
+        <li>Cada botón aparece solo cuando debe y hace exactamente lo que dice.</li>
+        <li>El checklist de 11 puntos corrido completo, con evidencia.</li>
+        <li>Cero hallazgos abiertos de severidad alta.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Especificación del panel (vistas, filtros y botones) · Bitácora del recorrido end-to-end · Reporte de pruebas del flujo de Empresas (borrador)</div>
+        <div><b>Riesgo del sprint</b> Que aparezcan más hallazgos de los que caben en 2 h de corrección. Mitigación: el Sprint 12 tiene espacio; prioriza por severidad, no por orden de aparición.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S12 -->
+  <div class="sprint">
+    <div class="sprint-head"><span class="code">S12</span><span class="name">Endurecimiento, documentación y entrega</span><span class="when">15&ndash;28 feb · 10 h · Hito 6</span></div>
+    <div class="body">
+      <p class="goal">El proyecto <b>se entrega</b>: sin hallazgos abiertos, con el equipo capacitado y con documentación que permita que alguien que no seas tú mantenga esto dentro de un año.</p>
+      <ol class="steps">
+        <li><span class="pill tu">Tú</span> <span class="h">3 h</span> Cerrar los hallazgos pendientes del Sprint 11 y correr una <strong>segunda vuelta del checklist de 11 puntos</strong>. La segunda vuelta es la que cuenta: la primera encuentra errores, la segunda confirma que las correcciones no rompieron nada más.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> <strong>Barrido de error handlers.</strong> Abrir cada uno de los ~15 escenarios y verificar módulo por módulo que ninguno quedó sin directiva de error. Es tedioso y es exactamente lo que evita que un escenario se apague solo en producción.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Compilar el <strong>reporte de pruebas del flujo de Empresas</strong> en el mismo formato y rigor que <span class="mono">Reporte-Pruebas-Asociaciones.pdf</span>: cada caso, su resultado, cada falla encontrada y cómo se resolvió.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>manual de operación</strong> para Mia, Adri, Ana Cris y Gabi &mdash; escrito desde su lado: &ldquo;cuando una empresa te contesta, haces esto&rdquo;, no &ldquo;el escenario E-7 dispara&rdquo;. Debe abrir explicando el filtro de Responsable, que con cuenta compartida es el primer gesto de cada sesión.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">1.5 h</span> Tomar las capturas de pantalla del panel para el manual y revisarlo con ojos de quien no construyó el sistema.</li>
+        <li><span class="pill ag">Agente</span> <span class="h">&mdash;</span> Redactar el <strong>runbook de incidentes</strong>: qué hacer si un escenario se apaga, cómo reprocesar una cola detenida, a quién avisar, y los 5 fallos más probables con su solución.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Sesión de capacitación con el equipo</strong> (1 h en vivo + preparación). Que cada quien opere su propia página del panel con un caso de prueba real durante la sesión. Lo que no se practica en la capacitación, se olvida.</li>
+        <li><span class="pill tu">Tú</span> <span class="h">2 h</span> <strong>Acta de entrega:</strong> alcance entregado, alcance diferido y por qué, inventario de accesos y credenciales, costos recurrentes mensuales (Airtable, Make, Calendly, Fillout), y las recomendaciones para la fase siguiente (flujo de Voluntario, carta de deslinde, Universidades).</li>
+      </ol>
+      <div class="dod"><ul>
+        <li>Segunda vuelta del checklist sin hallazgos de severidad alta.</li>
+        <li>Todos los escenarios con error handler verificado uno por uno.</li>
+        <li>El equipo operó el panel en vivo durante la capacitación.</li>
+        <li>Acta de entrega firmada por Dirección.</li>
+      </ul></div>
+      <div class="meta-row">
+        <div><b>Documentos que produces</b> Reporte de pruebas de Empresas (final) · Manual de operación · Runbook de incidentes · Acta de entrega · Inventario de accesos y costos</div>
+        <div><b>Riesgo del sprint</b> Que la capacitación se posponga por agenda del equipo. Agéndala desde el Sprint 10, con seis semanas de anticipación.</div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section>
+  <div class="sec-head"><span class="n">05</span><h2>Documentación &mdash; qué producir y cuándo</h2></div>
+
+  <p>La regla que ordena todo esto: <strong>si un documento no se actualiza al cerrar un sprint, no se va a actualizar nunca</strong>. Por eso cada documento de abajo tiene un momento fijo de actualización amarrado a una ceremonia, no una buena intención.</p>
+
+  <h4>Documentos de gestión</h4>
+  <div class="tw"><table>
+    <thead><tr><th>Documento</th><th>Para quién</th><th class="num">Se actualiza</th><th>Qué contiene</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Product Backlog</strong></td><td>Tú + cliente</td><td class="num">Continuo</td><td>Vive en ClickUp, lista &ldquo;4. Flujo Empresas&rdquo;. No es un documento aparte: es el tablero. Toda idea nueva entra aquí, no al sprint en curso.</td></tr>
+      <tr><td><strong>Sprint Backlog</strong></td><td>Tú</td><td class="num">Cada Planning</td><td>El filtro de ClickUp por el campo Sprint, más el objetivo del sprint escrito en una línea. Ya está en este plan; solo se ajusta si cambia algo.</td></tr>
+      <tr><td><strong>Definition of Done</strong></td><td>Tú</td><td class="num">Una vez (S0)</td><td>Los 6 puntos de la sección 1, fijados como Doc en ClickUp. Se relee cada Review. No se modifica a media obra.</td></tr>
+      <tr><td><strong>Bitácora de decisiones</strong></td><td>Tú + cliente</td><td class="num">Al decidir</td><td>Una entrada por decisión: fecha, qué se decidió, qué se descartó, por qué. Tres o cuatro líneas. Es el documento que contesta &ldquo;¿por qué está hecho así?&rdquo; dentro de ocho meses.</td></tr>
+      <tr><td><strong>Registro de riesgos</strong></td><td>Tú + cliente</td><td class="num">Cada Review</td><td>Riesgo, probabilidad, impacto, mitigación, dueño. Arranca con los riesgos de la sección 7; se agregan los que aparezcan.</td></tr>
+      <tr><td><strong>Reporte de sprint</strong></td><td>Cliente</td><td class="num">Cada Review</td><td>Una página, cada dos semanas: qué se entregó, qué sigue, qué está bloqueado y quién lo destraba, horas reales contra estimadas. Es el documento que sostiene la relación con el cliente.</td></tr>
+      <tr><td><strong>Acta de entrega</strong></td><td>Cliente</td><td class="num">S12</td><td>Alcance entregado y diferido, accesos, costos recurrentes, recomendaciones para la fase siguiente.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Documentos técnicos</h4>
+  <div class="tw"><table>
+    <thead><tr><th>Documento</th><th>Para quién</th><th class="num">Se actualiza</th><th>Qué contiene</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ficha técnica por escenario</strong></td><td>Tú + quien mantenga</td><td class="num">Al terminar cada escenario</td><td>Es el documento más importante del proyecto y el que más se olvida. Plantilla fija de media página: nombre y código del escenario, qué lo dispara, lista ordenada de módulos, filtros y sus condiciones exactas, directiva de error por módulo, dónde está el candado, y qué campos de Airtable toca. Serán unas 19 fichas.</td></tr>
+      <tr><td><strong>Casos de prueba</strong></td><td>Tú</td><td class="num">Antes de probar</td><td>Tabla por bloque: ID del caso, qué se prueba, entrada, resultado esperado, resultado real, estatus. Se escriben <em>antes</em> de probar &mdash; si los escribes después, solo documentas lo que ya funcionó.</td></tr>
+      <tr><td><strong>Reporte de pruebas vivo</strong></td><td>Cliente</td><td class="num">Cada Review</td><td>Mismo formato y rigor que <span class="mono">Reporte-Pruebas-Asociaciones.pdf</span>. Cada falla encontrada, con su causa y su corrección. Es la evidencia de que el sistema funciona, no la promesa.</td></tr>
+      <tr><td><strong>Catálogo de correos y plantillas</strong></td><td>Tú + cliente</td><td class="num">Al aprobar cada uno</td><td>Los 16 correos y las 3 plantillas de Docs, con su versión aprobada, quién la aprobó y en qué fecha. Evita la pregunta &ldquo;¿esta es la versión buena?&rdquo;.</td></tr>
+      <tr><td><strong>Manual de operación</strong></td><td>Equipo EZER</td><td class="num">S12</td><td>Escrito desde el lado de quien opera, con capturas del panel. Una sección por rol: Mia y Adri (responsables de cuenta), Ana Cris y Gabi (vista completa), todas operando sobre el mismo panel compartido.</td></tr>
+      <tr><td><strong>Runbook de incidentes</strong></td><td>Equipo + tú</td><td class="num">S12</td><td>Qué hacer si un escenario se apaga, cómo reprocesar una cola detenida, a quién avisar, y los 5 fallos más probables con su solución paso a paso.</td></tr>
+      <tr><td><strong>Diagrama de flujo simplificado</strong></td><td>Cliente</td><td class="num">Al cambiar una ruta</td><td>Ya existe (<span class="mono">Flujo-Simple-Empresas.pdf</span>). Se actualiza cuando una decisión cambia una ruta, no antes.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="t">Costo real de esta documentación</span>
+    <p>Aproximadamente <strong>1 hora por sprint</strong>, ya incluida en las 10 h comprometidas: la ficha técnica se escribe mientras el escenario está fresco (15 min), el reporte de sprint sale del tablero (15 min), y el reporte de pruebas se actualiza durante el Review (30 min). No es trabajo adicional al final: es parte del Definition of Done. La documentación que se pospone al cierre del proyecto nunca se escribe con la precisión necesaria, porque para entonces ya no recuerdas por qué pusiste ese filtro.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section>
+  <div class="sec-head"><span class="n">06</span><h2>La herramienta para que el cliente vea el avance</h2></div>
+
+  <div class="note good">
+    <span class="t">Recomendación: ClickUp &mdash; y no porque sea la mejor del mercado, sino porque ya está montada</span>
+    <p>El workspace <strong>EZER A.B.P.</strong> ya existe, con el Space &ldquo;Voluntariado Corporativo&rdquo;, el folder <span class="mono">📋 EZER VOLUNTARIADO CORPORATIVO</span>, sus 6 listas, los 5 estatus personalizados y los 3 campos personalizados (Escenario Make, Tipo, Bloqueado por). Migrar a otra herramienta a estas alturas costaría entre 4 y 6 horas &mdash; medio sprint completo &mdash; para ganar cero funcionalidad que necesites. La decisión correcta es exprimir lo que ya está, no empezar de cero.</p>
+  </div>
+
+  <h3>Los cuatro ajustes que faltan</h3>
+  <ol class="steps">
+    <li><strong>Campo personalizado &ldquo;Sprint&rdquo;</strong> <span class="h">10 min</span> Tipo Dropdown con las opciones S0 a S12. Es lo que habilita todo lo demás: agrupar por sprint, medir velocidad y filtrar el tablero del cliente. Sin este campo, ClickUp es una lista de pendientes; con él, es un tablero de SCRUM.</li>
+    <li><strong>Vista Board agrupada por Sprint</strong> <span class="h">10 min</span> Tu vista de trabajo diario. Cada columna es un sprint; arrastras tarjetas entre estatus dentro del sprint activo.</li>
+    <li><strong>Dashboard &ldquo;Avance Voluntariado Corporativo&rdquo;</strong> <span class="h">30 min</span> Es <em>esta</em> la vista del cliente, no el tablero de tareas. Cuatro widgets: <strong>(a)</strong> tarjeta de porcentaje completado sobre el total del proyecto; <strong>(b)</strong> gráfica de barras de tareas cerradas por sprint &mdash; muestra ritmo real, que es la pregunta que el cliente de verdad tiene; <strong>(c)</strong> lista filtrada por estatus <em>Bloqueado</em>, que debería estar casi siempre vacía y por eso comunica tanto cuando no lo está; <strong>(d)</strong> lista de los 6 hitos con sus fechas.</li>
+    <li><strong>Link público de solo lectura</strong> <span class="h">5 min</span> <span class="mono">Dashboard → Share → Public link</span>. El cliente entra desde el navegador, <strong>sin cuenta y sin consumir una licencia</strong>. Este es el punto que hace que el tablero de verdad se use: en cuanto le pides a alguien que cree una cuenta para ver el avance, deja de verlo.</li>
+  </ol>
+
+  <h3>La regla que evita que el tablero se muera</h3>
+  <p>La mayoría de los tableros se abandonan en la tercera semana. Lo que lo evita no es la herramienta, es un compromiso de calendario: <strong>una llamada de 20 minutos cada dos semanas, el domingo o lunes del cierre de sprint, frente al dashboard</strong>. No se revisa tarea por tarea &mdash; se ve el porcentaje, se revisa la columna de Bloqueados, y se confirma el objetivo del siguiente sprint. Trece llamadas en todo el proyecto. Si el cliente no puede sostener veinte minutos cada dos semanas, el reporte de sprint de una página lo sustituye por correo, pero la llamada es mejor.</p>
+
+  <div class="note warn">
+    <span class="t">Dos reglas de higiene del tablero, heredadas de la guía de ClickUp que ya escribiste</span>
+    <p>Primera: <strong>nada se queda en &ldquo;Bloqueado&rdquo; sin dueño ni motivo</strong>. Si una tarea se bloquea, se llena el campo &ldquo;Bloqueado por&rdquo; y se asigna a quien puede destrabarla &mdash; no a quien la iba a ejecutar. Segunda: <strong>si una tarea no cabe en un sprint, se parte en subtareas</strong>. Las tareas de varias semanas se vuelven invisibles: nunca cambian de estatus y dejan de generar información.</p>
+  </div>
+
+  <h3>Por qué no las otras</h3>
+  <div class="cad">
+    <div class="card"><h5>Notion</h5><p>Mejor para narrativa y documentación, notablemente peor para Gantt, dependencias y medición de velocidad. Además implicaría mantener dos herramientas.</p></div>
+    <div class="card"><h5>Trello</h5><p>Demasiado simple para un proyecto con dependencias duras entre bloques. Sin estimaciones ni burndown, el cliente ve tarjetas moviéndose pero no ritmo.</p></div>
+    <div class="card"><h5>Interfaz de Airtable</h5><p>Ya la tienen y sería tentador, pero mezclaría los datos de operación (empresas reales, cotizaciones) con la gestión del proyecto. Dos cosas distintas que conviene mantener separadas.</p></div>
+    <div class="card"><h5>Jira</h5><p>Correcto técnicamente y desproporcionado para un equipo de una persona. El costo de configuración se comería un sprint entero.</p></div>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section>
+  <div class="sec-head"><span class="n">07</span><h2>Riesgos</h2></div>
+  <div class="tw"><table>
+    <thead><tr><th>Riesgo</th><th class="num">Prob.</th><th class="num">Impacto</th><th>Mitigación</th></tr></thead>
+    <tbody>
+      <tr><td><strong>La dedicación real cae por debajo de 6 h/semana</strong> por carga de otros proyectos</td><td class="num">Alta</td><td class="num">Alto</td><td>Es el riesgo número uno de este plan. Se detecta rápido: si dos sprints seguidos cierran por debajo del compromiso, se baja de 10 h a 8 h y se recorre la fecha de entrega formalmente, en vez de arrastrar deuda invisible sprint tras sprint.</td></tr>
+      <tr><td>El Bloque 5 se desborda de sus dos sprints</td><td class="num">Media</td><td class="num">Alto</td><td>Ya está partido en 5A y 5B a propósito. Si aun así se desborda, la cotización (5A) se entrega sola como valor parcial y el pago pasa al siguiente sprint.</td></tr>
+      <tr><td>El evento de octubre presiona por adelantar alcance</td><td class="num">Alta</td><td class="num">Medio</td><td>Acordar en S0 que ese evento se opera con los Bloques 1&ndash;2 automatizados y el resto manual. Meter alcance a media obra es lo que destruye los planes de un solo recurso.</td></tr>
+      <tr><td>La revisión legal (convenios, deslinde, aviso de privacidad) no llega a tiempo</td><td class="num">Media</td><td class="num">Alto</td><td>Depende de Dirección desde julio. Bloquea el Sprint 7. Recordarlo formalmente en los Reviews de S4 y S5, con la fecha límite explícita.</td></tr>
+      <tr><td><s>Calendly no soporta el segundo o tercer tipo de evento</s> <strong>&mdash; RIESGO CERRADO</strong></td><td class="num">&mdash;</td><td class="num">&mdash;</td><td>Verificado el 28 de agosto: plan Standard confirmado y el tipo de evento de Empresas ya existe. No requiere respaldo.</td></tr>
+      <tr><td><strong>El parámetro UTM con el <span class="mono">record_id</span> no llega en el webhook de Calendly</strong></td><td class="num">Media</td><td class="num">Bajo</td><td>Riesgo nuevo, introducido por la decisión D-002. Se prueba en el Sprint 3 antes de construir el resto del escenario. Respaldo: emparejar por correo con el Router de 3 rutas de <span class="mono">A-3</span>, ya probado &mdash; se pierde la simplificación, no la funcionalidad.</td></tr>
+      <tr><td>Zonas horarias desalinean los cálculos de 7/3/1 días</td><td class="num">Media</td><td class="num">Medio</td><td>Fijar la zona horaria explícitamente en cada escenario programado y probar los nueve casos de fecha del Sprint 9.</td></tr>
+      <tr><td>El correo de voluntariado se satura al recibir copia de todo</td><td class="num">Media</td><td class="num">Bajo</td><td>Es una decisión ya confirmada del cliente. Queda documentada como riesgo aceptado; no bloquea. Si se vuelve un problema, se resuelve con filtros de Gmail, no rediseñando escenarios.</td></tr>
+      <tr><td>El equipo no adopta el panel y sigue trabajando en la tabla directa</td><td class="num">Media</td><td class="num">Alto</td><td>Es el riesgo que más proyectos así mata, y no es técnico. Mitigación: involucrar a Mia o Adri en una prueba real del panel desde el Sprint 11, no esperar a la capacitación del 12. <strong>Sube de importancia con el login compartido</strong> (D-005): sin filtro automático por usuario, si nadie usa el desplegable de Responsable el panel se vuelve una lista indistinta y el equipo regresa a la tabla.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section>
+  <div class="sec-head"><span class="n">08</span><h2>Si la fecha manda sobre el alcance</h2></div>
+
+  <p>Si Dirección necesita cerrar antes del 28 de febrero, hay dos recortes posibles. Ambos son honestos; lo que no es honesto es prometer la misma fecha con la misma cantidad de trabajo y menos horas.</p>
+
+  <div class="cad">
+    <div class="card">
+      <h5>Recorte A &mdash; Cierre en el ciclo de cobro</h5>
+      <p><strong>Entrega el 6 de diciembre</strong> (Sprints 0&ndash;7). Incluye captación, agenda, documentos, conexión con asociación, cotización, convenio y pago confirmado &mdash; el flujo <em>ya cobra</em>. Se difieren a una fase 2 el recibo fiscal, el curso, los recordatorios, el feedback y las cancelaciones, que se operan a mano mientras tanto. Ahorra 5 sprints. Es el recorte que recomendaría: entrega el valor de negocio completo y deja fuera lo que un equipo humano puede sostener manualmente con poco volumen.</p>
+    </div>
+    <div class="card">
+      <h5>Recorte B &mdash; Sin curso ni reactivación</h5>
+      <p><strong>Entrega el 14 de febrero</strong> (se elimina el Bloque 7 y la reactivación a 5 meses, y el Sprint 12 se comprime a la mitad). Ahorra un sprint y medio. Es un recorte menor y de bajo riesgo, pero también de bajo ahorro: si la presión de fecha es real, el Recorte A es el que de verdad mueve la aguja.</p>
+    </div>
+  </div>
+
+  <div class="note flame">
+    <span class="t">La tercera opción, que no es un recorte</span>
+    <p>Subir la dedicación de 7 a 10 h/semana &mdash;una sesión más de 3 horas&mdash; adelantaría la entrega aproximadamente <strong>seis semanas</strong>, a mediados de enero, sin tocar el alcance. Es la conversación que conviene tener con Dirección antes de recortar: no siempre el problema es el alcance; a veces es que nadie ha puesto sobre la mesa cuánto tiempo hace falta de verdad.</p>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section>
+  <div class="sec-head"><span class="n">09</span><h2>Qué hacer esta semana</h2></div>
+  <ol class="steps">
+    <li>Mandar este plan a Dirección EZER con la fecha propuesta del <strong>28 de febrero de 2027</strong> y las dos opciones de recorte, pidiendo respuesta antes del lunes 31 de agosto.</li>
+    <li>Cerrar por escrito las <strong>tres decisiones técnicas</strong> de la sección 2 &mdash; Calendly separado, filtro por Fase de asociación, y sobrescritura en &ldquo;Regenerar documento&rdquo;.</li>
+    <li>Verificar los cuatro planes (Airtable, Make, Calendly, Fillout) y <strong>compartir la carpeta raíz de Drive</strong>.</li>
+    <li>Importar el CSV de sprints a ClickUp, crear el campo <strong>Sprint</strong> y armar el dashboard con link público.</li>
+    <li><s><strong>Bloquear las sesiones</strong> en tu calendario.</s> Hecho el 28 de agosto: miércoles 17&ndash;19 h, viernes 16&ndash;19 h y sábado 17&ndash;19 h. Falta borrar las ocurrencias del receso (21 dic &ndash; 3 ene).</li>
+  </ol>
+</section>
+
+<footer>
+  Plan de trabajo elaborado con Claude Code · 26 de agosto de 2026 · Re-baseline de <span class="mono">Plan-Sprints-Empresas-EZER.pdf</span> (4 ago) a una capacidad real de 6 h/semana.<br>
+  Basado en el alcance oficial de <span class="mono">Plan-Empresas-EZER.pdf</span> y en los patrones validados durante la construcción y pruebas del flujo de Asociaciones. Documento vivo: se actualiza al cierre de cada sprint con lo realmente encontrado.
+</footer>
+
+</div>
+</body>
+</html>

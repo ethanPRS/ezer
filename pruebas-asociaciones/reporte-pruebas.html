@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reporte de Pruebas — Flujo de Asociaciones (Make/Airtable)</title>
+<style>
+  @page { size: letter; margin: 2cm 1.8cm; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 22px; margin-bottom: 2px; }
+  .subtitle { color: #555; font-size: 12px; margin-bottom: 24px; }
+  h2 {
+    font-size: 16px;
+    margin-top: 36px;
+    padding: 8px 12px;
+    background: #eef2f7;
+    border-left: 4px solid #2c5aa0;
+  }
+  h2 .estado-general {
+    float: right;
+    font-size: 11px;
+    font-weight: normal;
+  }
+  .meta {
+    font-size: 11px;
+    color: #444;
+    margin-bottom: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 11px;
+  }
+  th {
+    background: #f5f5f5;
+    font-weight: 600;
+  }
+  .caso-header {
+    background: #fafafa;
+    font-weight: 600;
+  }
+  .ok { color: #1a7f37; font-weight: 600; }
+  .fail { color: #c0392b; font-weight: 600; }
+  .pendiente { color: #b8860b; font-weight: 600; }
+  .bloqueado { color: #6c757d; font-weight: 600; }
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .badge.ok { background: #e6f4ea; color: #1a7f37; }
+  .badge.fail { background: #fdecea; color: #c0392b; }
+  .badge.pendiente { background: #fff8e1; color: #8a6d00; }
+  .badge.bloqueado { background: #eceff1; color: #555; }
+  .caso {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    page-break-inside: avoid;
+  }
+  .caso-titulo {
+    font-weight: 700;
+    font-size: 12.5px;
+    margin-bottom: 4px;
+  }
+  .caso-grid {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    row-gap: 3px;
+  }
+  .caso-grid .label { color: #555; font-weight: 600; }
+  .resumen-tabla { margin-top: 8px; }
+  .resumen-tabla th, .resumen-tabla td { font-size: 10.5px; }
+  footer {
+    margin-top: 40px;
+    font-size: 10px;
+    color: #888;
+    border-top: 1px solid #ddd;
+    padding-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Reporte de Pruebas — Flujo de Asociaciones</h1>
+<div class="subtitle">Sistema de automatización EZER (Airtable + Make + Calendly + Fillout + Gmail + Google Drive/Docs)</div>
+<div class="meta">
+  Última actualización: 31 de julio de 2026<br>
+  Base Airtable: <strong>Voluntariado Corporativo</strong> (antes "Empresas", appZA6fc9TRQz2upb) — Tabla Organizaciones (Tipo = Asociación)<br>
+  Registros de prueba usados: correo de recepción real <strong>sistemas@encuentromundialdevalores.org</strong>
+</div>
+
+<div class="meta" style="background:#eef2f7; padding:8px 12px; border-radius:6px;">
+  <strong>Nomenclatura de escenarios en Make (actualizada 27-jul-2026):</strong>
+  <table style="margin-top:6px;">
+    <tr><th>Nombre nuevo en Make</th><th>Nombre usado en este reporte</th></tr>
+    <tr><td>A-1) Envío de Correos Asociaciones (Nuevas)</td><td>"Escenario A" — Promoción inicial</td></tr>
+    <tr><td>A-2.1) Envío de Correos Asociaciones (Seguimiento - 5 días)</td><td>"Escenario B" — Seguimiento 5 días</td></tr>
+    <tr><td>A-2.2) Cambio de Estatus Asociaciones (Inactivas - 20 días)</td><td>"Escenario C" — Sin respuesta 20 días</td></tr>
+    <tr><td>A-3) Reunión Agendada (Asociaciones)</td><td>"Escenario D"</td></tr>
+    <tr><td>A-4) Captura de Datos (Asociaciones)</td><td>"Escenario E"</td></tr>
+    <tr><td>A-5) Envío de Convenio (Asociaciones)</td><td>"Escenario F"</td></tr>
+    <tr><td>A-6) Activar Asociaciones</td><td>"Escenario G"</td></tr>
+  </table>
+  <p style="margin:6px 0 0 0; font-size:10.5px; color:#555;">Nota: los códigos de <em>caso de prueba</em> de este reporte (A-0, A-1, A-2… para el primer escenario; B-1…B-5 para el segundo) son numeración interna de este documento y no coinciden con los nuevos códigos de escenario de Make (A-1, A-2.1…) — son dos numeraciones distintas que comparten formato por coincidencia.</p>
+</div>
+
+<div class="meta" style="background:#fff8e1; padding:10px 12px; border-radius:6px; border-left:4px solid #b8860b;">
+  <strong>Cambios de arquitectura — ronda del 30/31 de julio de 2026:</strong>
+  <ul style="margin:6px 0 0 18px; padding:0;">
+    <li><strong>Regla de negocio nueva (Convenio ↔ Empresa):</strong> el cliente aclaró que el Convenio solo debe enviarse a una asociación una vez que se le haya asignado una empresa, no justo después de la reunión inicial como funcionaba antes. Se aprovechó un vínculo ya existente pero sin usar entre las tablas <code>Eventos</code> y <code>Organizaciones</code> (una organización puede participar en un Evento como Empresa o como Asociación) para crear el campo rollup <strong>"Empresa vinculada"</strong>: se llena solo cuando el equipo asigna la asociación a un Evento que ya tiene empresa. A-5 ahora exige <code>{Empresa vinculada}!=""</code> en su Search Records — ver sección A-5 más abajo.</li>
+    <li><strong>Patrón "candado" (candado de envío):</strong> se detectó que, en varios escenarios, si el módulo final que marca "ya enviado" fallaba <em>después</em> de que el correo externo ya había salido, el registro se quedaba elegible para la siguiente corrida programada y se le reenviaba duplicado a la asociación. Se agregó un campo checkbox temporal por escenario (ej. "Promoción en proceso de envío", "Seguimiento en proceso de envío", "Convenio en proceso de envío") que se enciende justo antes del envío externo y se apaga junto con el marcado de "enviado" — y se agregó como condición extra en cada Search Records. Aplicado a A-1, A-2.1 y A-5 (no aplica a A-2.2, A-3 ni A-6 por su naturaleza — ver cada sección).</li>
+    <li><strong>Error handlers nativos de Make:</strong> se revisó módulo por módulo qué pasa ante una falla <em>técnica</em> (no de datos) — timeout de Google, error transitorio de Airtable, etc. — y se configuraron directivas <strong>Retry</strong> (automático, 3 intentos/5 min para fallas transitorias; manual para fallas de datos que no se van a arreglar solas) en los módulos de cada escenario. Detalle en la tabla de cada sección.</li>
+    <li><strong>Limpieza de datos de prueba:</strong> se borraron 43 registros de Organizaciones y 28 Contactos huérfanos de rondas de prueba anteriores (series B/C/A4/A5/A6/E2E/FALLO/MAKE, ya superadas por esta ronda, más varios registros rotos/ambiguos) para dejar la base limpia y evitar que contaminen corridas en vivo.</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>A-1) Envío de Correos Asociaciones (Nuevas) <span style="font-weight:400; font-size:13px; color:#666;">— antes "Escenario A", Promoción inicial</span> <span class="estado-general badge ok">COMPLETO</span></h2>
+<div class="meta">
+  Trigger: nuevo registro en Organizaciones (Tipo=Asociación, Fase=Nuevo) → envía correo con flyer del catálogo.<br>
+  Módulos clave: Search Config (flyer) → HTTP Download a file → Router (¿hay contacto/correo?) → Search Records Contactos → Iterator → Router (¿formato de correo válido?) → Gmail → Aggregator → Update Record.
+</div>
+<div class="caso" style="background:#f8fafc;">
+  <div class="caso-titulo">¿Para qué sirve este escenario?</div>
+  <p style="margin:4px 0;">Cuando el equipo registra una nueva asociación en Airtable, este escenario envía automáticamente el primer correo de contacto con el catálogo/flyer de EZER — sin que nadie del equipo tenga que acordarse de hacerlo a mano. Es el primer contacto real que recibe la asociación después de ser dada de alta.</p>
+  <div class="label" style="margin-top:6px;">Beneficios</div>
+  <ul style="margin:4px 0 0 18px; padding:0;">
+    <li><strong>Respuesta inmediata:</strong> la asociación recibe información el mismo día que se registra, sin depender de que alguien del equipo se acuerde de contactarla manualmente.</li>
+    <li><strong>Consistencia:</strong> todas las asociaciones reciben el mismo catálogo completo y legible, sin importar quién esté a cargo ese día.</li>
+    <li><strong>Nada se pierde en silencio:</strong> si a una asociación le falta un contacto, un correo, o el correo está mal capturado, el sistema avisa automáticamente al equipo (voluntariados/sistemas) para que lo corrijan — en vez de que esa asociación simplemente nunca reciba nada y nadie se dé cuenta.</li>
+    <li><strong>Soporta múltiples contactos por asociación:</strong> si una organización tiene más de un contacto registrado, cada uno recibe su propio correo individual, sin que un contacto "tape" a los demás.</li>
+    <li><strong>Ahorra tiempo operativo:</strong> libera al equipo de tener que enviar manualmente este primer correo a cada asociación nueva, uno por uno.</li>
+  </ul>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-0 — Envío normal (referencia, camino feliz)</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>Organización "PRUEBA E2E - Flujo Completo" (recmi2gSk9yvGeKf3) + Contacto "Contacto E2E Prueba"</div>
+    <div class="label">Resultado esperado</div><div>Correo recibido con flyer PDF adjunto y legible</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Corregido: el adjunto no se veía porque se mapeaba la URL de Airtable directo a Gmail. Se agregó módulo HTTP "Download a file" entre Config y Gmail; PDF ahora se recibe legible.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-1 — Organización sin ningún contacto vinculado</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar qué pasa cuando el rollup "Correo del contacto principal" llega vacío al módulo de Gmail (destinatario faltante)</div>
+    <div class="label">Registro de prueba</div><div>Organización "PRUEBA FALLO A1 - Sin Contacto" — sin ningún Contacto vinculado</div>
+    <div class="label">Resultado esperado</div><div>El escenario NO debe truncarse con error; debe detenerse limpiamente en un filtro antes de Gmail (sin intentar enviar sin destinatario)</div>
+    <div class="label">Resultado real</div><div><span class="badge fail">FALLÓ (confirmado)</span> Error real de Make: <em>"Couldn't send the email from module 3. The to field got an invalid email address."</em> — el rollup "Correo del contacto principal" llega vacío y Gmail truena al intentar enviar.</div>
+    <div class="label">Causa raíz</div><div>Ninguna validación previa al módulo de Gmail que confirme que existe un correo destinatario.</div>
+    <div class="label">Fix aplicado</div><div>Se agrega un Router antes del módulo de Gmail: Ruta 1 (correo no vacío) → envío normal a la asociación; Ruta 2 fallback (correo vacío) → correo interno de alerta al equipo EZER pidiendo completar el contacto en Airtable. Evita que la asociación quede sin promoción de forma silenciosa.</div>
+    <div class="label">Estado</div><div><span class="badge ok">RESUELTO Y CONFIRMADO</span> Re-prueba exitosa: el registro cayó correctamente en la ruta fallback y se envió la alerta interna, sin error.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-2 — Contacto vinculado pero con campo Correo vacío</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Simular un contacto capturado sin correo (campo email vacío en Contactos) — el rollup no estaría "vacío" técnicamente (hay un contacto) pero el valor de correo sí</div>
+    <div class="label">Registro de prueba</div><div>Organización "PRUEBA FALLO A2 - Contacto sin correo" + Contacto vinculado sin Correo</div>
+    <div class="label">Resultado esperado</div><div>Filtro debe detectar correo vacío/no válido y detener antes de Gmail</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Cayó correctamente en la ruta fallback (correo de alerta interna), igual que A-1. El filtro "Not exists" sobre el rollup cubre este caso también.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-3 — Organización con múltiples contactos vinculados</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar que el rollup ARRAYJOIN(", ") entregue ambos correos correctamente a Gmail "Para" (regresión del bug de separador vacío)</div>
+    <div class="label">Registro de prueba</div><div>Organización "PRUEBA A3 - Multiples Contactos" + 2 Contactos con correos distintos (alias +test)</div>
+    <div class="label">Resultado esperado</div><div>Correo llega a ambas direcciones, sin corrupción de datos</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">RESUELTO Y CONFIRMADO</span> tras un diagnóstico largo — ver causas y fix abajo</div>
+    <div class="label">Causas encontradas (en cadena)</div>
+    <div>
+      <ol style="margin:2px 0 0 16px; padding:0;">
+        <li>El campo "To" del módulo Gmail no acepta un solo texto con varios correos separados por coma (ni con <code>split()</code> directo) — el conector de Google Email en Make lo valida como una sola dirección y truena.</li>
+        <li>El chip del rollup <code>Correo del contacto principal</code> venía sin índice de registro (<code>[]</code> en vez de <code>[1]</code>) en más de un módulo — módulo 2 es un Search Records que puede traer más de un registro, así que cualquier campo suyo necesita índice de posición.</li>
+        <li><strong>Hallazgo importante:</strong> al resolver lo anterior con un Router + Iterator (uno por contacto), el módulo que marca "Promoción inicial enviada" quedó posicionado <em>antes</em> del Iterator/Gmail para evitar que se marcara varias veces — pero esto provocó que se marcara como enviado <strong>aunque el envío de Gmail fallara después</strong>. La organización de prueba quedó marcada como "ya procesada" sin haber recibido nunca el correo, y dejó de aparecer en las búsquedas de registros pendientes (huérfana silenciosa).</li>
+        <li>El Iterator seguía sin funcionar incluso con el índice correcto: su campo "Array" mostraba <code>split(...)</code> como texto literal en vez de ejecutarlo como función. Causa raíz encontrada por el usuario: en el cuadro de fórmulas de Make hace falta anteponer <code>/</code> para que reconozca una función como <code>split()</code> — sin eso, cualquier función escrita ahí se trata como texto plano. Aprendizaje útil para futuras fórmulas en Make.</li>
+      </ol>
+    </div>
+    <div class="label">Fix aplicado (arquitectura final)</div>
+    <div>
+      En vez de depender del rollup unido por comas + <code>split()</code>, se reemplazó el Iterator por un módulo <strong>Airtable → Search Records</strong> directo sobre la tabla <strong>Contactos</strong> (filtrado por "Organización" = la organización actual). Este módulo genera un bundle nativo por cada contacto vinculado, cada uno con su propio campo "Correo" ya limpio — sin necesidad de unir/separar texto. Ruta final: Filtro (correo válido) → Search Records (Contactos) → Gmail (uno por contacto, "To" = campo "Correo" directo) → <strong>Aggregator</strong> (Source Module = este Search Records) → Airtable Update Record ("Promoción inicial enviada" = true, una sola vez, después de los envíos).
+    </div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> — funcionó correctamente en la re-prueba</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-4 — Flyer eliminado/ausente en tabla Config</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar comportamiento si el adjunto "Flyer Catálogo 2026" no existe (módulo HTTP fallaría al no tener URL)</div>
+    <div class="label">Nota</div><div>No se simula en vivo para no afectar el envío real de producción (el registro Config es el único y compartido). Se documenta como riesgo y se recomienda filtro preventivo.</div>
+    <div class="label">Resultado real</div><div><span class="badge bloqueado">NO SIMULADO EN VIVO</span> — revisar recomendación de filtro más abajo</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-5 — Contacto con correo de formato inválido</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar qué pasa cuando el correo de un contacto no está vacío, pero tampoco tiene formato de correo válido (ej. sin "@")</div>
+    <div class="label">Registro de prueba</div><div>Organización "PRUEBA A5 - Correo Invalido" + Contacto "Contacto A5 - Correo Malformado" con correo <code>correo-sin-arroba.com</code></div>
+    <div class="label">Resultado esperado</div><div>No debe enviarse el correo a esa dirección inválida; el equipo (voluntariados/sistemas) debe recibir una alerta indicando qué organización y qué correo tiene el problema; la organización NO debe marcarse como "Promoción inicial enviada" si ese es su único contacto</div>
+    <div class="label">Fix aplicado</div><div>Segundo Router insertado entre el Iterator y Gmail: ruta "Formato válido" (regex <code>Matches pattern</code>) → envío normal; ruta "Formato inválido" (fallback) → correo de alerta a voluntariadocorporativo@ezer.org.mx (CC sistemas@) con el nombre de la organización y el correo problemático</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> — el Router de formato funcionó correctamente</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-6 — Organización con un contacto válido y uno con formato inválido (mixto)</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar que un contacto válido SÍ reciba la promoción aunque otro contacto de la misma organización tenga correo inválido, y que "Promoción inicial enviada" se marque como verdadero (porque al menos un envío sí tuvo éxito)</div>
+    <div class="label">Registro de prueba</div><div>Organización "PRUEBA A6 - Mixto Valido e Invalido" + Contacto A6-1 (sistemas@encuentromundialdevalores.org, válido) + Contacto A6-2 (ethan.rivera-udem.edu, sin "@", inválido)</div>
+    <div class="label">Resultado esperado</div><div>Contacto A6-1 recibe el correo; el equipo recibe alerta sobre A6-2; "Promoción inicial enviada" queda en true (el Update Record solo cuelga de la rama de formato válido, así que se marca en cuanto al menos un envío pasa por ahí)</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> — envío parcial y marcado condicional funcionaron como se esperaba</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A-7 — Candado de envío (protección contra duplicados) + error handlers</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Evitar que, si el Update Record final (el que marca "Promoción inicial enviada"=true) falla <em>después</em> de que Gmail ya envió el correo, la organización se quede elegible y reciba la promoción duplicada en la siguiente corrida programada</div>
+    <div class="label">Fix aplicado</div><div>Campo nuevo <code>Promoción en proceso de envío</code> (checkbox): se enciende con un Update Record insertado justo antes del Iterator/Gmail, y se apaga en el Update Record final (junto con "Promoción inicial enviada"). Se agregó <code>{Promoción en proceso de envío}=FALSE()</code> como condición extra al Search Records de entrada.</div>
+    <div class="label">Registros de prueba</div><div>"PRUEBA A1-CANDADO - Camino feliz" (caso simple, 1 contacto válido) y "PRUEBA A1-CANDADO-2 - Mixto valido e invalido" (1 contacto válido + 1 con formato inválido, para probar el candado junto con el Router de formato)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">CONFIRMADO</span> Ambos casos corrieron completos: el candado se encendió y apagó correctamente dentro de la misma ejecución, sin quedar atorado. El flag "Contacto con problema" también se comportó como se esperaba en el caso mixto.</div>
+    <div class="label">Error handlers</div>
+    <div>
+      <table>
+        <tr><th>Módulo</th><th>Directiva</th></tr>
+        <tr><td>Gmail (envío individual, dentro del Iterator)</td><td>Retry — Yes, 3 intentos, 5 min</td></tr>
+        <tr><td>Airtable Update Record final (marca enviado + apaga candado)</td><td>Retry — No (paso crítico contra duplicados; requiere revisión manual antes de reanudar)</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<table class="resumen-tabla">
+  <tr><th>Caso</th><th>Estado</th><th>Filtro/Fallback aplicado</th></tr>
+  <tr><td>A-0 Camino feliz</td><td class="ok">OK</td><td>Módulo HTTP Download a file agregado</td></tr>
+  <tr><td>A-1 Sin contacto</td><td class="ok">Resuelto y confirmado</td><td>Router con 2 rutas: correo no vacío → Gmail normal; correo vacío → Gmail de alerta interna al equipo</td></tr>
+  <tr><td>A-2 Contacto sin correo</td><td class="ok">OK (mismo fix que A-1)</td><td>Cubierto por el mismo Router/filtro</td></tr>
+  <tr><td>A-3 Múltiples contactos</td><td class="ok">Resuelto y confirmado</td><td>Iterator (uno por contacto) + Aggregator antes de marcar "Promoción inicial enviada"</td></tr>
+  <tr><td>A-4 Flyer ausente</td><td class="bloqueado">No simulado</td><td>Recomendado: filtro "URL Exists" antes de HTTP</td></tr>
+  <tr><td>A-5 Correo con formato inválido</td><td class="ok">Confirmado</td><td>Router de formato (regex) + alerta interna</td></tr>
+  <tr><td>A-6 Mixto (válido + inválido)</td><td class="ok">Confirmado</td><td>Mismo Router de formato; Aggregator condicional</td></tr>
+  <tr><td>A-7 Candado + error handlers</td><td class="ok">Confirmado (30-jul-2026)</td><td>Checkbox "Promoción en proceso de envío" + Retry en Gmail/Update Record</td></tr>
+</table>
+
+<div class="caso" style="background:#f0f7f0; border-color:#c8e6c9;">
+  <div class="caso-titulo">A-1) Envío de Correos Asociaciones (Nuevas) — cierre</div>
+  <p style="margin:4px 0;">Los 8 casos de prueba (A-0 a A-7) quedaron confirmados o documentados como riesgo aceptado (A-4). El escenario queda robusto ante: organizaciones sin contacto, contactos sin correo, múltiples contactos, correos con formato inválido, combinaciones mixtas, fallas técnicas (error handlers), y envíos duplicados por falla a medio proceso (candado).</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>A-2.1) Envío de Correos Asociaciones (Seguimiento - 5 días) <span style="font-weight:400; font-size:13px; color:#666;">— antes "Escenario B"</span> <span class="estado-general badge ok">COMPLETO</span></h2>
+<div class="meta">
+  Trigger: registros en Organizaciones con Fase=Nuevo, Promoción inicial enviada=true, Días desde promoción inicial ≥ 5 y Seguimiento 5 días enviado=false → envía correo de seguimiento y marca Seguimiento 5 días enviado=true.
+</div>
+<div class="caso" style="background:#f8fafc;">
+  <div class="caso-titulo">¿Para qué sirve este escenario?</div>
+  <p style="margin:4px 0;">Si una asociación recibió la promoción inicial (A-1) pero no ha respondido ni agendado una reunión después de 5 días, este escenario le manda un recordatorio automático — sin que el equipo tenga que llevar el control manual de "a quién ya le insistí".</p>
+  <div class="label" style="margin-top:6px;">Beneficios</div>
+  <ul style="margin:4px 0 0 18px; padding:0;">
+    <li><strong>Ninguna asociación se pierde por falta de seguimiento:</strong> el recordatorio sale automáticamente al día 5, sin depender de que alguien lo recuerde.</li>
+    <li><strong>No se manda de más:</strong> el checkbox "Seguimiento 5 días enviado" evita reenviar el mismo recordatorio dos veces.</li>
+    <li><strong>Prepara el terreno para A-2.2</strong> (cambio a inactiva a los 20 días), que depende de que este paso intermedio haya corrido correctamente.</li>
+  </ul>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso B-1 — Cumple exactamente 5 días</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA B1 - Cumple 5 dias exactos" — Fecha de promoción inicial enviada = 2026-07-22 (hoy - 5), Seguimiento 5 días enviado = false, contacto con correo válido</div>
+    <div class="label">Resultado esperado</div><div>Debe disparar el seguimiento (prueba de límite: 5 exactos sí cuentan)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Se identificó correctamente (Días desde promoción inicial = 5) y quedó marcado "Seguimiento 5 días enviado" = true.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso B-2 — Solo lleva 4 días (no debe disparar)</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA B2 - Solo 4 dias" — Fecha = 2026-07-23 (hoy - 4)</div>
+    <div class="label">Resultado esperado</div><div>NO debe disparar todavía — prueba del límite inferior (4 no cuenta, evita seguimientos prematuros)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — el filtro de días excluye correctamente registros con menos de 5 días.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso B-3 — Seguimiento ya se había enviado antes</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA B3 - Seguimiento ya enviado antes" — Fecha = 2026-07-17 (hoy - 10), Seguimiento 5 días enviado = TRUE ya</div>
+    <div class="label">Resultado esperado</div><div>NO debe volver a enviar (evita duplicados/spam a la asociación)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — el filtro de "ya enviado" evita el reenvío correctamente.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso B-4 — Nunca se envió la promoción inicial</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar que un registro sin "Fecha de promoción inicial enviada" (nada que dar seguimiento) no cause un error ni se dispare por accidente</div>
+    <div class="label">Registro de prueba</div><div>"PRUEBA B4 - Nunca se envio promocion inicial" — Fecha de promoción inicial enviada vacía, Promoción inicial enviada = false</div>
+    <div class="label">Resultado esperado</div><div>NO debe disparar (no hay nada que seguir), y no debe causar un error por fecha vacía en el cálculo de días</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — la fecha vacía no genera error ni falso disparo.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso B-5 — Contacto sin correo al momento del seguimiento</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar que si el contacto se quedó sin correo válido (dato faltante o borrado después de A-1), el seguimiento no truene y se avise al equipo, igual que en los casos A-1/A-2 de prueba</div>
+    <div class="label">Registro de prueba</div><div>"PRUEBA B5 - Contacto sin correo para seguimiento" — Fecha = 2026-07-21 (hoy - 6), contacto vinculado sin correo</div>
+    <div class="label">Resultado esperado</div><div>No debe tronar; idealmente debe reusar el mismo patrón de Router+fallback de alerta interna que ya funciona en A-1</div>
+    <div class="label">Resultado real</div><div><span class="badge fail">FALLA SILENCIOSA DETECTADA</span> El filtro "Validación" (Correo del contacto principal → Exists) sí lo excluyó correctamente de Gmail, pero lo descartó <strong>sin avisar a nadie</strong> — la asociación se queda sin seguimiento y sin que el equipo se entere.</div>
+    <div class="label">Fix aplicado</div><div>Se convirtió el filtro "Validación" en Router: Ruta 1 "Correo válido" (misma condición, cuelga Gmail 3 + Airtable 4 sin cambios) → Ruta 2 "Sin correo válido" (fallback, Not exists) → nuevo Gmail de alerta a voluntariadocorporativo@ezer.org.mx (CC sistemas@).</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> Re-prueba exitosa: B-1 (correo válido) recibió el seguimiento normal por la Ruta 1; B-5 cayó correctamente en la Ruta 2 y se envió la alerta interna. Como bono, también atrapó un registro huérfano viejo ("PRUEBA MAKE - Sin Contacto") que llevaba 12 días sin seguimiento.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso B-6 — Migración al patrón multi-contacto (Iterator/Router/Aggregator) + candado + error handlers</div>
+  <div class="caso-grid">
+    <div class="label">Contexto</div><div>El riesgo documentado desde la ronda anterior (A-2.1 usaba el rollup "Correo del contacto principal" directo, sin separar por contacto) se volvió realidad: al probar con "PRUEBA A3 - Multiples Contactos" (2 contactos), Gmail truena con <em>"Invalid email address in parameter 'to'"</em> porque el campo "To" recibe el string completo <code>correo1, correo2</code> en un solo destinatario en vez de uno por uno.</div>
+    <div class="label">Fix aplicado</div><div>Se copió el patrón ya validado de A-1 (Iterator sobre Contactos → Router "Formato válido" → Gmail individual por contacto → Array aggregator → Update Record final) y se reemplazó el envío directo del rollup. También se agregó el candado <code>Seguimiento en proceso de envío</code>, igual que en A-1.</div>
+    <div class="label">Bug adicional encontrado</div><div>Durante la migración, el "To" de Gmail quedó apuntando al campo <strong>obsoleto</strong> <code>Correo del contacto principal (obsoleto - sin separador)</code> en vez del campo correcto — con 2+ contactos, ese campo obsoleto concatena los correos sin separador (ej. <code>correo1correo2</code>), un email inválido de verdad. Corregido apuntando al campo correcto (con separador ", ").</div>
+    <div class="label">Bug de datos encontrado (no de Make)</div><div>Al diagnosticar, se detectó que <strong>dos Contactos distintos en la base compartían el mismo correo</strong> (uno de "PRUEBA VINC-1" y uno de prueba de A-3), lo cual — combinado con un Search Records con <code>Limit:1</code> sin desempate en A-3 — hizo que se actualizara la organización equivocada en esa prueba (ver hallazgo completo en la sección A-3). No es un bug de A-2.1, pero se documenta aquí porque se descubrió mientras se armaba este caso.</div>
+    <div class="label">Registros de prueba</div><div>"PRUEBA A2.1-CANDADO - Camino feliz" (1 contacto) y "PRUEBA A2.1-CANDADO-2 - Mixto valido e invalido" (1 válido + 1 con formato inválido, correo único para evitar el bug de duplicados)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">CONFIRMADO</span> Ambos casos corrieron completos tras los 2 fixes; el Router de formato dentro del Iterator solo envía al contacto con correo válido.</div>
+    <div class="label">Error handlers</div>
+    <div>
+      <table>
+        <tr><th>Módulo</th><th>Directiva</th></tr>
+        <tr><td>Gmail (envío individual, dentro del Iterator)</td><td>Retry — Yes, 3 intentos, 5 min</td></tr>
+        <tr><td>Airtable Update Record final (marca enviado + apaga candado)</td><td>Retry — No</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<table class="resumen-tabla">
+  <tr><th>Caso</th><th>Estado</th><th>Filtro/Fallback aplicado</th></tr>
+  <tr><td>B-1 Cumple 5 días exactos</td><td class="ok">OK</td><td>Filtro de días (Search Records)</td></tr>
+  <tr><td>B-2 Solo 4 días (no debe disparar)</td><td class="ok">OK</td><td>Filtro de días</td></tr>
+  <tr><td>B-3 Seguimiento ya enviado</td><td class="ok">OK</td><td>Filtro "Seguimiento 5 días enviado = false"</td></tr>
+  <tr><td>B-4 Nunca se envió promoción inicial</td><td class="ok">OK</td><td>Fecha vacía no genera falso disparo</td></tr>
+  <tr><td>B-5 Contacto sin correo</td><td class="ok">Resuelto y confirmado</td><td>Router: correo válido → Gmail normal; sin correo → alerta interna</td></tr>
+  <tr><td>B-6 Multi-contacto + candado</td><td class="ok">Resuelto y confirmado (30/31-jul-2026)</td><td>Iterator/Router/Aggregator (patrón de A-1) + candado + Retry</td></tr>
+</table>
+
+<div class="caso" style="background:#f0f7f0; border-color:#c8e6c9;">
+  <div class="caso-titulo">A-2.1) Envío de Correos Asociaciones (Seguimiento - 5 días) — cierre (versión estable)</div>
+  <p style="margin:4px 0;">Los 6 casos de prueba (B-1 a B-6) quedaron confirmados. El riesgo de múltiples contactos que quedó pendiente en la ronda anterior ya se resolvió con el mismo patrón de A-1. El escenario está listo para producción.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>A-2.2) Cambio de Estatus Asociaciones (Inactivas - 20 días) <span style="font-weight:400; font-size:13px; color:#666;">— antes "Escenario C"</span> <span class="estado-general badge ok">COMPLETO</span></h2>
+<div class="meta">
+  Trigger: registros en Organizaciones con Fase=Nuevo, Días desde promoción inicial ≥ 20 → cambia Fase a "Sin respuesta" (Inactiva) y notifica al equipo interno.
+</div>
+<div class="caso" style="background:#f8fafc;">
+  <div class="caso-titulo">¿Para qué sirve este escenario?</div>
+  <p style="margin:4px 0;">Si una asociación no respondió ni a la promoción inicial ni al recordatorio de 5 días, después de 20 días en total el sistema la marca como <strong>Inactiva</strong> automáticamente y avisa al equipo — para que el Kanban de Asociaciones refleje la realidad sin que alguien tenga que revisar caso por caso qué asociaciones ya "se enfriaron".</p>
+  <div class="label" style="margin-top:6px;">Beneficios</div>
+  <ul style="margin:4px 0 0 18px; padding:0;">
+    <li><strong>El tablero se mantiene honesto:</strong> las asociaciones que dejaron de responder no se quedan indefinidamente en "Nuevo" como si siguieran en proceso.</li>
+    <li><strong>Visibilidad para el equipo:</strong> el correo interno permite saber exactamente cuándo y cuál asociación pasó a inactiva, sin tener que revisar Airtable todos los días.</li>
+    <li><strong>No penaliza a quien sí respondió:</strong> si una asociación avanzó de fase (ej. agendó reunión) antes de los 20 días, no se le marca como inactiva aunque ya hayan pasado más de 20 días desde el primer contacto.</li>
+  </ul>
+  <div class="label" style="margin-top:8px;">Decisión de diseño confirmada con el usuario</div>
+  <p style="margin:4px 0;">El cambio a Inactiva <strong>depende de que el seguimiento de 5 días (A-2.1) se haya enviado</strong>, no solo de los días transcurridos. Fórmula final del Search Records: <code>AND(Tipo="Asociación", Fase="Nuevo", Promoción inicial enviada=TRUE(), Seguimiento 5 días enviado=TRUE(), Días desde promoción inicial&gt;=20)</code>. Riesgo aceptado a propósito: si el seguimiento nunca se logra enviar (ej. contacto sin correo válido que nadie corrige), la asociación se queda en "Nuevo" indefinidamente en vez de pasar a Inactiva — se acepta porque ese caso ya genera su propia alerta interna en A-2.1 (caso B-5) pidiendo corregir el dato.</p>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso C-1 — Cumple exactamente 20 días</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA C1 - Cumple 20 dias exactos" — Fecha de promoción inicial enviada = 2026-07-07 (hoy - 20), Seguimiento 5 días enviado = true, Fase = Nuevo</div>
+    <div class="label">Resultado esperado</div><div>Debe cambiar Fase a "Sin respuesta" y enviar el correo interno de alerta</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Cambió a "Sin respuesta" y llegó el correo interno con el nombre correcto de la asociación.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso C-2 — Solo lleva 19 días (no debe disparar)</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA C2 - Solo 19 dias" — Fecha = 2026-07-08 (hoy - 19)</div>
+    <div class="label">Resultado esperado</div><div>NO debe cambiar de fase todavía — prueba del límite inferior</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — el filtro de días excluye correctamente registros con menos de 20 días.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso C-3 — Ya está inactiva</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA C3 - Ya esta inactiva" — Fecha = 2026-07-02 (hoy - 25), Fase ya es "Sin respuesta"</div>
+    <div class="label">Resultado esperado</div><div>NO debe reprocesar ni reenviar la alerta interna (evita spam al equipo)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — al no estar en Fase=Nuevo, el filtro la excluye correctamente.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso C-4 — Ya avanzó de fase (no debe marcarse inactiva)</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar que una asociación que sí respondió y avanzó (ej. agendó reunión) no se marque como inactiva solo porque pasaron más de 20 días desde la promoción inicial</div>
+    <div class="label">Registro de prueba</div><div>"PRUEBA C4 - Ya avanzo de fase" — Fecha = 2026-07-02 (hoy - 25), pero Fase = "Reunión agendada" (no "Nuevo")</div>
+    <div class="label">Resultado esperado</div><div>NO debe cambiar de fase — el filtro debe exigir Fase=Nuevo, no solo días transcurridos</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> La fórmula del Search Records ya incluía <code>Fase="Nuevo"</code> desde el inicio — no apareció en ninguna corrida.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso C-5 — Nunca se envió el seguimiento de 5 días</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Revelar si el filtro de este escenario depende de que "Seguimiento 5 días enviado" sea true, o solo de los días transcurridos desde la promoción inicial (caso límite no documentado hasta ahora)</div>
+    <div class="label">Registro de prueba</div><div>"PRUEBA C5 - Nunca se envio seguimiento" — Fecha = 2026-07-02 (hoy - 25), Seguimiento 5 días enviado = false, Fase = Nuevo</div>
+    <div class="label">Resultado esperado</div><div>Decisión confirmada con el usuario: SÍ debe depender del seguimiento — mientras no se envíe, no debe marcarse inactiva</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Primera corrida (fórmula original, sin exigir Seguimiento) sí la marcó inactiva por error — reveló el caso límite. Se agregó <code>Seguimiento 5 días enviado=TRUE()</code> a la fórmula; en la re-prueba, C-5 se quedó correctamente en "Nuevo" sin dispararse.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso C-6 — Reordenar envío antes de marcar estatus + error handlers</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>El orden original era Airtable (marca Fase="Sin respuesta") → Gmail (avisa al equipo). Si Gmail fallaba, el registro ya había cambiado de fase y dejaba de cumplir el filtro del Search Records — el equipo nunca se enteraba de que esa asociación quedó inactiva, sin ningún rastro del fallo</div>
+    <div class="label">Fix aplicado</div><div>Se invirtió el orden: Gmail (avisa al equipo) → Airtable (marca "Sin respuesta"). Si el correo falla, el registro no cambia de fase y sigue disponible para reintentarse en la siguiente corrida — no se necesita candado porque un aviso interno duplicado no tiene costo real.</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> Probado con "PRUEBA A2.2 - Debe marcarse Sin Respuesta" (26 días desde promoción inicial) — cambió de fase y llegó el aviso correctamente con el nuevo orden.</div>
+    <div class="label">Error handlers</div>
+    <div>
+      <table>
+        <tr><th>Módulo</th><th>Directiva</th></tr>
+        <tr><td>Gmail (aviso interno)</td><td>Retry — Yes, 3 intentos, 5 min</td></tr>
+        <tr><td>Airtable Update Record (marca "Sin respuesta")</td><td>Retry — Yes, 3 intentos, 5 min (inofensivo si se reintenta de más)</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<table class="resumen-tabla">
+  <tr><th>Caso</th><th>Estado</th><th>Filtro/Fallback aplicado</th></tr>
+  <tr><td>C-1 Cumple 20 días exactos</td><td class="ok">OK</td><td>Fórmula de Search Records</td></tr>
+  <tr><td>C-2 Solo 19 días (no debe disparar)</td><td class="ok">OK</td><td>Fórmula de Search Records</td></tr>
+  <tr><td>C-3 Ya está inactiva</td><td class="ok">OK</td><td>Fase="Nuevo" en la fórmula</td></tr>
+  <tr><td>C-4 Ya avanzó de fase</td><td class="ok">OK</td><td>Fase="Nuevo" en la fórmula</td></tr>
+  <tr><td>C-5 Nunca se envió seguimiento</td><td class="ok">Resuelto y confirmado</td><td>Se agregó "Seguimiento 5 días enviado=TRUE()" a la fórmula</td></tr>
+  <tr><td>C-6 Orden Gmail/Airtable + error handlers</td><td class="ok">Resuelto y confirmado (31-jul-2026)</td><td>Gmail antes de Airtable + Retry en ambos</td></tr>
+</table>
+
+<div class="caso" style="background:#f0f7f0; border-color:#c8e6c9;">
+  <div class="caso-titulo">A-2.2) Cambio de Estatus Asociaciones (Inactivas - 20 días) — cierre (versión estable)</div>
+  <p style="margin:4px 0;">Los 6 casos de prueba (C-1 a C-6) quedaron confirmados. El escenario está listo para producción, incluyendo el correo interno de alerta y el orden corregido que evita que una falla de Gmail deje una asociación inactiva sin que el equipo se entere.</p>
+</div>
+
+<h2>Historial de cambios y correcciones <span class="estado-general badge ok">LOG</span></h2>
+<table>
+  <tr><th style="width:90px">Fecha</th><th style="width:70px">Escenario</th><th>Problema encontrado</th><th>Cómo se resolvió</th></tr>
+  <tr>
+    <td>24-jul-2026</td>
+    <td>A-1</td>
+    <td>El PDF del flyer llegaba adjunto pero no se podía abrir/ver.</td>
+    <td>Causa: se mapeaba la <em>URL</em> del adjunto de Airtable directo al campo "Data" de Gmail (solo metadata, no el archivo real). Solución: se insertó un módulo HTTP "Download a file" entre el módulo de Config y el de Gmail; el "File name" se sigue tomando del adjunto de Airtable, pero el "Data" ahora viene del módulo HTTP. PDF confirmado legible.</td>
+  </tr>
+  <tr>
+    <td>24-jul-2026</td>
+    <td>A-1</td>
+    <td>Caso A-1 (organización sin ningún contacto vinculado): error real en Make — <em>"Couldn't send the email from module 3. The to field got an invalid email address."</em></td>
+    <td>Causa: el rollup "Correo del contacto principal" queda vacío cuando no hay contacto vinculado, y no existía ninguna validación antes de Gmail. Solución: se agrega un Router antes del módulo de Gmail con 2 rutas — (1) correo no vacío → envío normal a la asociación; (2) fallback, correo vacío → correo interno de alerta al equipo EZER para que completen el contacto en Airtable. Así se evita el error Y se evita que la asociación se quede sin promoción de forma silenciosa. <strong>Confirmado con re-prueba: A-1 y A-2 caen correctamente en el fallback.</strong></td>
+  </tr>
+  <tr>
+    <td>24-jul-2026</td>
+    <td>A-1</td>
+    <td>Caso A-3 (2 contactos con correos distintos): el campo "To" de Gmail rechazaba el envío con "invalid email address"/"invalid address", sin importar el formato de los correos probados (con "+", con ".", con correos reales de dos dominios distintos) ni el índice de arreglo agregado.</td>
+    <td>Causa real: el conector de Google Email en Make no acepta un solo texto con varias direcciones separadas por coma en el campo "To" — necesita procesarlas una por una. Se rediseñó la ruta con un <strong>Iterator</strong> (separa el rollup en direcciones individuales con <code>split(Correo del contacto principal[1]; ", ")</code>) para que Gmail envíe un correo independiente por cada contacto.</td>
+  </tr>
+  <tr>
+    <td>24-jul-2026</td>
+    <td>A-1</td>
+    <td><strong>Hallazgo crítico:</strong> al poner el módulo que marca "Promoción inicial enviada" antes del Iterator (para evitar que se marcara varias veces, una por contacto), la organización de prueba quedó marcada como "enviada" aunque el Gmail fallara después — saliendo para siempre de las búsquedas de registros pendientes, sin haber recibido el correo realmente. Detectado al ver que el módulo de búsqueda ya no traía el registro A-3 en una corrida posterior.</td>
+    <td>Se corrigió la arquitectura: el marcado de "Promoción inicial enviada" se mueve a <strong>después</strong> del Iterator/Gmail, usando un módulo <strong>Aggregator</strong> (Source Module = Iterator) para que el marcado ocurra una sola vez, y solo después de que los envíos individuales ya se intentaron/completaron. Registro de prueba reseteado manualmente en Airtable para permitir re-prueba. <strong>Pendiente confirmar</strong> con una corrida exitosa.</td>
+  </tr>
+  <tr>
+    <td>27-jul-2026</td>
+    <td>A-2.1</td>
+    <td>Caso B-5 (contacto sin correo): el filtro "Validación" excluía correctamente a la organización de Gmail, pero lo hacía en silencio — sin avisar a nadie, dejando a esa asociación sin seguimiento y sin que el equipo se enterara.</td>
+    <td>Se convirtió el filtro "Validación" en Router con 2 rutas: correo válido → envío normal (sin cambios); sin correo válido (fallback) → alerta interna a voluntariadocorporativo@ezer.org.mx (CC sistemas@). <strong>Confirmado con re-prueba:</strong> B-1 fluyó por la ruta válida y B-5 (más un registro huérfano viejo) cayeron correctamente en la alerta.</td>
+  </tr>
+  <tr>
+    <td>27-jul-2026</td>
+    <td>A-1 / A-2.1</td>
+    <td>Mejora de visibilidad (no un bug): en el Kanban, una asociación con un contacto roto se veía idéntica a una recién creada normal — ambas en Fase "Nuevo" — sin forma de distinguirlas de un vistazo.</td>
+    <td>Se creó el campo <code>⚠️ Contacto con problema</code> (checkbox) en Organizaciones. En A-1, se enciende en las 2 rutas de fallback (sin contacto/correo, y formato inválido) y se apaga en la ruta exitosa (junto al Update Record que marca "Promoción inicial enviada"). En A-2.1 se replicó el mismo patrón (se enciende en la ruta fallback "Sin correo válido", se apaga en la ruta "Correo válido"). Se agregó también como campo visible en la tarjeta del Kanban ("Asociaciones — Panel"). Confirmado configurado en ambos escenarios.</td>
+  </tr>
+  <tr>
+    <td>27-jul-2026</td>
+    <td>A-4</td>
+    <td><strong>Incidente grave:</strong> al probar con un <code>record_id</code> inventado (caso A4-3), Airtable regresó <code>[403] Invalid permissions</code> al intentar un Update Record contra un ID inexistente — y ese error fue lo bastante grave para que <strong>Make desactivara automáticamente todo el escenario</strong>, dejando de procesar cualquier envío real hasta reactivarlo a mano.</td>
+    <td>Se agregó una validación previa: Search Records con <code>RECORD_ID() = "{{1.record_id}}"</code> (las comillas son obligatorias — sin ellas, Airtable regresa <code>[422] Unknown field names</code> porque interpreta el valor como nombre de campo, no como texto) + Router (registro válido/inválido) + alerta interna con los datos capturados + nueva vista de Airtable para reconstruir el registro a mano. Confirmado con re-prueba.</td>
+  </tr>
+  <tr>
+    <td>27-jul-2026</td>
+    <td>A-4 / A-5</td>
+    <td>Patrón repetido: en ambos escenarios, el módulo de Update Record final no tenía mapeado el campo <code>Fase de asociación</code> (a "Reunión realizada" en A-4, a "Convenio enviado" en A-5) — el resto del flujo (Drive, Docs, Gmail) funcionaba bien, pero la Fase se quedaba sin actualizar.</td>
+    <td>Se agregó el campo faltante en ambos Update Record. Lección para escenarios futuros: verificar explícitamente que <strong>todos</strong> los campos de estatus/fase estén mapeados, no solo los campos "obvios" (IDs, links, checkboxes) — es fácil olvidar el cambio de Fase cuando ya se están mapeando muchos otros campos.</td>
+  </tr>
+  <tr>
+    <td>27-jul-2026</td>
+    <td>A-5</td>
+    <td>Caso A5-2/A5-4: un registro con "Convenio revisado" marcado pero sin Convenio Doc ID y/o sin ID carpeta Drive llegaba hasta el módulo de Google Drive "Upload a File" y tronaba ahí: <em>"got no folder ID from ID carpeta Drive field"</em>.</td>
+    <td>Se agregó un Router entre Search Records y Google Docs "Download a Document": ruta "datos completos" (ambos campos Exist) → flujo normal; ruta fallback → alerta interna con link a la vista "Buscar / Corregir Asociación". Confirmado con re-prueba.</td>
+  </tr>
+  <tr>
+    <td>30-jul-2026</td>
+    <td>General / A-4 / A-5</td>
+    <td>El cliente aclaró que el Convenio debe enviarse solo cuando la asociación ya tiene una empresa asignada, no justo después de la reunión inicial (comportamiento anterior).</td>
+    <td>Se descubrió un vínculo triple ya existente pero sin usar entre <code>Eventos</code> y <code>Organizaciones</code> (una organización puede ser Empresa o Asociación en un mismo Evento). Se renombraron los campos para claridad ("Eventos (como Empresa)" / "Eventos (como Asociación)") y se creó el rollup <strong>"Empresa vinculada"</strong> (se llena cuando el equipo asigna la asociación a un Evento que ya tiene empresa). A-5 ahora exige este campo no vacío en su Search Records.</td>
+  </tr>
+  <tr>
+    <td>30/31-jul-2026</td>
+    <td>A-1 / A-2.1 / A-5</td>
+    <td>Riesgo de envío duplicado: si el Update Record final (el que marca "ya enviado") fallaba después de que el correo/convenio externo ya había salido, el registro se quedaba elegible para la siguiente corrida y se reenviaba duplicado.</td>
+    <td>Se creó el patrón "candado": checkbox temporal por escenario que se enciende antes del envío externo y se apaga junto con el marcado de "enviado", agregado como condición extra al Search Records de cada escenario. Aplicado y confirmado en A-1, A-2.1 y A-5.</td>
+  </tr>
+  <tr>
+    <td>31-jul-2026</td>
+    <td>A-2.1</td>
+    <td>El riesgo de "múltiples contactos" que había quedado documentado como pendiente en la ronda anterior se confirmó real: con 2 contactos, Gmail truena con "Invalid email address" porque el "To" recibía el rollup completo en un solo destinatario. Al diagnosticar, también se encontró que el "To" apuntaba al campo obsoleto (sin separador entre correos).</td>
+    <td>Se migró A-2.1 al mismo patrón Iterator/Router "Formato válido"/Gmail individual/Array aggregator ya usado en A-1, y se corrigió el mapeo del "To" al campo correcto (con separador). Confirmado con casos de 1 y 2 contactos (uno válido, uno inválido).</td>
+  </tr>
+  <tr>
+    <td>31-jul-2026</td>
+    <td>A-2.2 / A-6</td>
+    <td>En ambos escenarios el Update Record que cambia de estatus corría <em>antes</em> del Gmail de confirmación/aviso. Si Gmail fallaba, el estatus ya había cambiado y el registro dejaba de cumplir el filtro del Search Records — la notificación se perdía para siempre sin que nadie se enterara.</td>
+    <td>Se invirtió el orden en ambos: Gmail primero, Update Record después. Sin necesidad de candado porque un reintento de más no genera daño real (aviso o confirmación duplicada, no un envío externo repetido a la asociación). Confirmado con re-prueba en ambos.</td>
+  </tr>
+  <tr>
+    <td>31-jul-2026</td>
+    <td>A-3</td>
+    <td>Desbloqueado (Calendly Standard + Make de paga activos). Al probar las 3 rutas del Router 7 se encontraron 4 fallas: (1) dos Contactos con el mismo correo + Search Records con Limit:1 sin desempate → actualizó la organización equivocada (corrompió temporalmente "PRUEBA VINC-1", restaurado a mano); (2) la rama fallback ponía el teléfono del invitado de Calendly como nombre de la organización en vez de su nombre real; (3) la rama fallback no vinculaba el Contacto nuevo a la Organización nueva; (4) la rama fallback no mapeaba la Fecha de reunión.</td>
+    <td>Se corrigieron los 3 mapeos de la rama fallback (nombre, vínculo Contacto↔Organización, fecha de reunión). El problema de correos duplicados en Contactos se documenta como riesgo sistémico — ver sección A-3 y Pendientes. Las 3 rutas confirmadas funcionando tras los fixes.</td>
+  </tr>
+  <tr>
+    <td>31-jul-2026</td>
+    <td>A-5</td>
+    <td>Al probar el nuevo filtro de Empresa vinculada con VINC-1 (con empresa) se encontraron 2 fallas más: (1) el chip <code>Correo del contacto principal[]</code> en la condición "Datos completos" del Router 7 no tenía índice de posición (<code>[]</code> en vez de <code>[1]</code>), el mismo bug ya documentado en A-1 — hacía que un registro con correo válido cayera igual en la rama fallback; (2) la rama fallback marcaba <code>Convenio enviado (PDF procesado)=true</code> aunque no se hubiera enviado nada, dejando a la asociación sin convenio para siempre y sin forma de reprocesarla.</td>
+    <td>Se corrigió el índice del chip a <code>[1]</code> y se quitó el mapeo indebido del checkbox en la rama fallback. Confirmado con re-prueba: VINC-1 (con empresa) se procesó completo, VINC-2 (sin empresa) no fue tocado en absoluto.</td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>A-3) Reunión Agendada (Asociaciones) <span style="font-weight:400; font-size:13px; color:#666;">— antes "Escenario D"</span> <span class="estado-general badge ok">COMPLETO</span></h2>
+<div class="meta">
+  Trigger: webhook de Calendly (Watch Events) cuando alguien agenda una reunión → Get an Event (detalle) → Search Records en Contactos por correo del invitado → Router con 3 rutas según lo que encuentre.
+</div>
+<div class="caso" style="background:#f8fafc;">
+  <div class="caso-titulo">¿Para qué sirve este escenario?</div>
+  <p style="margin:4px 0;">Cuando alguien agenda una reunión por Calendly, este escenario actualiza automáticamente el registro correspondiente en Airtable (Fase="Reunión agendada" + fecha) — o lo crea si no existía — sin que el equipo tenga que ir a buscar manualmente quién agendó y actualizar el Kanban a mano.</p>
+  <div class="label" style="margin-top:6px;">Desbloqueo</div>
+  <p style="margin:4px 0;">Este escenario estuvo bloqueado desde la ronda anterior porque conectar Calendly en Make requería el plan "Standard" de Calendly. El usuario activó las suscripciones de pago de Calendly y de Make el 30-jul-2026, lo que permitió retomar y terminar esta prueba.</p>
+  <div class="label" style="margin-top:6px;">Las 3 rutas del Router 7 (aclaradas con el usuario, no eran obvias por el nombre)</div>
+  <ul style="margin:4px 0 0 18px; padding:0;">
+    <li><strong>Ruta 1 "Existe":</strong> ya existe un Contacto con ese correo Y ese contacto tiene una Organización vinculada → actualiza esa organización (Fase="Reunión agendada" + fecha) y confirma por correo.</li>
+    <li><strong>Ruta 2 "Organización No Existe":</strong> ya existe un Contacto con ese correo pero <strong>sin</strong> Organización vinculada (contacto "suelto", dado de alta a mano antes de tener el registro completo) → crea la Organización nueva y la vincula al Contacto que ya existía.</li>
+    <li><strong>Ruta 3 fallback:</strong> no existe ningún Contacto con ese correo (persona totalmente nueva) → crea tanto el Contacto como la Organización.</li>
+  </ul>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso D-1 — Ruta "Existe"</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A3 - Reunion Agendada (Existe)" + Contacto con correo real, reserva real hecha en Calendly con ese mismo correo</div>
+    <div class="label">Resultado esperado</div><div>La organización de prueba debe actualizarse: Fase="Reunión agendada" + Fecha de reunión</div>
+    <div class="label">Resultado real (1er intento)</div><div><span class="badge fail">FALLA ENCONTRADA</span> El registro de prueba no cambió nada. Diagnóstico vía History: el Search Records en Contactos (<code>{Correo} = "..."</code>, Limit 1) encontró un Contacto distinto que <strong>compartía el mismo correo</strong> (el de "PRUEBA VINC-1"), y como no hay ningún criterio de desempate, actualizó esa organización en vez de la de prueba — "PRUEBA VINC-1" quedó temporalmente con Fase="Reunión agendada" sin deberlo, y tuvo que restaurarse a mano.</div>
+    <div class="label">Causa raíz</div><div>Dos Contactos distintos en la base con el mismo correo. No es un bug de Make — es un riesgo real: si dos asociaciones distintas llegan a compartir un contacto con el mismo correo, Calendly puede actualizar la organización equivocada en silencio. Documentado como riesgo sistémico en Pendientes.</div>
+    <div class="label">Resultado real (2do intento)</div><div><span class="badge ok">CONFIRMADO</span> Con un correo único (sin duplicados en Contactos), la ruta "Existe" actualizó correctamente Fase y Fecha de reunión.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso D-2 — Ruta "Organización No Existe" (contacto suelto)</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Simular un Contacto dado de alta a mano sin Organización todavía, que luego agenda una reunión</div>
+    <div class="label">Registro de prueba</div><div>Contacto suelto creado en Airtable (sin Organización vinculada), reserva real en Calendly con su correo</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">CONFIRMADO</span> Sin bugs. Creó la Organización nueva con Fecha de reunión, Fase="Reunión agendada" y Tipo="Asociación" correctos, y la vinculó al Contacto que ya existía (no creó un contacto duplicado).</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso D-3 — Ruta fallback (persona totalmente nueva)</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>Reservas reales en Calendly con correos que nunca habían existido en Contactos</div>
+    <div class="label">Resultado real (1er intento)</div><div><span class="badge fail">FALLA ENCONTRADA</span> Se creó una Organización nueva pero con el <strong>teléfono del invitado</strong> como nombre (ej. "+1 812-621-7175") en vez de su nombre real — mapeo de campo equivocado en el Create a Record. Esto también explicó dos registros "ambiguos" (con teléfono como nombre) que se habían encontrado y borrado durante la limpieza de datos de prueba de este mismo día, sin saber en ese momento que venían de este bug.</div>
+    <div class="label">Fix 1</div><div>Se corrigió el mapeo de "Nombre" en el Create a Record de la Organización para tomar el nombre del invitado, no su teléfono.</div>
+    <div class="label">Resultado real (2do intento)</div><div><span class="badge fail">FALLA ENCONTRADA</span> El nombre ya salía correcto, pero el Contacto nuevo se creó <strong>sin vincular</strong> a la Organización nueva (campo de link vacío).</div>
+    <div class="label">Fix 2</div><div>Se agregó el mapeo del link "Organización" en el Create a Record del Contacto, apuntando al Record ID recién creado de la Organización.</div>
+    <div class="label">Resultado real (3er intento)</div><div><span class="badge fail">FALLA ENCONTRADA</span> Nombre y vínculo correctos, pero faltaba la <strong>Fecha de reunión</strong> (a diferencia de la ruta "Existe", que sí la guardaba desde el inicio).</div>
+    <div class="label">Fix 3</div><div>Se agregó el mapeo de Fecha de reunión (tomada del evento de Calendly) en la rama fallback.</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> Re-prueba con correo nuevo: Organización creada con nombre correcto, Contacto vinculado, Fecha de reunión presente, Fase="Reunión agendada".</div>
+  </div>
+</div>
+
+<table class="resumen-tabla">
+  <tr><th>Caso</th><th>Estado</th><th>Filtro/Fallback aplicado</th></tr>
+  <tr><td>D-1 Ruta "Existe"</td><td class="ok">Resuelto y confirmado</td><td>Correo único requerido para el match — riesgo de duplicados documentado en Pendientes</td></tr>
+  <tr><td>D-2 Ruta "No existe" (contacto suelto)</td><td class="ok">Confirmado, sin bugs</td><td>Router 7, ruta 2</td></tr>
+  <tr><td>D-3 Ruta fallback (persona nueva)</td><td class="ok">Resuelto y confirmado (3 fixes)</td><td>Mapeos de nombre, vínculo Contacto↔Organización y fecha corregidos</td></tr>
+</table>
+
+<div class="caso" style="background:#fffaf0; border-color:#f0d9a0;">
+  <div class="caso-titulo">Error handlers recomendados</div>
+  <p style="margin:4px 0 6px 0;">A-3 se dispara por webhook (una vez por reserva), no por escaneo programado — no aplica el patrón de candado porque no hay riesgo de "reenvío por la siguiente corrida". Lo que sí importa es que ninguna reserva se pierda por una falla técnica, ya que no hay una corrida programada que la vuelva a intentar después.</p>
+  <table>
+    <tr><th>Módulo</th><th>Directiva</th><th>Por qué</th></tr>
+    <tr><td>Calendly "Get an Event"</td><td>Retry — Yes, 3, 5 min</td><td>Falla de API transitoria</td></tr>
+    <tr><td>Airtable Search Records (Contactos)</td><td>Retry — Yes, 3, 5 min</td><td>Transitoria</td></tr>
+    <tr><td>Airtable Update/Create (las 3 rutas)</td><td>Retry — Yes, 3, 5 min</td><td>Transitoria; sin riesgo de duplicado porque el evento es único</td></tr>
+    <tr><td>Gmail de confirmación (las 3 rutas)</td><td>Retry — No</td><td>El correo del invitado no se valida antes de Gmail (a diferencia de A-1/A-2.1); si falla, suele ser un correo mal formado — no es transitorio</td></tr>
+  </table>
+</div>
+
+<div class="caso" style="background:#f0f7f0; border-color:#c8e6c9;">
+  <div class="caso-titulo">A-3) Reunión Agendada — cierre</div>
+  <p style="margin:4px 0;">Las 3 rutas del Router 7 quedaron probadas con reservas reales de Calendly y confirmadas tras corregir 4 fallas (match por correo duplicado, nombre mapeado al teléfono, contacto sin vincular, fecha de reunión faltante en fallback). Queda un riesgo sistémico documentado en Pendientes: dos Contactos con el mismo correo pueden hacer que Calendly actualice la organización equivocada.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>A-4) Captura de Datos (Asociaciones) <span style="font-weight:400; font-size:13px; color:#666;">— antes "Escenario E"</span> <span class="estado-general badge ok">COMPLETO</span></h2>
+<div class="meta">
+  Trigger: envío del formulario de Fillout "Reunion Asociacion" (con record_id + contacto_id ocultos en la URL) → actualiza Organizaciones y Contactos, crea carpeta en Drive, genera el Convenio editable, y notifica al equipo.
+</div>
+<div class="caso" style="background:#f8fafc;">
+  <div class="caso-titulo">¿Para qué sirve este escenario?</div>
+  <p style="margin:4px 0;">Después de la reunión con la asociación, el equipo llena este formulario con todos los datos recabados. El sistema guarda la información en Airtable, crea automáticamente la carpeta de Drive de esa asociación y genera el borrador del Convenio de colaboración — sin que nadie tenga que crear carpetas ni documentos a mano.</p>
+  <div class="label" style="margin-top:6px;">Beneficios</div>
+  <ul style="margin:4px 0 0 18px; padding:0;">
+    <li><strong>Cero trabajo manual de Drive/Docs:</strong> la carpeta y el Convenio se generan solos en cuanto se captura la información.</li>
+    <li><strong>El equipo se entera al instante:</strong> un correo interno avisa que ya está lista la carpeta y el Convenio, con las ligas directas.</li>
+    <li><strong>Resistente a datos rotos:</strong> si el link del formulario se usa con un identificador inválido (borrado o mal copiado), el sistema no truena ni se apaga — avisa al equipo con los datos capturados para que lo resuelvan a mano.</li>
+  </ul>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A4-1 — Envío normal (referencia, camino feliz)</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A4 - Captura de Datos" (recG0JLROQRVbFnUD) + "PRUEBA A4-2 - Prueba Correo Interno" (reccvGk2I59twBz6X), llenados y enviados directamente en el formulario real de Fillout</div>
+    <div class="label">Resultado esperado</div><div>Todos los campos del formulario se guardan en Organizaciones/Contactos, se crea la carpeta de Drive, se genera el Convenio, y llega el correo interno con las 2 ligas y el link a la vista de Revisión de Convenios</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Confirmado en ambos envíos: Municipio, Meses, Horarios, Días, Tipo de asistencia, Perfil, Dirección, Colonia, Teléfono, Recursos, Notas y Voluntarios se guardaron correctamente; carpeta de Drive y Convenio Doc ID generados; Cargo del contacto actualizado en Contactos.</div>
+    <div class="label">Hallazgo y fix</div><div>El escenario no estaba encendido inicialmente (el usuario no lo había activado) — una vez encendido, funcionó. Además, el Update Record no tenía mapeado <code>Fase de asociación → "Reunión realizada"</code>; se agregó ese mapeo y se confirmó en una segunda corrida.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A4-3 — record_id inexistente</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>Formulario enviado con <code>record_id=recAAAAAAAAAAAAAA</code> (inventado, no existe en Airtable)</div>
+    <div class="label">Resultado esperado</div><div>No debe tronar ni afectar al resto del escenario; debe avisar al equipo con los datos capturados</div>
+    <div class="label">Resultado real</div><div><span class="badge fail">FALLA CRÍTICA ENCONTRADA</span> El Update Record directo con un <code>record_id</code> inexistente regresó <code>[403] Invalid permissions</code> — y ese error fue lo bastante grave para que <strong>Make desactivara automáticamente todo el escenario</strong>, dejando de procesar cualquier envío (de prueba o real) hasta reactivarlo manualmente.</div>
+    <div class="label">Fix aplicado</div>
+    <div>
+      Se rediseñó el inicio del flujo: después del trigger de Fillout, se agregó un <strong>Airtable Search Records</strong> con filtro <code>RECORD_ID() = "{{1.record_id}}"</code> (nota: el valor debe ir entre comillas dentro de la fórmula, error de sintaxis encontrado en el camino) y un <strong>Router</strong>: ruta "Registro válido" ({{2.id}} Exists) continúa el flujo normal; ruta "Registro inválido" (fallback) → correo interno con los datos capturados en el formulario (Nombre de la asociación, Nombre de contacto, record_id recibido) y un link a una vista de Airtable para buscar/crear el registro correspondiente.
+    </div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> Re-prueba exitosa: cayó limpiamente en la ruta de fallback, sin tronar ni apagar el escenario.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A4-4 — contacto_id vacío</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A4-4 - Sin contacto_id" (recmV56TtJaB0Bq6q) — formulario enviado con record_id válido pero sin el parámetro contacto_id en la URL</div>
+    <div class="label">Resultado esperado</div><div>No debe tronar; a definir si necesita su propio manejo o si el Router de A4-3 ya lo protege indirectamente</div>
+    <div class="label">Resultado real</div><div><span class="badge pendiente">PENDIENTE</span> — quedó en la cola cuando el escenario se desactivó por A4-3; no se ha vuelto a probar de forma aislada después del fix</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A4-5 — Reenvío del mismo formulario (idempotencia)</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Verificar si reenviar el mismo record_id/contacto_id ya procesado crea una carpeta de Drive y un Convenio <strong>duplicados</strong> en vez de reusar los existentes</div>
+    <div class="label">Registro de prueba</div><div>Mismo record_id/contacto_id de A4-1, reenviado con datos ligeramente distintos</div>
+    <div class="label">Resultado real</div><div><span class="badge pendiente">PENDIENTE</span> — mismo motivo que A4-4, quedó en cola durante el incidente de desactivación</div>
+  </div>
+</div>
+
+<table class="resumen-tabla">
+  <tr><th>Caso</th><th>Estado</th><th>Filtro/Fallback aplicado</th></tr>
+  <tr><td>A4-1 Camino feliz</td><td class="ok">OK</td><td>Fase de asociación agregada al Update Record</td></tr>
+  <tr><td>A4-3 record_id inexistente</td><td class="ok">Resuelto y confirmado</td><td>Search Records + Router (registro válido/inválido) + alerta interna + vista de corrección</td></tr>
+  <tr><td>A4-4 contacto_id vacío</td><td class="pendiente">Pendiente de re-prueba aislada</td><td>—</td></tr>
+  <tr><td>A4-5 Reenvío (duplicados)</td><td class="pendiente">Pendiente de re-prueba aislada</td><td>—</td></tr>
+</table>
+
+<div class="caso" style="background:#fffaf0; border-color:#f0d9a0;">
+  <div class="caso-titulo">Vistas de Airtable creadas para este escenario</div>
+  <ul style="margin:4px 0 0 18px; padding:0;">
+    <li><strong>"Buscar / Corregir Asociación"</strong> (<a href="https://airtable.com/appZA6fc9TRQz2upb/pag06YrND3XbeUgTZ">link</a>) — grid completo con todos los campos que captura el formulario, para reconstruir un registro a mano cuando el record_id llega roto.</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>A-5) Envío de Convenio (Asociaciones) <span style="font-weight:400; font-size:13px; color:#666;">— antes "Escenario F"</span> <span class="estado-general badge ok">COMPLETO</span></h2>
+<div class="meta">
+  Trigger: registros con Convenio revisado=true, Convenio enviado(PDF procesado)=false, <strong>Empresa vinculada no vacío</strong> y Convenio en proceso de envío=false → descarga el Convenio como PDF, lo sube a Drive, lo envía por correo a la asociación, y actualiza el estatus.
+</div>
+<div class="caso" style="background:#f8fafc;">
+  <div class="caso-titulo">¿Para qué sirve este escenario?</div>
+  <p style="margin:4px 0;">Una vez que el equipo revisa/edita el Convenio generado en A-4 y marca la casilla "Convenio revisado", este escenario convierte automáticamente el documento a PDF, lo guarda en la carpeta de Drive de la asociación, y se lo envía por correo — sin que nadie tenga que exportar ni adjuntar el archivo a mano.</p>
+  <div class="label" style="margin-top:6px;">Cambio de regla de negocio (30-jul-2026)</div>
+  <p style="margin:4px 0;">El cliente aclaró que el Convenio solo debe enviarse una vez que la asociación ya tiene una empresa asignada — antes se enviaba justo después de la reunión inicial (A-4), sin esperar a la asignación. Se agregó el campo rollup <code>Empresa vinculada</code> (se llena vía el vínculo de Eventos cuando el equipo asigna la asociación a un Evento que ya tiene empresa) y se agregó <code>{Empresa vinculada}!=""</code> al Search Records de entrada — así, una asociación sin empresa ni siquiera entra al flujo, sin importar que "Convenio revisado" esté marcado.</p>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A5-1 — Envío normal (camino feliz)</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A4 - Captura de Datos" (recG0JLROQRVbFnUD), con Convenio Doc ID real generado en A-4, marcado Convenio revisado=true</div>
+    <div class="label">Resultado esperado</div><div>Descarga el PDF del Convenio, lo sube a la carpeta de Drive correcta, envía el correo con el PDF adjunto, y cambia Fase a "Convenio enviado"</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> El PDF se subió correctamente a la carpeta de Drive de la asociación y "Convenio enviado (PDF procesado)" quedó en true.</div>
+    <div class="label">Hallazgo y fix</div><div>El Update Record no tenía mapeado <code>Fase de asociación → "Convenio enviado"</code> (mismo tipo de descuido que en A-4). Se agregó el campo y se confirmó en una segunda corrida.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A5-2 — Convenio Doc ID vacío</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A5-2 - Convenio Doc ID vacio" (reccgl9APZ1wU38bG) — Convenio revisado=true pero sin Convenio Doc ID ni ID carpeta Drive</div>
+    <div class="label">Resultado esperado</div><div>No debe tronar; debe avisar al equipo que faltan datos</div>
+    <div class="label">Resultado real</div><div><span class="badge fail">FALLA ENCONTRADA</span> El flujo llegó hasta el módulo de Google Drive "Upload a File" y truena ahí: <em>"Couldn't map the folderId field... The Google Drive upload got no folder ID from ID carpeta Drive field."</em></div>
+    <div class="label">Fix aplicado</div><div>Router entre Search Records y Google Docs "Download a Document": ruta "Datos completos" (Convenio Doc ID Exists AND ID carpeta Drive Exists) → flujo normal; ruta fallback → correo interno de alerta con link a la vista "Buscar / Corregir Asociación" para completar los datos faltantes.</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> Cayó correctamente en el fallback, con el nombre de la organización correcto en la alerta.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A5-3 — Ya se había enviado antes</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A5-3 - Ya enviado antes" (recCYMvdnpTA56DSn) — Convenio revisado=true PERO Convenio enviado(PDF procesado)=true ya</div>
+    <div class="label">Resultado esperado</div><div>No debe reprocesar ni reenviar el PDF (evita duplicados/spam)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — el filtro de "ya procesado" en el Search Records lo excluye correctamente desde el inicio.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A5-4 — Sin contacto/correo al momento de enviar</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A5-4 - Sin correo de contacto" (recU6WYZW7yUU3O5Y) — Convenio Doc ID válido, pero sin ID carpeta Drive ni contacto vinculado</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Cayó en el mismo Router de "datos incompletos" que A5-2 (por la falta de ID carpeta Drive). El caso específico de "correo de contacto vacío" con carpeta/documento completos queda pendiente de aislar y probar por separado.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A5-5 — Filtro de Empresa vinculada + candado + error handlers</div>
+  <div class="caso-grid">
+    <div class="label">Registros de prueba</div><div>"PRUEBA VINC-1 - Con empresa (debe enviar)" (vinculada a un Evento con empresa asignada, Empresa vinculada no vacío) y "PRUEBA VINC-2 - Sin empresa (NO debe enviar)" (mismos datos completos, pero sin Evento/empresa)</div>
+    <div class="label">Resultado esperado</div><div>VINC-1 debe procesarse normal; VINC-2 no debe ni aparecer en el Search Records</div>
+    <div class="label">Resultado real (1er intento, VINC-1)</div><div><span class="badge fail">FALLA ENCONTRADA</span> Cayó en la rama fallback (datos incompletos) a pesar de tener Convenio Doc ID, ID carpeta Drive, correo de contacto y Empresa vinculada, todos presentes. Causa: el chip <code>Correo del contacto principal[]</code> en la condición del Router 7 no tenía índice de posición (<code>[]</code> en vez de <code>[1]</code>) — el mismo bug ya documentado en A-1/Caso A-3, ahora reaparecido en A-5.</div>
+    <div class="label">Fix 1</div><div>Se corrigió el chip a <code>Correo del contacto principal[1]</code>.</div>
+    <div class="label">Falla adicional detectada en el camino</div><div>Al revisar el resultado del intento fallido, se encontró que la rama fallback estaba marcando <code>Convenio enviado (PDF procesado)=true</code> aunque no se hubiera generado ni enviado nada — como ese checkbox es parte del propio filtro de entrada, la asociación se habría quedado <strong>sin convenio para siempre</strong>, sin forma de que A-5 la volviera a recoger.</div>
+    <div class="label">Fix 2</div><div>Se quitó el mapeo de ese checkbox en la rama fallback (solo debe marcarse en la rama de éxito real).</div>
+    <div class="label">Resultado real (2do intento)</div><div><span class="badge ok">CONFIRMADO</span> VINC-1: PDF generado y subido a Drive, Fase="Convenio enviado", checkbox correcto, candado apagado. VINC-2: completamente intacto, sin ningún rastro de haber entrado al flujo.</div>
+    <div class="label">Error handlers</div>
+    <div>
+      <table>
+        <tr><th>Módulo</th><th>Directiva</th></tr>
+        <tr><td>Google Docs / Drive (descarga y subida del PDF)</td><td>Retry — Yes, 3, 5 min</td></tr>
+        <tr><td>Gmail (envío del convenio)</td><td>Retry — Yes, 3, 5 min</td></tr>
+        <tr><td>Airtable Update Record final (marca enviado + apaga candado)</td><td>Retry — No</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<table class="resumen-tabla">
+  <tr><th>Caso</th><th>Estado</th><th>Filtro/Fallback aplicado</th></tr>
+  <tr><td>A5-1 Camino feliz</td><td class="ok">OK</td><td>Fase de asociación agregada al Update Record</td></tr>
+  <tr><td>A5-2 Convenio Doc ID vacío</td><td class="ok">Resuelto y confirmado</td><td>Router: datos completos vs. incompletos + alerta interna</td></tr>
+  <tr><td>A5-3 Ya enviado antes</td><td class="ok">OK</td><td>Filtro "ya procesado" en Search Records</td></tr>
+  <tr><td>A5-4 Sin ID carpeta Drive</td><td class="ok">OK</td><td>Mismo Router que A5-2</td></tr>
+  <tr><td>A5-5 Empresa vinculada + candado (VINC-1/VINC-2)</td><td class="ok">Resuelto y confirmado (31-jul-2026)</td><td>Filtro Empresa vinculada + fix índice [1] + fix checkbox fallback + candado + Retry</td></tr>
+</table>
+
+<div class="caso" style="background:#f0f7f0; border-color:#c8e6c9;">
+  <div class="caso-titulo">A-4 y A-5 — cierre</div>
+  <p style="margin:4px 0;">Ambos escenarios quedan en versión estable, incluyendo el nuevo filtro de Empresa vinculada en A-5 (regla de negocio confirmada con el cliente) y el patrón de candado. Pendiente para una siguiente ronda: re-probar A4-4 y A4-5 de forma aislada (quedaron en cola durante el incidente de desactivación), y aislar un caso de "correo de contacto vacío" puro en A-5 (sin que se mezcle con la falta de ID carpeta Drive).</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>A-6) Activar Asociaciones <span style="font-weight:400; font-size:13px; color:#666;">— antes "Escenario G"</span> <span class="estado-general badge ok">COMPLETO</span></h2>
+<div class="meta">
+  Trigger: registros con Convenio firmado=true y Fase de asociación ≠ "Activa" → cambia Fase a "Activa" y envía correo de confirmación a la asociación.
+</div>
+<div class="caso" style="background:#f8fafc;">
+  <div class="caso-titulo">¿Para qué sirve este escenario?</div>
+  <p style="margin:4px 0;">Cuando la asociación regresa el Convenio firmado y el equipo marca la casilla correspondiente, este escenario activa formalmente a la asociación en el sistema y le confirma por correo que ya forma parte de la red de EZER, para que en las próximas semanas se le puedan asignar empresas interesadas.</p>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A6-1 — Debe activarse</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A6-1 - Debe activarse" (recrxciaICp9nG4Lw) — Fase="Convenio enviado", Convenio firmado=true, contacto con correo válido</div>
+    <div class="label">Resultado esperado</div><div>Debe cambiar Fase a "Activa" y enviar el correo de confirmación</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> Cambió a Fase "Activa" y llegó el correo "¡Ya están activos en EZER!" correctamente.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A6-2 — Ya está activa</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A6-2 - Ya esta activa" (recZpIYrl2UCtqTJC) — Fase ya es "Activa", Convenio firmado=true</div>
+    <div class="label">Resultado esperado</div><div>No debe reprocesar ni reenviar el correo (este es el caso que en la sesión original causó el error "module 2 returned no record" al correr Run once dos veces — ya se agregó un filtro de seguridad por entonces, hay que reconfirmar que sigue funcionando)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — el filtro de Fase!=Activa lo excluye correctamente.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A6-3 — Convenio aún no firmado (control negativo)</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A6-3 - No firmado aun" (rec89aLF7zz1hofdi) — Fase="Convenio enviado", Convenio firmado=false</div>
+    <div class="label">Resultado esperado</div><div>NO debe activarse (nada que hacer todavía)</div>
+    <div class="label">Resultado real</div><div><span class="badge ok">OK</span> No apareció en la corrida — el filtro de Convenio firmado=true lo excluye correctamente.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A6-4 — Sin contacto/correo al momento de activar</div>
+  <div class="caso-grid">
+    <div class="label">Registro de prueba</div><div>"PRUEBA A6-4 - Sin correo para activar" (recj6iNRa9I90y7w8) — Convenio firmado=true, sin ningún contacto vinculado</div>
+    <div class="label">Resultado esperado</div><div>No debe tronar; idealmente debe reusar el mismo patrón de Router+fallback de alerta interna del resto de los escenarios</div>
+    <div class="label">Resultado real</div><div><span class="badge fail">FALLA ENCONTRADA</span> Primera corrida: "Couldn't send the email... The to field mapped from Correo del contacto principal was empty." Como el Update Record (Fase→Activa) corre <strong>antes</strong> del Gmail, la organización quedó marcada Activa para siempre sin haber recibido la confirmación y sin que nadie se enterara.</div>
+    <div class="label">Fix aplicado</div><div>Router agregado entre el Update Record y el Gmail de confirmación: ruta "Correo válido" → Gmail normal; ruta "Sin correo" (fallback) → alerta interna a voluntariadocorporativo@ezer.org.mx (CC sistemas@) con link a la vista "Buscar / Corregir Asociación". El Update Record se deja sin condicionar (la activación es real independientemente de si se puede notificar).</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> Re-prueba exitosa: cayó en el fallback con el nombre correcto en la alerta.</div>
+  </div>
+</div>
+
+<div class="caso">
+  <div class="caso-titulo">Caso A6-5 — Reordenar envío antes de marcar Activa + error handlers</div>
+  <div class="caso-grid">
+    <div class="label">Objetivo</div><div>Mismo riesgo detectado en A-2.2: el Update Record (Fase→"Activa") corría antes del Gmail de confirmación. Si Gmail fallaba, la asociación ya quedaba "Activa" y el filtro (Fase != Activa) dejaba de encontrarla — la confirmación se perdía para siempre sin aviso.</div>
+    <div class="label">Fix aplicado</div><div>Se invirtió el orden: Gmail (confirmación) → Airtable (marca Activa). Sin necesidad de candado — un reintento de más solo genera una confirmación duplicada, no un daño real.</div>
+    <div class="label">Registro de prueba</div><div>"PRUEBA A6 - Debe activarse (nuevo orden)" — Fase="Convenio enviado", Convenio firmado=true, correo válido</div>
+    <div class="label">Estado</div><div><span class="badge ok">CONFIRMADO</span> Cambió a Fase="Activa" correctamente con el nuevo orden.</div>
+    <div class="label">Error handlers</div>
+    <div>
+      <table>
+        <tr><th>Módulo</th><th>Directiva</th></tr>
+        <tr><td>Gmail (confirmación)</td><td>Retry — Yes, 3, 5 min</td></tr>
+        <tr><td>Airtable Update Record (marca Activa)</td><td>Retry — Yes, 3, 5 min</td></tr>
+        <tr><td>Gmail (alerta interna, fallback sin correo)</td><td>Retry — Yes, 3, 5 min</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<table class="resumen-tabla">
+  <tr><th>Caso</th><th>Estado</th><th>Filtro/Fallback aplicado</th></tr>
+  <tr><td>A6-1 Debe activarse</td><td class="ok">OK</td><td>—</td></tr>
+  <tr><td>A6-2 Ya está activa</td><td class="ok">OK</td><td>Filtro Fase != Activa</td></tr>
+  <tr><td>A6-3 No firmado (control)</td><td class="ok">OK</td><td>Filtro Convenio firmado = true</td></tr>
+  <tr><td>A6-4 Sin contacto/correo</td><td class="ok">Resuelto y confirmado</td><td>Router post-Update Record: correo válido → Gmail normal; sin correo → alerta interna</td></tr>
+  <tr><td>A6-5 Orden Gmail/Airtable + error handlers</td><td class="ok">Resuelto y confirmado (31-jul-2026)</td><td>Gmail antes de Airtable + Retry en ambos</td></tr>
+</table>
+
+<div class="caso" style="background:#f0f7f0; border-color:#c8e6c9;">
+  <div class="caso-titulo">A-6 — cierre (versión estable)</div>
+  <p style="margin:4px 0;">Los 5 casos de prueba (A6-1 a A6-5) quedaron confirmados. Con esto, los 7 escenarios del flujo de Asociaciones (A-1, A-2.1, A-2.2, A-3, A-4, A-5, A-6) están en versión estable y probados de forma meticulosa, incluyendo el patrón de candado, error handlers, y el nuevo filtro de Empresa vinculada. Algunos casos aislados quedan pendientes de re-prueba (A4-4, A4-5) documentados en la sección de Pendientes.</p>
+</div>
+
+<h2>Pendientes / Mejoras futuras <span class="estado-general badge pendiente">PARA DESPUÉS</span></h2>
+<div class="caso" style="background:#fffaf0; border-color:#f0d9a0;">
+  <p style="margin:4px 0 8px 0;">Prioridad actual: tener una <strong>versión funcional y estable</strong> del flujo completo. Los siguientes puntos quedan identificados y documentados a propósito para revisarlos más adelante, sin bloquear el avance:</p>
+  <table>
+    <tr><th style="width:110px">Escenario</th><th>Pendiente</th></tr>
+    <tr>
+      <td>A-3 / General</td>
+      <td><strong>Riesgo sistémico — correos duplicados entre Contactos:</strong> A-3 hizo evidente que si dos Contactos distintos (de dos asociaciones distintas) comparten el mismo correo, el Search Records de Calendly (Limit:1, sin desempate) puede actualizar la organización equivocada en silencio. No se ha resuelto — pendiente decidir un criterio de desempate (ej. filtrar también por Organización activa/más reciente) o agregar una validación de correo único en Contactos.</td>
+    </tr>
+    <tr>
+      <td>A-4</td>
+      <td><strong>Casos A4-4 y A4-5 sin re-probar:</strong> quedaron en cola desde el incidente de desactivación de la ronda anterior (contacto_id vacío, y reenvío del mismo formulario/riesgo de duplicados). Pendiente re-probarlos de forma aislada.</td>
+    </tr>
+    <tr>
+      <td>A-5</td>
+      <td><strong>Caso "correo de contacto vacío" puro:</strong> sigue pendiente de aislar sin que se mezcle con la falta de ID carpeta Drive (documentado desde la ronda anterior, caso A5-4).</td>
+    </tr>
+    <tr>
+      <td>General</td>
+      <td><strong>Recorrido end-to-end completo:</strong> se empezó a armar un registro maestro ("PRUEBA FLUJO COMPLETO - End to End") para llevarlo por las 7 etapas seguidas (A-1 → A-2.1 → A-3 → A-4 → A-5 → A-6), adelantando fechas manualmente entre pasos. Quedó pausado en el Paso 1 (A-1) para priorizar el ajuste de A-5 — retomar el lunes.</td>
+    </tr>
+    <tr>
+      <td>A-1</td>
+      <td><strong>Caso A-4 (flyer ausente):</strong> no se simuló en vivo para no afectar el envío real de producción. Riesgo aceptado; se recomienda un filtro "URL Exists" antes del módulo HTTP si se quiere blindar por completo.</td>
+    </tr>
+    <tr>
+      <td>General</td>
+      <td><strong>Campos "(obsoleto)" en Airtable:</strong> quedan varios campos marcados como obsoletos pendientes de borrar manualmente (no hay forma de borrarlos vía API) — incluyendo "Empresa esperando (¿obsoleto?)" (tercer vínculo a Eventos sin uso identificado, candidato a borrar si se confirma que nadie lo usa) y los rollups "(obsoleto - sin separador)". Revisar la tabla Organizaciones y eliminarlos vía clic derecho → "Delete field".</td>
+    </tr>
+    <tr>
+      <td>General</td>
+      <td><strong>Reordenar opción "Disponible":</strong> la nueva Fase "Disponible" (asociaciones sin empresa asignada aún) se agregó al final de la lista de opciones del campo — pendiente reordenarla manualmente para que quede después de "Reunión realizada", donde tiene más sentido cronológico.</td>
+    </tr>
+    <tr>
+      <td>Bloque 8 (Empresas)</td>
+      <td>Al construir el módulo de Recordatorios y Feedback del lado de <strong>Empresas</strong>, recordar vincular el feedback de las empresas (pendiente señalado explícitamente por el usuario).</td>
+    </tr>
+    <tr>
+      <td>General</td>
+      <td><strong>Migración de datos reales:</strong> la carga de los datos reales de asociaciones (9 archivos CSV) se hará hasta que el flujo completo de Make esté probado y estable.</td>
+    </tr>
+  </table>
+</div>
+
+<footer>
+  Reporte generado con Claude Code — automatización EZER / Asociaciones. Documento vivo, se actualiza conforme se prueban más escenarios. Los 7 escenarios principales (A-1, A-2.1, A-2.2, A-3, A-4, A-5, A-6) están en versión estable al 31-jul-2026.
+</footer>
+
+</body>
+</html>
