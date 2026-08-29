@@ -113,8 +113,6 @@ Programas de interés: ${projects && projects.length > 0 ? projects.join(', ') :
 ¿Quiere capacitación?: ${wantsTraining ? 'Sí' : 'No'}
 Comentarios: ${finalComments}
 
-${calendlyText}
-
 Saludos cordiales,
 Equipo EZER
 EZER A.B.P. · La Casa del Voluntario
@@ -136,7 +134,6 @@ ezer-eventos.vercel.app`;
         <li><strong>¿Quiere capacitación?:</strong> ${wantsTraining ? 'Sí' : 'No'}</li>
       </ul>
       <p><strong>Comentarios:</strong> ${escapeHtml(finalComments).replace(/\n/g, '<br>')}</p>
-      ${calendlyHtml}
       <br>
       <p>Saludos cordiales,<br>
       <strong>Equipo EZER</strong><br>
