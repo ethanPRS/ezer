@@ -597,3 +597,52 @@ contradicción** que ya existía en el texto, no solo el duplicado.
 correo viejo con Calendly sigue saliendo.
 
 ---
+## 2026-08-29 · ✅ `E-1` FASE B — los dos correos, desplegados y activos
+
+Escenario 5537665 completo: **11 módulos**, `isinvalid: false`, `isActive: true`.
+
+Ruta 3 final: `Search Contactos` → `Get Config` → `Create Evento` → `http:DownloadFile` (flyer)
+→ **Correo #1 a la empresa** → **Correo #2 interno a EZER** → `Update Config` (`retry:false`).
+
+### Los dos correos
+
+**#1 a la empresa** — saludo personalizado, botón de Calendly con
+`?utm_content={{10.id}}` (el record ID del Evento, que es lo que exige D-002), el flyer del
+Catálogo 2026 adjunto, y el nombre del Responsable asignado. Paleta EZER (#1A2E6C / #E8401C).
+
+**#2 interno a voluntariadocorporativo@** — tabla con todos los datos del registro, el Responsable
+que tocó por turno, y el record ID del Evento para poder buscarlo.
+
+Ambos con `Break, retry: false` — **reintentar un correo es lo que lo duplica**.
+
+### D-016 · Versiones de módulo que hay que recordar
+
+`http:DownloadFile` es **versión 4**, no 3. Se descubrió por error de despliegue y se confirmó con
+`apps_recommend`. El blueprint de `A-1` no expone la versión de forma localizable, así que **no
+sirve como fuente para versiones de módulo** — hay que consultarlas explícitamente.
+
+Confirmadas hasta ahora: `airtable:*` v3 · `google-email:sendAnEmail` v4 · `http:DownloadFile` v4
+· `builtin:*` v1.
+
+También: el parámetro `description` de `scenarios_update` tiene **límite de 240 caracteres**.
+
+### 🔴 Hallazgo de la prueba end-to-end: el correo NO es único en Contactos
+
+La prueba se mandó con `sistemas@encuentromundialdevalores.org` y reveló que **8 contactos de
+prueba comparten ese mismo correo**. El escenario tomó la ruta "Ya existe", eligió uno
+arbitrariamente (`maxRecords: 1`), lo actualizó, y ligó el Evento a **la organización equivocada**.
+
+**No es un bug del escenario** — se comportó como está diseñado. Pero expone un supuesto que hay
+que hacer explícito: **la deduplicación asume que el correo identifica de forma única a un
+contacto**. Con correos repetidos, elige uno al azar.
+
+**Dos implicaciones a resolver:**
+1. Limpiar los contactos de prueba duplicados antes de migrar datos reales
+2. Definir qué pasa si una persona se registra con un correo ya ligado a **otra** empresa
+   (¿cambió de trabajo? ¿es un despacho que representa a varias?). Hoy el Evento nuevo se cuelga
+   de la empresa vieja.
+
+Registro restaurado (`rec9GOvTOUUkR6IKr` → "Contacto VINC-1"), Evento de prueba eliminado y
+Config de vuelta en "Adri".
+
+---
