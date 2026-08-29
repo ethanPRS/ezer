@@ -7,6 +7,7 @@ import { NUEVO_LEON_MUNICIPALITIES } from "../municipalities";
 
 interface Event {
   id: number;
+  numero: number;
   title: string;
   company: string;
   date: string;
@@ -47,7 +48,7 @@ export function EventCatalog() {
         const { data, error } = await supabase
           .from('events')
           .select('*')
-          .order('date', { ascending: true });
+          .order('numero', { ascending: true });
 
         if (error) {
           console.error(error);
@@ -61,6 +62,7 @@ export function EventCatalog() {
 
           return {
             id: e.id,
+            numero: e.numero,
             title: e.name,
             company: e.company,
             date: e.date,
@@ -175,7 +177,7 @@ export function EventCatalog() {
             <div className="text-center py-16" style={{ color: "#6B7280" }}>Cargando eventos...</div>
           ) : filtered.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((event, index) => (
+              {filtered.map((event) => (
                 <div
                   key={event.id}
                   style={{
@@ -230,7 +232,7 @@ export function EventCatalog() {
                   {/* Content */}
                   <div style={{ padding: "18px 18px 0", display: "flex", flexDirection: "column", flex: 1 }}>
                     <h3 style={{ color: "#1A2E6C", fontWeight: 800, fontSize: 16, lineHeight: 1.35, marginBottom: 8 }}>
-                      <span style={{ color: "#E8401C", marginRight: 6 }}>{index + 1}.</span>{event.title}
+                      <span style={{ color: "#E8401C", marginRight: 6 }}>{event.numero}.</span>{event.title}
                     </h3>
 
                     <p style={{ color: "#6B7280", fontSize: 13, lineHeight: 1.6, margin: "0 0 12px" }} className="line-clamp-4">

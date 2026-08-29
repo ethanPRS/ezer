@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entendimiento del Flujo de Empresas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --ground:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F7;
+  --ink:#151A2B; --ink-2:#4A5468; --ink-3:#78839A;
+  --line:#DCE2EC; --line-2:#BFC9D9;
+  --navy:#1A2E6C; --navy-soft:#E5EAF6;
+  --flame:#C3371A; --flame-soft:#FBE8E3;
+  --ok:#17683D; --ok-soft:#E1F0E7;
+  --warn:#835500; --warn-soft:#FAEFD8;
+  --shadow:0 1px 2px rgba(21,26,43,.05), 0 6px 18px rgba(21,26,43,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+    --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+    --line:#293147; --line-2:#39435E;
+    --navy:#93A9EE; --navy-soft:#1A2340;
+    --flame:#FF8963; --flame-soft:#3A2019;
+    --ok:#6ED498; --ok-soft:#12301F;
+    --warn:#E5B75A; --warn-soft:#332708;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+  --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+  --line:#293147; --line-2:#39435E;
+  --navy:#93A9EE; --navy-soft:#1A2340;
+  --flame:#FF8963; --flame-soft:#3A2019;
+  --ok:#6ED498; --ok-soft:#12301F;
+  --warn:#E5B75A; --warn-soft:#332708;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:820px;margin:0 auto;padding:52px 26px 88px}
+p{margin:0 0 12px;max-width:66ch}
+h1,h2,h3,.eyebrow,.mono,.chip,.actor,.num{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+h1{font-size:clamp(29px,4.4vw,42px);line-height:1.07;letter-spacing:-.022em;font-weight:800;margin:0 0 10px;text-wrap:balance}
+h2{font-size:22px;line-height:1.18;letter-spacing:-.015em;font-weight:700;margin:0 0 6px;text-wrap:balance}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--flame);margin:0 0 12px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+header{border-bottom:3px solid var(--navy);padding-bottom:24px;margin-bottom:34px}
+.lede{font-size:18px;line-height:1.5;color:var(--ink-2);max-width:60ch;margin:0}
+
+section{margin-top:48px}
+.sec-head{display:flex;align-items:baseline;gap:11px;border-bottom:1px solid var(--line-2);padding-bottom:8px;margin-bottom:20px}
+.sec-head .n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;font-weight:600;color:var(--flame);letter-spacing:.08em;flex:none}
+.sec-head h2{margin:0}
+
+/* etapas */
+.stage{
+  display:grid;grid-template-columns:60px 1fr;gap:16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);
+  break-inside:avoid;page-break-inside:avoid;
+}
+.stage .rail{display:flex;flex-direction:column;align-items:center;gap:7px}
+.num{
+  width:32px;height:32px;line-height:32px;text-align:center;border-radius:8px;
+  background:var(--navy);color:var(--surface);font-size:13px;font-weight:700;
+  font-family:"IBM Plex Mono",monospace;flex:none;
+}
+.stage.nuevo .num{background:var(--flame)}
+.actor{
+  font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);text-align:center;line-height:1.25;
+}
+.stage h3{font-family:Archivo,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.01em;margin:2px 0 6px;line-height:1.25}
+.stage p{font-size:15px;margin:0 0 8px;color:var(--ink-2)}
+.stage p:last-child{margin-bottom:0}
+.stage ul{margin:0 0 8px;padding-left:19px;font-size:15px;color:var(--ink-2)}
+.stage li{margin-bottom:4px}
+.mails{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.chip{
+  display:inline-block;padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:600;
+  background:var(--navy-soft);color:var(--navy);white-space:nowrap;
+}
+.chip.f{background:var(--flame-soft);color:var(--flame)}
+.tagnew{
+  display:inline-block;font-family:Archivo,sans-serif;font-size:9.5px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;background:var(--flame-soft);color:var(--flame);
+  padding:2px 7px;border-radius:4px;margin-left:7px;vertical-align:2px;
+}
+
+.note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:0 8px 8px 0;padding:14px 17px;margin:0 0 18px;box-shadow:var(--shadow)}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.flame{border-left-color:var(--flame);background:var(--flame-soft)}
+.note p:last-child{margin-bottom:0}
+.note .t{font-family:Archivo,sans-serif;font-weight:700;font-size:13.5px;display:block;margin-bottom:4px}
+
+/* supuestos */
+.sup{counter-reset:sp;list-style:none;padding:0;margin:0}
+.sup > li{
+  counter-increment:sp;position:relative;padding:13px 16px 13px 46px;
+  background:var(--surface);border:1px solid var(--line);border-radius:9px;
+  margin-bottom:10px;font-size:15px;line-height:1.5;box-shadow:var(--shadow);
+}
+.sup > li::before{
+  content:"¿" counter(sp) "?";position:absolute;left:12px;top:13px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--flame);
+}
+.sup b{font-weight:600;color:var(--ink)}
+
+footer{margin-top:60px;padding-top:14px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-3);font-family:Archivo,sans-serif}
+
+@media (max-width:600px){
+  .wrap{padding:34px 16px 60px}
+  .stage{grid-template-columns:44px 1fr;gap:12px;padding:14px}
+}
+@media print{
+  @page{size:letter;margin:1.7cm 1.5cm}
+  body{background:#fff;font-size:10.5pt}
+  .wrap{padding:0;max-width:none}
+  .stage,.note,.sup>li{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">EZER A.B.P. · Validación de entendimiento</p>
+  <h1>Así entendí el flujo de Empresas</h1>
+  <p class="lede">Catorce etapas, de que alguien levanta la mano hasta que el evento se cierra. Léelo rápido y dime dónde me equivoqué &mdash; incorpora tus respuestas del 28 de agosto, incluida la tercera reunión con la asociación.</p>
+</header>
+
+<section>
+  <div class="sec-head"><span class="n">FLUJO</span><h2>Las catorce etapas</h2></div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">1</span><span class="actor">Empresa</span></div>
+    <div>
+      <h3>Contacto</h3>
+      <p>Alguien llega por correo o pica &ldquo;contacto&rdquo; en la página. Se le asigna Responsable por turnos entre Mia y Adri.</p>
+      <div class="mails"><span class="chip">→ Empresa: bienvenida + liga de Calendly</span><span class="chip">→ EZER: nuevo interesado</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">2</span><span class="actor">Empresa</span></div>
+    <div>
+      <h3>Agenda la reunión</h3>
+      <p>Agenda por Calendly. En el formulario del invitado pone <strong>solo sus datos</strong> &mdash; nada de asociación ni de fases.</p>
+      <div class="mails"><span class="chip">→ Empresa: liga de la videollamada</span><span class="chip">→ EZER: liga de la videollamada</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">3</span><span class="actor">EZER</span></div>
+    <div>
+      <h3>La reunión</h3>
+      <p>Se capturan los datos de la empresa y se le pregunta si quiere el curso de sensibilización.</p>
+      <p>Aquí es donde se levantan <strong>las cuatro variables que después alimentan el match</strong>: en qué municipio quieren hacer el voluntariado, cuántos voluntarios pueden ir, a qué beneficiarios quieren apoyar, y en qué fechas.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">4</span><span class="actor">EZER</span></div>
+    <div>
+      <h3>Cotización</h3>
+      <p>Se manda la cotización del evento, con el curso incluido si lo quisieron. El correo a la empresa lleva un <strong>botón de &ldquo;si te interesa, pícale para los siguientes pasos&rdquo;</strong>.</p>
+      <div class="mails"><span class="chip">→ Empresa: cotización + botón</span><span class="chip">→ EZER: copia</span></div>
+    </div>
+  </div>
+
+  <div class="stage nuevo">
+    <div class="rail"><span class="num">5</span><span class="actor">Empresa</span></div>
+    <div>
+      <h3>Datos fiscales<span class="tagnew">nace el nº de referencia</span></h3>
+      <p>El botón la lleva a un formulario con los datos bancarios de EZER, los pasos a seguir, y la subida de su <strong>constancia de situación fiscal</strong> más lo necesario para elaborar el recibo.</p>
+      <p>Al terminar <strong>se genera el número de referencia</strong>, que de aquí en adelante identifica todo el proceso de esa empresa con ese evento.</p>
+      <div class="mails"><span class="chip">→ Empresa: ya subiste tus datos</span><span class="chip f">→ EZER + contador: con el nº de referencia</span></div>
+    </div>
+  </div>
+
+  <div class="stage nuevo">
+    <div class="rail"><span class="num">6</span><span class="actor">Contador</span></div>
+    <div>
+      <h3>El recibo</h3>
+      <p>El contador recibe el correo con una liga y <strong>sube el recibo usando el número de referencia</strong>. Eso dispara solo el aviso a las dos partes.</p>
+      <div class="mails"><span class="chip">→ Empresa: recibo adjunto + liga para su comprobante</span><span class="chip">→ EZER: ya se envió</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">7</span><span class="actor">Empresa</span></div>
+    <div>
+      <h3>Comprobante de pago</h3>
+      <p>Sube su comprobante con el número de referencia. El correo que le llega a EZER trae la liga de <strong>&ldquo;conecta con la asociación correspondiente&rdquo;</strong>.</p>
+      <div class="mails"><span class="chip">→ Empresa: ya lo recibimos</span><span class="chip">→ EZER: comprobante recibido</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">8</span><span class="actor">EZER</span></div>
+    <div>
+      <h3>Confirmar el pago</h3>
+      <p>Se registra la transferencia. <strong>Hasta aquí la empresa todavía no sabe con qué asociación va a trabajar</strong> &mdash; paga primero, se le asigna después.</p>
+    </div>
+  </div>
+
+  <div class="stage nuevo">
+    <div class="rail"><span class="num">9</span><span class="actor">Sistema</span></div>
+    <div>
+      <h3>El match<span class="tagnew">la pieza nueva</span></h3>
+      <p>La liga lleva a una pantalla en Airtable: buscas la empresa, ves lo que pidió, y aprietas <strong>&ldquo;busca qué asociación hace match&rdquo;</strong>.</p>
+      <p>Devuelve un ranking con porcentaje y semáforo por variable. Como en tu ejemplo: <em>Cardio Chavitos, 90%</em> &mdash; municipio Santa Catarina ✅, 10 voluntarios ✅, niños ✅, pero fechas ❌ porque ellos solo reciben en junio y la empresa busca mayo. Debajo, la siguiente con 85%.</p>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">10</span><span class="actor">Empresa</span></div>
+    <div>
+      <h3>Escoge asociación</h3>
+      <p>EZER revisa el ranking y le manda por correo <strong>las 2 o 3 mejores opciones</strong>, cada una con su porcentaje y un botón para elegirla. La empresa pica y queda ligada.</p>
+      <div class="mails"><span class="chip">→ Empresa: reporte de opciones + botones</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">11</span><span class="actor">Ambas</span></div>
+    <div>
+      <h3>Segunda reunión &mdash; con la empresa</h3>
+      <p>La empresa agenda otra cita por Calendly, ahora para definir el evento. En esa reunión se fija <strong>la fecha y el lugar del curso</strong> (si lo pagaron) y se arma <strong>la ficha técnica con el minuto a minuto</strong>.</p>
+      <div class="mails"><span class="chip">→ Empresa: cita confirmada</span><span class="chip">→ EZER: cita confirmada</span></div>
+    </div>
+  </div>
+
+
+  <div class="stage nuevo">
+    <div class="rail"><span class="num">12</span><span class="actor">Asociación</span></div>
+    <div>
+      <h3>Tercera reunión &mdash; con la asociación<span class="tagnew">nueva</span></h3>
+      <p>Una cita aparte, <strong>solo con la asociación</strong>, para explicarle los últimos detalles del evento. La empresa no participa.</p>
+      <div class="mails"><span class="chip">→ Asociación: cita confirmada</span><span class="chip">→ EZER: cita confirmada</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">13</span><span class="actor">EZER</span></div>
+    <div>
+      <h3>Antes del evento</h3>
+      <ul>
+        <li>Recordatorio de qué materiales llevar y cuáles ya se juntaron</li>
+        <li>Datos de los voluntarios que van a asistir</li>
+        <li>Firma del deslinde de responsabilidades</li>
+        <li>Asignar quién de EZER acompaña el evento</li>
+        <li>Recordatorios automáticos a 7, 3 y 1 día</li>
+        <li><strong>Llamada telefónica de confirmación</strong> que hace EZER, dejando registro de quién marcó y cuándo &mdash; <strong>más un correo automatizado</strong> de confirmación. Son dos cosas, no una.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="rail"><span class="num">14</span><span class="actor">Todos</span></div>
+    <div>
+      <h3>El evento y el cierre</h3>
+      <p>Se documenta con fotos y se levantan <strong>tres feedbacks distintos por QR</strong>: de la asociación, de la empresa y de los participantes.</p>
+      <div class="mails"><span class="chip">→ Empresa: feedback + carpeta de fotos</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">CONFIRMADO</span><h2>Los siete supuestos, resueltos</h2></div>
+  <div class="note good" style="border-left-color:var(--ok);background:var(--ok-soft)">
+    <span class="t">Los siete quedaron confirmados el 28 de agosto</span>
+    <p>&ldquo;El MIT&rdquo; es el <b>Meet</b> donde se llevan las reuniones · Las 4 variables del match se capturan en la <b>primera reunión</b> · El curso <b>se cotiza en la etapa 4</b> · El deslinde lo firman <b>los voluntarios</b> · Los <b>tres feedbacks son distintos</b> · El número de referencia es <b>empresa + evento</b>.</p>
+  </div>
+  <div class="note flame">
+    <span class="t">Y dos correcciones que cambian el flujo</span>
+    <p><b>La confirmación previa al evento son dos cosas:</b> la llamada telefónica que hace EZER <em>y además</em> un correo automatizado. Yo tenía solo la llamada.</p>
+    <p><b>Hay una tercera reunión</b> &mdash; con la asociación sola, para explicarle los últimos detalles. Sube a <b>14 etapas</b> y a <b>cuatro tipos de evento en Calendly</b>: primera reunión, segunda con la empresa, tercera con la asociación, y el curso de sensibilización.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">ABIERTO</span><h2>Dos cosas que sé que faltan</h2></div>
+  <div class="note warn">
+    <span class="t">Quién toma las fotos y a dónde se suben</span>
+    <p>El video lo deja explícitamente como pendiente. Se necesita antes de construir la etapa 13.</p>
+  </div>
+  <div class="note warn">
+    <span class="t">¿Una asociación puede atender más de una empresa a la vez?</span>
+    <p>Define el filtro del motor de match. Si puede, también hay que sugerir a las que ya tienen empresa asignada; si no, se descartan. Cambia qué asociaciones aparecen en el ranking.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">OJO</span><h2>Lo que más cambió respecto de lo que yo tenía</h2></div>
+  <div class="note flame">
+    <span class="t">Dos inversiones de orden</span>
+    <p><strong>La asociación se conecta después del pago</strong>, no antes. Yo tenía un candado que impedía mandar la cotización hasta ligar una asociación &mdash; es exactamente al revés: la empresa paga primero y se le asigna después.</p>
+    <p><strong>El recibo se emite antes del pago</strong>, no después. Primero la constancia fiscal, luego el recibo del contador, y hasta entonces la empresa transfiere.</p>
+  </div>
+</section>
+
+<footer>
+  Documento de validación · 28 de agosto de 2026 · Elaborado a partir de la transcripción del video de back office.<br>
+  Si el flujo de arriba es correcto, el siguiente paso es reescribir el plan de trabajo completo sobre esta base.
+</footer>
+
+</div>
+</body>
+</html>

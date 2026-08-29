@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Plan de Sprints — Flujo de Empresas (SCRUM, equipo de 1)</title>
+<style>
+  @page { size: letter; margin: 2cm 1.8cm; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 22px; margin-bottom: 2px; }
+  .subtitle { color: #555; font-size: 12px; margin-bottom: 24px; }
+  h2 {
+    font-size: 16px;
+    margin-top: 36px;
+    padding: 8px 12px;
+    background: #eef2f7;
+    border-left: 4px solid #2c5aa0;
+  }
+  h3 { font-size: 13.5px; margin-top: 18px; color: #2c5aa0; }
+  .meta { font-size: 11px; color: #444; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 10px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; font-size: 11px; }
+  th { background: #f5f5f5; font-weight: 600; }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .badge.ok { background: #e6f4ea; color: #1a7f37; }
+  .badge.new { background: #fdecea; color: #c0392b; }
+  .badge.reuse { background: #e8eef8; color: #2c5aa0; }
+  .sprint {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    page-break-inside: avoid;
+  }
+  .sprint-titulo { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .sprint-grid { display: grid; grid-template-columns: 150px 1fr; row-gap: 4px; }
+  .sprint-grid .label { color: #555; font-weight: 600; }
+  .callout { background: #fff8e1; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #b8860b; margin-bottom: 14px; }
+  .callout.good { background: #e6f4ea; border-left-color: #1a7f37; }
+  footer { margin-top: 40px; font-size: 10px; color: #888; border-top: 1px solid #ddd; padding-top: 8px; }
+  ul { margin: 4px 0 0 18px; padding: 0; }
+</style>
+</head>
+<body>
+
+<h1>Plan de Sprints — Flujo de Empresas Voluntarias</h1>
+<div class="subtitle">Metodología SCRUM adaptada a equipo de 1 persona · Basado en Plan-Empresas-EZER.pdf (Flujo 1, Bloques 1–10)</div>
+<div class="meta">
+  Elaborado: 4 de agosto de 2026<br>
+  Alcance: únicamente el Flujo 1 (Empresas Voluntarias), tal como está definido en el documento de trabajo interno ya existente — no incluye Aliados, Empresas Aliadas ni Universidades.
+</div>
+
+<div class="callout good">
+  <strong>Buena noticia antes de empezar:</strong> la base de Airtable que se construyó y probó a fondo para el flujo de Asociaciones (Organizaciones, Contactos, Eventos, Cotizaciones, Recibos, Config, Feedback) es la <strong>misma base</strong> que pide el Bloque 1 de este plan. Al revisar el esquema real, ya existen: <code>Responsable</code>, <code>Asociación asignada</code>, <code>Sugerencias de asociación</code>, <code>Recordatorio 7d/3d/1d enviado</code>, <code>RFC</code>/<code>Razón social</code>/<code>Uso CFDI</code>, <code>Incluye curso de sensibilización</code>, <code>Curso realizado</code>, <code>Fecha de transferencia</code>, <code>ID carpeta Drive evento</code>, y la tabla <code>Config</code> con <code>Último responsable asignado</code>. Es decir: <strong>el modelo de datos del Bloque 1 ya está prácticamente terminado</strong>. Lo que falta es la automatización (Make), los formularios (Fillout), las plantillas (Docs) y el panel — no la base.
+</div>
+
+<h2>Metodología: SCRUM con un equipo de 1</h2>
+<div class="meta">
+  <ul>
+    <li><strong>Sprints de 1 semana.</strong> Con un equipo de una sola persona (más este asistente como pair de desarrollo), sprints cortos permiten reordenar prioridades rápido si algo bloquea (igual que pasó con Calendly durante Asociaciones) sin perder semanas completas.</li>
+    <li><strong>Ceremonias simplificadas:</strong> no hay daily standup ni planning poker con otra persona. En su lugar: (1) <em>Sprint Planning</em> — 15-20 min al inicio de cada sprint revisando el Backlog y confirmando el objetivo; (2) <em>Sprint Review</em> — al cerrar, correr las pruebas del "Definition of Done" y actualizar el reporte vivo; (3) <em>Retro</em> — 1-2 líneas de qué se aprendió, igual que se fue documentando el "Historial de cambios" del reporte de Asociaciones.</li>
+    <li><strong>Definition of Done por historia</strong> (igual de riguroso que con Asociaciones, no se negocia): escenario construido en Make + candado si hay riesgo de envío duplicado + error handlers (Retry) en cada módulo + probado con al menos un caso mínimo y un caso límite/extremo + documentado en el reporte vivo.</li>
+    <li><strong>Product Backlog:</strong> las 12 épicas de abajo, priorizadas en el mismo orden en que aparecen en el Plan-Empresas-EZER.pdf (Bloques 1→10, panel al final antes de pruebas), porque cada bloque depende de que el anterior funcione (ej. no se puede probar Bloque 5 sin que el Bloque 4 desbloquee la cotización).</li>
+  </ul>
+</div>
+
+<h2>Product Backlog — Épicas</h2>
+<table>
+  <tr><th style="width:26px">#</th><th>Épica</th><th style="width:70px">Bloque</th><th style="width:70px">Tipo</th></tr>
+  <tr><td>E1</td><td>Webhook + Router + dedupe + reparto por turnos + Correo #1 Bienvenida</td><td>1</td><td><span class="badge reuse">Reusa</span></td></tr>
+  <tr><td>E2</td><td>Calendly + escenario "Reunión agendada" + Correo #3 + recordatorios de agenda (Correo #2) + carpetas por ID</td><td>2</td><td><span class="badge reuse">Reusa</span></td></tr>
+  <tr><td>E3</td><td>Formulario Fillout interno + 3 plantillas Docs + escenario "Captura de datos"</td><td>3</td><td><span class="badge new">Nuevo</span></td></tr>
+  <tr><td>E4</td><td>Escenario de sugerencias de asociación + liga manual + desbloqueo de cotización</td><td>4</td><td><span class="badge new">Nuevo</span></td></tr>
+  <tr><td>E5</td><td>Botón "Enviar cotización" + seguimiento sin respuesta + comprobante + botón "Confirmar pago" + registro de voluntarios</td><td>5</td><td><span class="badge new">Nuevo</span></td></tr>
+  <tr><td>E6</td><td>Botón "Adjuntar recibo" + Watch Records + Correo #7</td><td>6</td><td><span class="badge new">Nuevo</span></td></tr>
+  <tr><td>E7</td><td>Router condicional de curso de sensibilización + Calendly separado + Correo #9</td><td>7</td><td><span class="badge reuse">Reusa</span></td></tr>
+  <tr><td>E8</td><td>Recordatorios 7/3/1 días + carpeta de fotos + plantilla de asistencia</td><td>8</td><td><span class="badge reuse">Reusa</span></td></tr>
+  <tr><td>E9</td><td>Feedback a hora fija + cierre + reactivación a 5 meses</td><td>9</td><td><span class="badge reuse">Reusa</span></td></tr>
+  <tr><td>E10</td><td>Cancelación por empresa + cancelación por asociación (2 variantes de correo)</td><td>10</td><td><span class="badge new">Nuevo</span></td></tr>
+  <tr><td>E11</td><td>Panel: interfaz de 4 páginas (Mia/Adri/Ana Cris/Gabi) con filtros y botones nativos</td><td>Panel</td><td><span class="badge reuse">Reusa</span></td></tr>
+  <tr><td>E12</td><td>Pruebas end-to-end (checklist de 11 puntos ya definido) + reporte PDF vivo, mismo formato que Asociaciones</td><td>—</td><td><span class="badge reuse">Reusa</span></td></tr>
+</table>
+<p style="font-size:10.5px; color:#555;">"Reusa" = ya existe un patrón probado y funcionando del lado de Asociaciones que se puede adaptar directo (candado, Router+fallback, multi-contacto, recordatorios por días, panel de interfaces). "Nuevo" = integración o lógica que no tiene equivalente construido todavía (Fillout+3 Docs simultáneos, botones de Automatización nativa encadenados, Calendar events, cancelaciones con re-matching).</p>
+
+<h2>Plan de Sprints</h2>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 0 — Preparación (no es semana completa)</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>Dejar cuentas, planes y modelo de datos listos antes de tocar Make</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Confirmar planes activos: Airtable Team, Make Core/Pro, Calendly Standard, Fillout (Free para empezar)</li>
+        <li>Verificar contra el spec del Bloque 1 qué campos faltan en Organizaciones/Eventos/Config (la mayoría ya existe, ver nota arriba) y crear solo lo que falte</li>
+        <li>Confirmar con el stakeholder cualquier decisión de negocio pendiente además de las 2 ya resueltas (Fase 04 con motor de sugerencias sembrado a mano; correo de "dirección" = correo de voluntariado)</li>
+      </ul>
+    </div>
+    <div class="label">Entregable</div><div>Checklist de accesos ✓ + modelo de datos verificado</div>
+    <div class="label">Estimado</div><div><strong>3–5 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 1 — E1: Webhook, Router, Reparto por Turnos, Bienvenida</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>Que un registro de empresa (desde "Me interesa" o /empresas) cree/actualice en Airtable sin duplicar, con Responsable asignado y correo de bienvenida enviado</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Editar <code>api/interest.js</code>: quitar la condición que excluye el registro de empresa</li>
+        <li>Escenario: Webhook → Search Records (por correo) → Router existe/no existe → Create/Update</li>
+        <li>Lógica de turnos: Get Record Config → alternar Mia/Adri → Update Eventos + Config</li>
+        <li>Correo #1 Bienvenida (flyer + link Calendly), copia a voluntariado</li>
+        <li>Candado + error handlers (mismo estándar que A-1)</li>
+      </ul>
+    </div>
+    <div class="label">Pruebas</div><div>Sin correo capturado; dos registros seguidos (verificar alternancia Mia/Adri); reenvío del mismo correo (no debe duplicar)</div>
+    <div class="label">Estimado</div><div><strong>10–12 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 2 — E2: Calendly y Recordatorios de Agenda</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>Que agendar dispare el correo con el link del formulario interno antes de la reunión, y que quien no agende reciba recordatorio a los 5 días / se inactive a los 20</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Configurar tipo de evento en Calendly ("Reunión de voluntariado corporativo") + <code>record_id</code> oculto + mínimo 1 día de anticipación</li>
+        <li>Escenario "Reunión agendada": Watch Events → Update Fase+fecha → Get Responsable → Correo #3 (interno, inmediato, no esperar a que termine la reunión)</li>
+        <li>Escenario diario: 5 días sin agendar → Correo #2; 20 días → Fase Inactivo</li>
+        <li>Carpetas de Drive por ID (empresa + evento), verificando que no se recreen si ya existe el ID</li>
+      </ul>
+    </div>
+    <div class="label">Pruebas</div><div>Reserva real de Calendly (igual que se hizo con A-3); casos límite de 4/5 días y 19/20 días; carpeta que ya existe (no debe duplicarse)</div>
+    <div class="label">Estimado</div><div><strong>10–12 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 3 — E3: Formulario Interno y Documentos</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>Que llenar el formulario interno genere Ficha Técnica y Cotización como Docs editables en la carpeta correcta</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Formulario Fillout: evento, fecha estimada, municipio, coordinador, asistentes, duración, RFC, razón social, uso CFDI, casilla de curso, <code>record_id</code> oculto</li>
+        <li>3 plantillas de Google Docs (Ficha Técnica, Cotización, Convenio EZER–Empresa) en carpeta "Plantillas" separada</li>
+        <li>Escenario: Fillout → Update Airtable (Fase 03) → Docs ×2 desde plantilla → Move a carpeta del evento → guardar links</li>
+      </ul>
+    </div>
+    <div class="label">Pruebas</div><div>record_id inexistente (mismo patrón defensivo de A-4); contacto_id vacío; reenvío del mismo formulario (no debe duplicar documentos)</div>
+    <div class="label">Estimado</div><div><strong>12–15 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 4 — E4: Sugerencias de Asociación y Desbloqueo</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>Que el sistema sugiera hasta 3 asociaciones activas del sector correcto, y que la cotización no se pueda enviar hasta que alguien ligue una a mano</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Escenario de sugerencias: Search Records en Organizaciones (Tipo=Asociación, Estatus=Activa, Sector relacionado) → escribir hasta 3 en campo de solo lectura</li>
+        <li>Escenario Watch Records sobre "Asociación asignada": al dejar de estar vacío, habilita Fase 05</li>
+        <li>Condición de visibilidad del botón "Enviar cotización" en el Interface (solo si Asociación asignada no está vacío)</li>
+      </ul>
+    </div>
+    <div class="label">Pruebas</div><div>Cero asociaciones activas del sector (sugerencias vacías, no debe tronar); intentar enviar cotización sin asociación ligada (debe ser imposible, checklist del plan original lo exige explícitamente)</div>
+    <div class="label">Estimado</div><div><strong>8–10 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 5 — E5: Cotización, Convenio y Pago (el más grande — considerar 1.5 sprints)</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>Cotización + convenio se mandan juntos, y confirmar el pago dispara los pasos a seguir con la asociación ya incluida</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Botón "Enviar cotización": export PDF ×2 (cotización + convenio) → Correo #4 al coordinador (copia voluntariado) → Fase 05</li>
+        <li>Escenario diario de seguimiento: Fase 05 + 7 días sin comprobante → Correo #5</li>
+        <li>Fillout de comprobante de pago → marca "Comprobante recibido"</li>
+        <li>Botón "Confirmar pago": Fecha de transferencia → Google Calendar (crear evento) → Correo #6 al coordinador (con datos de la asociación ya asignada) + Correo #8 interno a contabilidad → Fase 06</li>
+        <li>Fillout de registro de voluntarios + deslinde (va en el correo de pasos a seguir, no en recordatorios)</li>
+        <li>Candado + error handlers en cada paso (es el bloque con más riesgo de envío duplicado)</li>
+      </ul>
+    </div>
+    <div class="label">Pruebas</div><div>Es el bloque con más piezas móviles — probar cada correo por separado, más el flujo completo de principio a fin; verificar explícitamente que el registro de voluntarios llegue en "pasos a seguir" y no en recordatorios (el plan original lo marca como corrección ya hecha, no regresar a como estaba)</div>
+    <div class="label">Estimado</div><div><strong>16–20 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 6 — E6 + E7: Recibo/SAT y Curso de Sensibilización</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>El recibo queda archivado y notificado; el curso se agenda solo si se pagó, si no, se salta limpio</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Botón "Adjuntar recibo" (visible tras Fase 06) → nuevo registro en Recibos ligado al Evento</li>
+        <li>Escenario Watch Records en Recibos → Correo #7 con el recibo adjunto</li>
+        <li>Router condicional según "Incluye curso de sensibilización": sí → Correo #9 con Calendly de curso (tipo de evento separado) → marca Curso realizado; no → salta directo a Fase 08</li>
+      </ul>
+    </div>
+    <div class="label">Pruebas</div><div>Ambas ramas del router (con curso / sin curso); recibo subido sin Evento ligado (no debe tronar)</div>
+    <div class="label">Estimado</div><div><strong>10–12 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 7 — E8 + E9: Recordatorios, Fotos, Feedback, Cierre y Reactivación</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>El ciclo del evento se recuerda, se documenta con fotos, se cierra con feedback, y se reactiva 5 meses después sin intervención manual</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Escenario diario de recordatorios (hoy+7 / +3 / +1) → Correo #10 ×3, marcando casillas para no repetir</li>
+        <li>El día del evento: carpeta de fotos en Drive → Correo #11 al Responsable</li>
+        <li>Plantilla de hoja de asistencia (manual, no automatizada — documentar el proceso igual)</li>
+        <li>Feedback a hora fija (7pm del día del evento) → Correo #12 con Fillout precargado</li>
+        <li>Trigger de cierre (Fillout de feedback) → Fase 10 → Correo #13 con mini reporte de impacto</li>
+        <li>Escenario programado: 5 meses después → Correo #14 de reactivación</li>
+      </ul>
+    </div>
+    <div class="label">Pruebas</div><div>Casos límite de fecha (igual que B-1/B-2/C-1/C-2 en Asociaciones: exactamente 7/3/1 días, un día antes/después)</div>
+    <div class="label">Estimado</div><div><strong>12–15 horas</strong></div>
+  </div>
+</div>
+
+<div class="sprint">
+  <div class="sprint-titulo">Sprint 8 — E10 + E11 + E12: Cancelaciones, Panel y Cierre del Proyecto</div>
+  <div class="sprint-grid">
+    <div class="label">Objetivo</div><div>Ninguna cancelación deja cabos sueltos, el equipo tiene su panel de trabajo diario, y el flujo completo queda probado y documentado</div>
+    <div class="label">Incluye</div>
+    <div>
+      <ul>
+        <li>Cancelación por empresa: botón → Calendar delete → desmarcar recordatorios → Correo #15 a la asociación (si ya estaba ligada)</li>
+        <li>Cancelación por asociación: botón → no cambia Fase → re-corre sugerencias del Bloque 4 → Correo #16 (variante "buscando reemplazo" / "cambiamos de asociación")</li>
+        <li>Panel: Interface de 4 páginas (Mia, Adri con filtro por Responsable; Ana Cris y Gabi sin filtro), control de Fase, botones nativos (Ligar asociación, Enviar cotización, Confirmar pago, Adjuntar recibo, Cancelar/Reprogramar, Asociación canceló)</li>
+        <li>Ronda final end-to-end: correr el checklist de 11 puntos ya definido en el plan original, de principio a fin con un caso realista</li>
+        <li>Reporte PDF vivo del flujo de Empresas, mismo formato y rigor que <code>Reporte-Pruebas-Asociaciones.pdf</code></li>
+      </ul>
+    </div>
+    <div class="label">Estimado</div><div><strong>12–15 horas</strong></div>
+  </div>
+</div>
+
+<h2>Cronograma resumen</h2>
+<table>
+  <tr><th>Escenario de dedicación</th><th>Horas totales estimadas</th><th>Duración calendario</th></tr>
+  <tr><td>Parcial (~12–15 h/semana, compaginando con otras responsabilidades)</td><td rowspan="2">~103–115 horas</td><td><strong>7–8 semanas (≈ 2 meses)</strong></td></tr>
+  <tr><td>Dedicado (~20–25 h/semana)</td><td><strong>4.5–5.5 semanas (≈ 1.2 meses)</strong></td></tr>
+</table>
+<p style="font-size:10.5px; color:#555;">El total de horas ya incluye pruebas y corrección de bugs encontrados en el camino (con base en lo observado en Asociaciones: cada bloque construido reveló entre 1 y 4 fallas reales antes de quedar estable — es lo esperado, no un imprevisto). No incluye tiempo de espera externo (aprobación de plantillas de correo/documentos por el cliente, tiempo de reserva real en Calendly para pruebas, etc.), que corre en paralelo y no debería sumar días bloqueados si se agenda con anticipación.</p>
+
+<h2>Riesgos y dependencias</h2>
+<table>
+  <tr><th style="width:140px">Riesgo</th><th>Mitigación</th></tr>
+  <tr><td>Calendly con 2 tipos de evento (reunión inicial + curso de sensibilización) puede requerir revisar el plan de Calendly otra vez, como pasó con Asociaciones</td><td>Confirmar en Sprint 0 si el plan actual soporta múltiples tipos de evento con parámetros ocultos antes de llegar al Sprint 2 y 6</td></tr>
+  <tr><td>El Bloque 5 es el más grande y con más integraciones (Docs, Drive, Gmail ×3, Calendar, Fillout ×2) — riesgo real de que tome más de 1 sprint</td><td>Tratarlo desde el inicio como 1.5–2 sprints si hace falta, en vez de forzar 1 semana; dividir en sub-entregas (cotización primero, pago después) si se necesita mostrar avance parcial</td></tr>
+  <tr><td>El botón "Regenerar documento" (mencionado en el plan para corregir fecha/municipio/asistentes tras editar en Airtable) no tiene especificación detallada de cómo evitar generar un documento duplicado en Drive</td><td>Definir esto explícitamente en Sprint 3: ¿sobrescribe el Doc existente o crea uno nuevo y archiva el viejo? Documentar la decisión antes de construir</td></tr>
+  <tr><td>Reutilizar el mismo correo de voluntariado para "dirección" de fotos y para todas las copias (CC) puede saturar esa bandeja</td><td>Ya es una decisión confirmada del cliente — solo dejar documentado como riesgo aceptado, no bloquea el desarrollo</td></tr>
+</table>
+
+<h2>Siguientes pasos inmediatos</h2>
+<div class="callout">
+  <ol style="margin:4px 0 0 18px; padding:0;">
+    <li>Confirmar el escenario de dedicación (parcial vs dedicado) para fijar una fecha de cierre concreta</li>
+    <li>Arrancar Sprint 0 esta semana: verificar accesos y el puñado de campos que pudieran faltar contra el Bloque 1</li>
+    <li>Reservar en el calendario personal bloques fijos de trabajo por sprint (igual que se hizo con las sesiones de prueba de Asociaciones) para no perder el ritmo</li>
+  </ol>
+</div>
+
+<footer>
+  Plan elaborado con Claude Code, basado en Plan-Empresas-EZER.pdf (documento de trabajo interno) y en la experiencia real de construcción/pruebas del flujo de Asociaciones. Documento vivo — actualizar al cierre de cada sprint con lo realmente encontrado, igual que el reporte de Asociaciones.
+</footer>
+
+</body>
+</html>

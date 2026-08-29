@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Encargo para IA del Cliente — Correos y Formularios (Flujo Empresas)</title>
+<style>
+  @page { size: letter; margin: 2cm 1.8cm; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 12px;
+    line-height: 1.55;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 22px; margin-bottom: 2px; }
+  .subtitle { color: #555; font-size: 12px; margin-bottom: 24px; }
+  h2 {
+    font-size: 16px;
+    margin-top: 32px;
+    padding: 8px 12px;
+    background: #eef2f7;
+    border-left: 4px solid #2c5aa0;
+  }
+  .meta { font-size: 11px; color: #444; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 10px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; font-size: 11px; }
+  th { background: #f5f5f5; font-weight: 600; }
+  .item { border: 1px solid #ddd; border-radius: 6px; margin-bottom: 12px; padding: 10px 14px; page-break-inside: avoid; }
+  .item-titulo { font-weight: 700; font-size: 12.5px; margin-bottom: 4px; color: #1A2E6C; }
+  .item-grid { display: grid; grid-template-columns: 130px 1fr; row-gap: 3px; }
+  .item-grid .label { color: #555; font-weight: 600; }
+  .callout { background: #fff8e1; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #b8860b; margin-bottom: 14px; }
+  .callout.bad { background: #fdecea; border-left-color: #c0392b; }
+  .callout.good { background: #e6f4ea; border-left-color: #1a7f37; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+  footer { margin-top: 40px; font-size: 10px; color: #888; border-top: 1px solid #ddd; padding-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Encargo para redactar con IA — Correos y Formularios</h1>
+<div class="subtitle">Contenido delegable del Flujo de Empresas Voluntarias · No requiere saber Make, Airtable ni Fillout</div>
+<div class="meta">Elaborado: 17 de agosto de 2026 · Este documento es autocontenido — se puede entregar directo a cualquier IA o persona que redacte, sin contexto adicional del proyecto.</div>
+
+<div class="callout good">
+  <strong>Qué es esto:</strong> una lista completa de los correos y formularios que faltan por redactar para el Flujo de Empresas de EZER A.B.P. — La Casa del Voluntario (una organización sin fines de lucro que conecta empresas con asociaciones civiles para jornadas de voluntariado corporativo). Cada elemento trae el contexto necesario para redactarlo sin tener que entender el sistema técnico por detrás.
+</div>
+
+<div class="callout">
+  <strong>Instrucciones para quien redacte (persona o IA):</strong>
+  <ul style="margin:6px 0 0 18px; padding:0;">
+    <li>Usa <strong>placeholders genéricos entre corchetes</strong> para cualquier dato variable, por ejemplo <code>[NOMBRE_EMPRESA]</code>, <code>[NOMBRE_COORDINADOR]</code>, <code>[FECHA_EVENTO]</code>. No inventes ni uses sintaxis técnica de ningún sistema — eso se conecta después por separado.</li>
+    <li>Los correos van en <strong>HTML simple</strong> (párrafos, listas, un botón de llamado a la acción cuando aplique), no en texto plano. Usa como referencia visual el ejemplo de estilo en la última sección de este documento.</li>
+    <li>Tono: profesional pero cálido, en español de México, de "usted" hacia empresas/asociaciones externas (no tutear). Para correos internos al equipo de EZER, tono cercano y claro, con instrucciones fáciles de seguir paso a paso (evitar jerga técnica).</li>
+    <li>Colores de marca: azul marino <code>#1A2E6C</code> y naranja <code>#E8401C</code>. Firma siempre como "Equipo EZER A.B.P. — La Casa del Voluntario", con la frase institucional <em>"Servir genera esperanza, comunidad y transformación."</em></li>
+    <li>Entrega cada correo en un bloque de código HTML separado, con el nombre del correo como título arriba, en el mismo orden de este documento.</li>
+  </ul>
+</div>
+
+<h2>Parte A — Correos a redactar (16 en total)</h2>
+
+<div class="item">
+  <div class="item-titulo">Correo #1 — Bienvenida</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Contacto de la empresa que se acaba de registrar</div>
+    <div class="label">Cuándo</div><div>Justo al registrarse por primera vez</div>
+    <div class="label">Debe incluir</div><div>Bienvenida, breve presentación de EZER (27+ años de trayectoria, parte del Global Corporate Volunteering Research Project de IAVE), qué es el programa de voluntariado corporativo, botón para agendar una reunión inicial (placeholder <code>[LINK_CALENDLY]</code>)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #2 — Recordatorio de agendar</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Contacto de la empresa</div>
+    <div class="label">Cuándo</div><div>5 días después del registro, si aún no ha agendado una reunión</div>
+    <div class="label">Debe incluir</div><div>Recordatorio breve y amable (no insistente) de que sigue pendiente agendar, mismo botón de Calendly</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #3 — Interno: link de formulario</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Un miembro del equipo interno de EZER (el "Responsable" asignado a esa empresa)</div>
+    <div class="label">Cuándo</div><div>En cuanto la empresa agenda la reunión — llega ANTES de que empiece la cita, no después</div>
+    <div class="label">Debe incluir</div><div>Aviso de que se agendó una reunión, resumen básico (nombre de empresa, fecha/hora), botón para abrir el formulario interno que van a llenar durante la reunión (placeholder <code>[LINK_FORMULARIO_INTERNO]</code>). Tono: directo, para uso interno del equipo, no para la empresa.</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #4 — Cotización + Convenio</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa (con copia al equipo interno de voluntariado)</div>
+    <div class="label">Cuándo</div><div>Cuando el equipo de EZER ya armó la propuesta, después de la reunión y de que se le asignó una asociación beneficiada</div>
+    <div class="label">Debe incluir</div><div>Presentación de la cotización y el convenio (ambos van adjuntos como PDF, no hace falta redactar su contenido aquí, solo mencionarlos), datos de pago (placeholder <code>[DATOS_DE_PAGO]</code>), botón/link para subir su comprobante de pago (placeholder <code>[LINK_COMPROBANTE]</code>)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #5 — Seguimiento sin respuesta</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa</div>
+    <div class="label">Cuándo</div><div>7 días después de la cotización, si no ha llegado el comprobante de pago</div>
+    <div class="label">Debe incluir</div><div>Recordatorio amable de que la cotización sigue pendiente de pago, mismo link de comprobante</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #6 — Pasos a seguir</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa (con copia al equipo interno)</div>
+    <div class="label">Cuándo</div><div>En cuanto el equipo de EZER confirma que ya se recibió el pago</div>
+    <div class="label">Debe incluir</div><div>Confirmación de pago recibido, nombre y breve descripción de la asociación beneficiada que les fue asignada (placeholders <code>[NOMBRE_ASOCIACION]</code>, <code>[DESCRIPCION_ASOCIACION]</code>, <code>[UBICACION]</code>), próximos pasos logísticos, botón para registrar a los voluntarios que van a participar (placeholder <code>[LINK_REGISTRO_VOLUNTARIOS]</code>)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #7 — Recibo fiscal</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa (con copia al equipo interno)</div>
+    <div class="label">Cuándo</div><div>Cuando el equipo interno sube el recibo/factura ya timbrado</div>
+    <div class="label">Debe incluir</div><div>Aviso de que el recibo fiscal (CFDI) ya está listo y adjunto</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #8 — Aviso interno a contabilidad</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Equipo interno de contabilidad de EZER</div>
+    <div class="label">Cuándo</div><div>Al mismo tiempo que el Correo #6, cuando se confirma el pago</div>
+    <div class="label">Debe incluir</div><div>Datos fiscales de la empresa (placeholders <code>[RFC]</code>, <code>[RAZON_SOCIAL]</code>, <code>[USO_CFDI]</code>, <code>[MONTO]</code>, <code>[FOLIO]</code>) para que puedan generar el recibo. Tono interno, directo, tipo tabla de datos.</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #9 — Invitación al curso de sensibilización</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa</div>
+    <div class="label">Cuándo</div><div>Solo si la empresa contrató el curso de sensibilización junto con el evento</div>
+    <div class="label">Debe incluir</div><div>Breve explicación de qué es el curso de sensibilización y por qué es valioso antes del evento de voluntariado, botón para agendar la fecha (placeholder <code>[LINK_CALENDLY_CURSO]</code>)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #10 — Recordatorio del evento (3 versiones: 7, 3 y 1 día antes)</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa (con copia al equipo interno)</div>
+    <div class="label">Cuándo</div><div>7, 3 y 1 día antes de la fecha confirmada del evento</div>
+    <div class="label">Debe incluir</div><div>Redactar 3 versiones cortas con el mismo formato pero ajustando la urgencia según los días restantes (ej. "¡Faltan 7 días!", "¡Ya casi! Faltan 3 días", "¡Es mañana!"), resumen de fecha/hora/lugar del evento</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #11 — Carpeta de fotos</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Responsable interno de EZER (no a la empresa)</div>
+    <div class="label">Cuándo</div><div>El mismo día del evento</div>
+    <div class="label">Debe incluir</div><div>Aviso corto de que ya está lista la carpeta de Drive para subir las fotos del evento, botón/link a la carpeta (placeholder <code>[LINK_CARPETA_FOTOS]</code>)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #12 — Link de feedback</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa</div>
+    <div class="label">Cuándo</div><div>La noche del mismo día del evento</div>
+    <div class="label">Debe incluir</div><div>Agradecimiento breve por participar, botón para llenar una encuesta corta de retroalimentación (placeholder <code>[LINK_FEEDBACK]</code>)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #13 — Agradecimiento + reporte de impacto</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa</div>
+    <div class="label">Cuándo</div><div>Después de que responden la encuesta de feedback — cierra el ciclo del evento</div>
+    <div class="label">Debe incluir</div><div>Agradecimiento genuino, mini reporte de impacto con espacio para cifras (placeholders <code>[NUM_VOLUNTARIOS]</code>, <code>[NUM_HORAS]</code>) y una foto destacada (placeholder <code>[FOTO_DESTACADA]</code>), invitación a seguir colaborando en el futuro</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #14 — Reactivación</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de una empresa que ya participó antes</div>
+    <div class="label">Cuándo</div><div>5 meses después de su último evento</div>
+    <div class="label">Debe incluir</div><div>Reconexión cálida ("ha pasado un tiempo desde su último evento con nosotros..."), invitación a ver el catálogo vigente de nuevas oportunidades (placeholder <code>[LINK_CATALOGO]</code>)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #15 — Aviso a la asociación (evento cancelado)</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Contacto de la asociación beneficiada</div>
+    <div class="label">Cuándo</div><div>Si la empresa cancela el evento después de ya tener una asociación asignada</div>
+    <div class="label">Debe incluir</div><div>Aviso claro pero cuidadoso de que el evento se canceló, sin culpar a nadie, con la intención de mantener la relación a futuro</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Correo #16 — Aviso a la empresa (2 variantes: buscando reemplazo / ya se encontró)</div>
+  <div class="item-grid">
+    <div class="label">Se envía a</div><div>Coordinador de la empresa</div>
+    <div class="label">Cuándo</div><div>Si la asociación asignada cancela su participación</div>
+    <div class="label">Debe incluir</div><div><strong>Variante A ("buscando reemplazo"):</strong> aviso de que la asociación original ya no puede participar, tranquilidad de que el equipo ya está buscando una nueva. <strong>Variante B ("ya se encontró"):</strong> mismo aviso pero ya presentando la nueva asociación asignada (placeholder <code>[NOMBRE_NUEVA_ASOCIACION]</code>)</div>
+  </div>
+</div>
+
+<h2>Parte B — Formularios de Fillout a diseñar (4 en total)</h2>
+
+<div class="item">
+  <div class="item-titulo">Formulario 1 — Captura de Datos (uso interno)</div>
+  <div class="item-grid">
+    <div class="label">Quién lo llena</div><div>El Responsable de EZER, durante o justo después de la reunión con la empresa</div>
+    <div class="label">Campos</div>
+    <div>
+      <ul style="margin:2px 0 0 16px; padding:0;">
+        <li>Nombre del evento (texto)</li>
+        <li>Fecha estimada (fecha)</li>
+        <li>Municipio (selección única)</li>
+        <li>Nombre del coordinador (texto)</li>
+        <li>Correo del coordinador (correo)</li>
+        <li>Teléfono del coordinador (teléfono)</li>
+        <li>Número de asistentes/voluntarios (número)</li>
+        <li>Duración del evento (selección: ej. medio día / día completo)</li>
+        <li>RFC de la empresa (texto)</li>
+        <li>Razón social (texto)</li>
+        <li>Uso de CFDI (selección única, catálogo del SAT)</li>
+        <li>¿Incluye curso de sensibilización? (casilla sí/no)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Formulario 2 — Comprobante de Pago</div>
+  <div class="item-grid">
+    <div class="label">Quién lo llena</div><div>El coordinador de la empresa</div>
+    <div class="label">Campos</div><div>Adjuntar archivo o pegar link del comprobante (obligatorio), comentario adicional (opcional, texto largo)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Formulario 3 — Registro de Voluntarios + Deslinde</div>
+  <div class="item-grid">
+    <div class="label">Quién lo llena</div><div>El coordinador de la empresa, uno por cada voluntario que va a participar</div>
+    <div class="label">Campos</div><div>Nombre completo del voluntario (repetible, uno por persona), talla de playera si aplica (selección única), casilla obligatoria de aceptación del deslinde de responsabilidad (debe incluir un resumen breve del deslinde antes de la casilla — pedir el texto exacto si no se tiene, o usar como referencia la Carta de Consentimiento y Deslinde que EZER ya usa para voluntarios individuales)</div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="item-titulo">Formulario 4 — Feedback Post-Evento</div>
+  <div class="item-grid">
+    <div class="label">Quién lo llena</div><div>El coordinador de la empresa, después del evento</div>
+    <div class="label">Campos</div><div>Calificación general (escala/estrellas), comentarios (texto largo, opcional), ¿repetirían la experiencia? (sí/no)</div>
+  </div>
+</div>
+
+<h2>Qué NO está incluido en este encargo</h2>
+<div class="callout bad">
+  <p style="margin:4px 0;">Lo siguiente requiere contexto técnico del sistema y se queda fuera de este encargo — no se debe intentar resolver con la IA del cliente:</p>
+  <ul style="margin:6px 0 0 18px; padding:0;">
+    <li>Configuración de Make, Airtable, Fillout o Calendly.</li>
+    <li>Las plantillas de Google Docs (Ficha Técnica, Cotización, Convenio EZER–Empresa) — llevan marcadores técnicos específicos del sistema de automatización y cláusulas legales que deben coordinarse aparte.</li>
+    <li>Cualquier variable con doble llave <code>{{...}}</code> — esa sintaxis es específica del sistema de automatización y se agrega después, no la debe generar la IA del cliente.</li>
+  </ul>
+</div>
+
+<h2>Ejemplo de referencia visual (formato esperado)</h2>
+<p style="margin:4px 0;">Así de estructurado debe verse cada correo — este es un ejemplo real ya usado por EZER, para copiar el estilo (colores, botón, firma):</p>
+<table>
+<tr><td style="font-family:monospace; font-size:10px; white-space:pre-wrap;">&lt;div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1A2E6C;"&gt;
+  &lt;p&gt;Reciba un cordial saludo de parte del equipo de EZER A.B.P. — La Casa del Voluntario.&lt;/p&gt;
+  &lt;p&gt;[Cuerpo del mensaje...]&lt;/p&gt;
+  &lt;div style="margin:20px 0; padding:16px; background:#F8FAFC; border-radius:8px; border:1px solid #E5E7EB;"&gt;
+    &lt;a href="[LINK]" target="_blank" style="display:inline-block; padding:10px 20px; background:#E8401C; color:#FFFFFF; border-radius:6px; text-decoration:none; font-weight:600;"&gt;[Texto del botón]&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;p&gt;Atentamente,&lt;br&gt;&lt;strong&gt;Equipo EZER A.B.P. — La Casa del Voluntario&lt;/strong&gt;&lt;/p&gt;
+  &lt;p style="font-style:italic; color:#64748B;"&gt;"Servir genera esperanza, comunidad y transformación."&lt;/p&gt;
+  &lt;p style="font-size:12px; color:#94A3B8;"&gt;EZER A.B.P. — La Casa del Voluntario · voluntariocorporativo@ezer.org.mx · ezer.org.mx · ezer-eventos.vercel.app&lt;/p&gt;
+&lt;/div&gt;</td></tr>
+</table>
+
+<footer>
+  Documento elaborado con Claude Code, para delegar la redacción de contenido del Flujo de Empresas a un tercero (persona o IA) sin necesidad de contexto técnico del proyecto.
+</footer>
+
+</body>
+</html>

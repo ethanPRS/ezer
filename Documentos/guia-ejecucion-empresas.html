@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía de Ejecución — Flujo de Empresas (paso a paso)</title>
+<style>
+  @page { size: letter; margin: 2cm 1.8cm; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 12px;
+    line-height: 1.55;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 22px; margin-bottom: 2px; }
+  .subtitle { color: #555; font-size: 12px; margin-bottom: 24px; }
+  h2 {
+    font-size: 16px;
+    margin-top: 36px;
+    padding: 8px 12px;
+    background: #eef2f7;
+    border-left: 4px solid #2c5aa0;
+  }
+  h3 { font-size: 13.5px; margin-top: 16px; color: #2c5aa0; }
+  .meta { font-size: 11px; color: #444; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 10px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; font-size: 11px; }
+  th { background: #f5f5f5; font-weight: 600; }
+  .owner { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+  .owner.tu { background: #e8eef8; color: #2c5aa0; }
+  .owner.yo { background: #e6f4ea; color: #1a7f37; }
+  .owner.agente { background: #f3e8fd; color: #7c3aed; }
+  .paso { border: 1px solid #ddd; border-radius: 6px; margin-bottom: 12px; padding: 10px 14px; page-break-inside: avoid; }
+  .paso-titulo { font-weight: 700; font-size: 12.5px; margin-bottom: 4px; }
+  .callout { background: #fff8e1; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #b8860b; margin-bottom: 14px; }
+  .callout.good { background: #e6f4ea; border-left-color: #1a7f37; }
+  .callout.info { background: #eef2f7; border-left-color: #2c5aa0; }
+  ol, ul { margin: 4px 0 0 18px; padding: 0; }
+  li { margin-bottom: 4px; }
+  footer { margin-top: 40px; font-size: 10px; color: #888; border-top: 1px solid #ddd; padding-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Guía de Ejecución — Flujo de Empresas Voluntarias</h1>
+<div class="subtitle">Paso a paso operativo, con responsable por tarea (tú / yo / agentes) · Complementa Plan-Sprints-Empresas-EZER.pdf</div>
+<div class="meta">Elaborado: 6 de agosto de 2026 · Rol: gestión de proyecto y ejecución técnica asistida</div>
+
+<div class="callout info">
+  <strong>Cómo se reparte el trabajo — leer antes de empezar:</strong>
+  <table style="margin-top:8px;">
+    <tr><th style="width:110px">Etiqueta</th><th>Qué significa</th></tr>
+    <tr><td><span class="owner tu">TÚ</span></td><td>Requiere que tú hagas clics/configuración directa en Make, Fillout o Calendly. No tengo conexión API a esas 3 plataformas en esta sesión — todo lo que se construyó para Asociaciones lo hiciste tú, yo solo guié módulo por módulo. Sigo recomendando este modelo: es más seguro para un sistema en producción y tú terminas entendiendo cómo mantenerlo.</td></tr>
+    <tr><td><span class="owner yo">YO</span></td><td>Lo hago directo, sin que tengas que intervenir: Airtable (tablas, campos, vistas, datos de prueba), código del sitio (api/interest.js, componentes React), diagnóstico de errores, verificación de resultados.</td></tr>
+    <tr><td><span class="owner agente">AGENTE</span></td><td>Trabajo que puedo mandar a un agente en paralelo mientras seguimos con otra cosa en la misma sesión — principalmente redactar en bloque todo el contenido (correos, plantillas de Docs, preguntas de formularios) para que cuando llegues a construir en Make/Fillout, el texto ya esté listo para copiar y pegar, en vez de esperar a que te lo redacte reactivamente paso por paso.</td></tr>
+  </table>
+  <p style="margin:8px 0 0 0;"><strong>Ser honesto sobre el límite real de los agentes aquí:</strong> el cuello de botella de este proyecto no es redactar contenido — es dar los clics reales en Make (arrastrar módulos, conectar rutas, mapear campos). Eso nadie más que tú lo puede hacer en esta configuración. Usar agentes para adelantar todo el contenido sí ahorra tiempo real (dejas de esperarme entre módulo y módulo), pero no reemplaza las horas de construcción en Make — por eso el estimado de tiempo total no baja dramáticamente, baja principalmente el tiempo "muerto" de espera.</p>
+</div>
+
+<div class="callout good">
+  <strong>Punto de partida — lo que ya está listo (Sprint 0, confirmado en la sesión pasada):</strong>
+  <ul>
+    <li>Las 7 tablas de Airtable (Organizaciones, Contactos, Eventos, Cotizaciones, Recibos, Config, Feedback) ya existen con prácticamente todos los campos que pide el Bloque 1 — Responsable (Mia/Adri/Ana Cris/Gabi), Fase (12 etapas 01–10 + Inactivo + Cancelado), Asociación asignada, Sugerencias de asociación, Recordatorios 7d/3d/1d, RFC/Razón social/Uso CFDI, Config con turnos Mia/Adri.</li>
+    <li>El webhook de <code>api/interest.js</code> ya manda <code>tipo: "registro_empresa"</code> sin condicionarlo — confirmado en el diff de git, ya desplegado.</li>
+    <li>Las fases de Asociaciones ya se renombraron a los nuevos textos ("Asociación Sin Reunión", etc.) — si quieres nombres equivalentes para el lado de Empresas, lo definimos en el Bloque 1 de abajo.</li>
+  </ul>
+</div>
+
+<h2>Bloque 1 — Base, Router y Bienvenida</h2>
+<div class="paso">
+  <div class="paso-titulo">Paso 1.1 — Confirmar accesos y planes <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Verifica que sigan activos: Airtable Team, Make (con capacidad para el volumen nuevo), Calendly Standard, Fillout. Si algo bajó de plan desde la última vez, avísame antes de seguir.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 1.2 — Crear el escenario "E-1: Registro de Empresa" en Make <span class="owner tu">TÚ</span></div>
+  <ol>
+    <li>Escenario nuevo → módulo <strong>Webhooks → Custom webhook</strong>. Crea el hook y cópiame la URL.</li>
+    <li>Yo comparo esa URL contra la que ya está en <code>api/interest.js</code> y ajusto el código si no coinciden <span class="owner yo">YO</span>.</li>
+    <li>Filtro justo después del trigger: <code>tipo = registro_empresa</code> (para que este escenario ignore los webhooks de "evento").</li>
+    <li>Airtable → Search Records en Organizaciones por correo (rollup "Correo del contacto principal") → Router: existe / no existe.</li>
+    <li>Rama "no existe": Create a Record en Organizaciones (Tipo=Empresa) + Create a Record en Contactos, vinculado.</li>
+    <li>Rama "existe": Update Record (por si cambió algún dato).</li>
+    <li>Lógica de turnos: Get Record en Config → si "Último responsable asignado"=Mia → asigna Adri (y viceversa) → Update en Eventos y en Config.</li>
+    <li>Fase del Evento nuevo → "01 Contacto".</li>
+  </ol>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 1.3 — Redactar Correo #1 Bienvenida <span class="owner agente">AGENTE</span></div>
+  <p style="margin:4px 0;">Te lo preparo en paralelo mientras avanzas con lo de arriba: correo con flyer del catálogo, link de Calendly, mismo estilo visual que ya usamos en Asociaciones (botones con degradado, nada de texto plano). Cuando lo tengas, lo pegas en el Gmail del escenario.</p>
+  <div class="label">Error handlers</div>
+  <table><tr><th>Módulo</th><th>Directiva</th></tr>
+    <tr><td>Todos los Airtable/Gmail de este escenario</td><td>Retry — Yes, 3, 5 min (mismo criterio que Asociaciones: transitorio, sin riesgo de duplicado grave en el primer contacto)</td></tr>
+  </table>
+</div>
+<p><strong>Tiempo estimado Bloque 1:</strong> 8–10 horas (bajó de la estimación original de 10–12h porque el modelo de datos ya está listo).</p>
+
+<h2>Bloque 2 — Calendly y Recordatorios de Agenda</h2>
+<div class="paso">
+  <div class="paso-titulo">Paso 2.1 — Configurar Calendly <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Tipo de evento "Reunión de voluntariado corporativo — Empresas" (puede ser el mismo que ya usas para Asociaciones, o uno separado si quieres poder distinguir el tipo de reunión en el Router más adelante — <strong>duda para ti:</strong> ¿usamos el mismo Calendly para ambos flujos, o uno dedicado a Empresas? Si es el mismo, el escenario "Reunión agendada" va a necesitar un Router adicional para decidir si el correo que agendó es Empresa o Asociación).</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 2.2 — Escenario "Reunión agendada — Empresas" <span class="owner tu">TÚ</span></div>
+  <ol>
+    <li>Watch Events (Invitee Created) → Update Record (Fase→"02 Reunión", guarda fecha).</li>
+    <li>Get Record para leer Responsable.</li>
+    <li>Gmail inmediato al Responsable con el link del Fillout interno (record_id precargado) — <strong>mismo patrón que ya armamos en A-3 de Asociaciones, incluida la tarea de Google Tasks en vez de tocar el evento compartido</strong> (ver Bloque 2.3).</li>
+  </ol>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 2.3 — Reusar el patrón de Google Tasks <span class="owner tu">TÚ</span> <span class="owner agente">AGENTE</span></div>
+  <p style="margin:4px 0;">Exactamente lo que acabamos de armar para A-3 de Asociaciones: en vez de editar el evento de Calendly (lo vería el invitado externo), crear una tarea de Google Tasks con el link del Fillout. Te preparo el texto exacto (título/notas) en paralelo.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 2.4 — Recordatorios de agenda + carpetas por ID <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Escenario diario: 5 días sin agendar → Correo #2; 20 días → Fase "Inactivo". Carpetas de Drive para empresa y evento, siempre verificando el ID guardado antes de crear una nueva.</p>
+</div>
+<p><strong>Tiempo estimado Bloque 2:</strong> 8–10 horas (bajó porque el patrón de Google Tasks ya está probado en Asociaciones, no hay que diseñarlo de cero).</p>
+
+<h2>Bloque 3 — Formulario Interno y Documentos</h2>
+<div class="paso">
+  <div class="paso-titulo">Paso 3.1 — Redactar preguntas del Fillout interno <span class="owner agente">AGENTE</span></div>
+  <p style="margin:4px 0;">Te preparo la lista completa de preguntas (evento, fecha estimada, municipio, coordinador, asistentes, duración, RFC, razón social, uso CFDI, casilla de curso) en el orden recomendado, para que solo las captures en Fillout sin tener que decidir redacción sobre la marcha.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 3.2 — Construir el formulario en Fillout <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Con la lista ya lista del paso anterior, es principalmente captura — no debería requerir muchas decisiones de diseño en el momento.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 3.3 — Redactar las 3 plantillas de Google Docs <span class="owner agente">AGENTE</span></div>
+  <p style="margin:4px 0;">Ficha Técnica, Cotización, y Convenio EZER–Empresa (mismo nivel de cuidado que ya le dimos al Convenio de Asociaciones: profesional, con espacio para logo, y su propio deslinde de responsabilidad adaptado al lado de Empresas). Te las preparo listas para pegar en Docs con los marcadores <code>{{...}}</code> correctos.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 3.4 — Escenario "Captura de datos" <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Fillout → Update Airtable (Fase→"03 Captura de datos") → Docs ×2 desde plantilla → Move a carpeta del evento → guardar links. Mismo patrón defensivo que A-4 de Asociaciones (validar record_id antes de tocar nada).</p>
+</div>
+<p><strong>Tiempo estimado Bloque 3:</strong> 10–13 horas (el ahorro viene de tener las 3 plantillas y las preguntas del formulario ya redactadas antes de sentarte a construir, no de que la construcción en sí sea más rápida).</p>
+
+<h2>Bloque 4 — Sugerencias de Asociación y Desbloqueo</h2>
+<div class="callout">
+  <strong>Duda para ti antes de este bloque:</strong> el campo "Estatus" (Activa/Inactiva) que pide este bloque para filtrar asociaciones está marcado como legacy. ¿Lo revivimos y lo mantenemos sincronizado a mano, o mejor cambiamos la condición de búsqueda para que use <code>Fase de asociación = "Activa"</code> (el nombre real, ya renombrado) en su lugar? Yo recomiendo la segunda opción — un campo menos que mantener sincronizado.
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 4.1 — Escenario de sugerencias <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Search Records en Organizaciones (Tipo=Asociación, [Activa según lo que decidamos arriba], Sector de apoyo relacionado con la causa del evento) → escribe hasta 3 en "Sugerencias de asociación" → Fase→"04 Conectar asociación".</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 4.2 — Desbloqueo de cotización <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Escenario Watch Records sobre "Asociación asignada": al dejar de estar vacío, habilita la Fase 05. Configurar el botón "Enviar cotización" en el panel para que solo aparezca si ese campo no está vacío.</p>
+</div>
+<p><strong>Tiempo estimado Bloque 4:</strong> 8–10 horas.</p>
+
+<h2>Bloque 5 — Cotización, Convenio y Pago (el más grande)</h2>
+<div class="paso">
+  <div class="paso-titulo">Paso 5.1 — Redactar Correos #4, #5, #6, #8 <span class="owner agente">AGENTE</span></div>
+  <p style="margin:4px 0;">Cotización+Convenio, seguimiento sin respuesta, pasos a seguir (con los datos de la asociación ya asignada), y aviso interno a contabilidad — los 4 en paralelo, mismo estilo visual que el resto.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 5.2 — Construir los 4 escenarios/botones <span class="owner tu">TÚ</span></div>
+  <ol>
+    <li>Botón "Enviar cotización": export PDF ×2 → Correo #4 → Fase 05.</li>
+    <li>Escenario diario de seguimiento (7 días sin comprobante) → Correo #5.</li>
+    <li>Fillout de comprobante de pago → marca "Comprobante recibido".</li>
+    <li>Botón "Confirmar pago": Fecha de transferencia → Google Calendar (evento) → Correo #6 + Correo #8 → Fase 06.</li>
+    <li>Fillout de registro de voluntarios + deslinde.</li>
+  </ol>
+  <p style="margin:4px 0;">Candado + error handlers en cada paso — es el bloque con más riesgo real de envío duplicado.</p>
+</div>
+<p><strong>Tiempo estimado Bloque 5:</strong> 15–18 horas (considera dividirlo en 2 sesiones de trabajo — cotización primero, pago después — para poder mostrar avance parcial).</p>
+
+<h2>Bloque 6 y 7 — Recibo/SAT y Curso de Sensibilización</h2>
+<div class="paso">
+  <div class="paso-titulo">Paso 6.1 — Redactar Correo #7 y #9 <span class="owner agente">AGENTE</span></div>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 6.2 — Construir ambos escenarios <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Botón "Adjuntar recibo" + Watch Records + Correo #7. Router condicional de curso (Calendly separado, tipo de evento nuevo) + Correo #9.</p>
+</div>
+<p><strong>Tiempo estimado:</strong> 9–11 horas.</p>
+
+<h2>Bloque 8 y 9 — Recordatorios, Fotos, Feedback, Cierre, Reactivación</h2>
+<div class="paso">
+  <div class="paso-titulo">Paso 8.1 — Redactar Correos #10, #11, #12, #13, #14 <span class="owner agente">AGENTE</span></div>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 8.2 — Construir los escenarios <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Recordatorios 7/3/1 días (mismo patrón que A-2.1/A-2.2 de Asociaciones, ya muy probado). Carpeta de fotos. Feedback a hora fija. Cierre. Reactivación a 5 meses.</p>
+</div>
+<p><strong>Tiempo estimado:</strong> 11–14 horas.</p>
+
+<h2>Bloque 10 + Panel + Pruebas Finales</h2>
+<div class="paso">
+  <div class="paso-titulo">Paso 10.1 — Redactar Correos #15 y #16 (2 variantes) <span class="owner agente">AGENTE</span></div>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 10.2 — Construir cancelaciones <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Cancelación por empresa (Calendar delete + desmarcar recordatorios + aviso a asociación). Cancelación por asociación (re-corre sugerencias + aviso "buscando reemplazo"/"cambiamos de asociación").</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 10.3 — Panel de Airtable <span class="owner yo">YO</span> <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Yo armo la estructura de las 4 páginas (Mia, Adri, Ana Cris, Gabi) con sus filtros vía Airtable API — tú solo confirmas los botones de Automatización nativa dentro de cada página, ya que esos se configuran mejor directo en la interfaz de Airtable.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 10.4 — Ronda final de pruebas <span class="owner yo">YO</span> <span class="owner tu">TÚ</span></div>
+  <p style="margin:4px 0;">Igual que hicimos con Asociaciones: yo preparo los casos de prueba en Airtable (mínimos, extremos, multi-contacto, etc.) y verifico resultados; tú corres cada escenario en Make. Checklist de 11 puntos ya definido en el plan original, más los casos de resistencia que agreguemos sobre la marcha.</p>
+</div>
+<div class="paso">
+  <div class="paso-titulo">Paso 10.5 — Reporte PDF vivo <span class="owner yo">YO</span></div>
+  <p style="margin:4px 0;">Documentar todo el proceso de pruebas y hallazgos, mismo formato que <code>Reporte-Pruebas-Asociaciones.pdf</code>.</p>
+</div>
+<p><strong>Tiempo estimado:</strong> 13–16 horas.</p>
+
+<h2>Cronograma resumen</h2>
+<table>
+  <tr><th>Bloque</th><th>Horas (con contenido pre-armado por agente)</th><th>Horas originales (Sprint Plan)</th></tr>
+  <tr><td>1 — Webhook, Router, Bienvenida</td><td>8–10</td><td>10–12</td></tr>
+  <tr><td>2 — Calendly y Recordatorios</td><td>8–10</td><td>10–12</td></tr>
+  <tr><td>3 — Formulario y Documentos</td><td>10–13</td><td>12–15</td></tr>
+  <tr><td>4 — Sugerencias y Desbloqueo</td><td>8–10</td><td>8–10</td></tr>
+  <tr><td>5 — Cotización, Convenio y Pago</td><td>15–18</td><td>16–20</td></tr>
+  <tr><td>6 y 7 — Recibo/SAT y Curso</td><td>9–11</td><td>10–12</td></tr>
+  <tr><td>8 y 9 — Recordatorios/Feedback/Cierre</td><td>11–14</td><td>12–15</td></tr>
+  <tr><td>10 + Panel + Pruebas</td><td>13–16</td><td>12–15</td></tr>
+  <tr><td><strong>Total</strong></td><td><strong>82–102 horas</strong></td><td><strong>~103–115 horas</strong></td></tr>
+</table>
+<p style="font-size:10.5px; color:#555;">La reducción (~15-20%) viene sobre todo de no tener que esperar contenido a mitad de construcción y de reusar patrones ya probados en Asociaciones (candado, error handlers, multi-contacto, Google Tasks). No viene de automatizar la construcción en Make/Fillout/Calendly, que sigue siendo trabajo tuyo, clic a clic.</p>
+<table>
+  <tr><th>Escenario de dedicación</th><th>Duración calendario</th></tr>
+  <tr><td>Parcial (~12–15 h/semana)</td><td><strong>6–7 semanas (≈ 1.5 meses)</strong></td></tr>
+  <tr><td>Dedicado (~20–25 h/semana)</td><td><strong>3.5–4.5 semanas (≈ 1 mes)</strong></td></tr>
+</table>
+
+<h2>Preguntas abiertas antes de empezar</h2>
+<div class="callout">
+  <ol>
+    <li><strong>Calendly compartido o separado:</strong> ¿el mismo tipo de evento para Asociaciones y Empresas, o uno dedicado? Afecta el diseño del Router en Bloque 2.</li>
+    <li><strong>Campo "Estatus" vs "Fase de asociación":</strong> ¿revivimos el campo legacy o usamos Fase de asociación="Activa" para las sugerencias del Bloque 4?</li>
+    <li><strong>Orden de trabajo:</strong> ¿seguimos bloque por bloque en el orden de arriba (recomendado, cada uno depende del anterior), o hay alguna prioridad de negocio que quieras adelantar primero?</li>
+  </ol>
+</div>
+
+<h2>Cómo trabajamos en cada sesión</h2>
+<div class="callout good">
+  <ol>
+    <li>Al empezar cada bloque, te aviso qué contenido voy a preparar en paralelo (correos, plantillas) para que no tengas que esperarlo a mitad de la construcción.</li>
+    <li>Te guío módulo por módulo en Make/Fillout/Calendly, igual que con Asociaciones — tú das los clics, yo confirmo la configuración exacta.</li>
+    <li>En cuanto termines un escenario, preparo casos de prueba reales en Airtable (del mínimo al extremo) para que lo probemos juntos antes de pasar al siguiente bloque.</li>
+    <li>Cualquier hallazgo o bug se documenta de inmediato — no se deja para el final.</li>
+  </ol>
+</div>
+
+<footer>
+  Guía elaborada con Claude Code, como complemento operativo de Plan-Sprints-Empresas-EZER.pdf. Basado en el alcance oficial de Plan-Empresas-EZER.pdf y en los patrones ya validados durante la construcción y pruebas del flujo de Asociaciones.
+</footer>
+
+</body>
+</html>
