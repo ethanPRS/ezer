@@ -420,3 +420,63 @@ exactamente cómo se producen inconsistencias.
 que sigue. Hay que verificar disponibilidad antes de comprometerla.
 
 ---
+## 2026-08-28 · PUNTO DE RETOMADA — construcción de `E-1`
+
+### 🔴 Hallazgo operativo: el sitio manda registros a un escenario apagado
+
+`api/interest.js` línea 224 hace POST a `https://hook.us2.make.com/gk3msgktwdcxack4cb718h5d6a5ntfsd`
+con `tipo: "registro_empresa"`. Ese webhook es el hook **2521498 ("Nuevo Prospecto")**, y pertenece
+al escenario **`Contacto Empresas` (5537665), que está marcado inválido y DESACTIVADO**.
+
+**Consecuencia:** hoy, cada empresa que se registra en el sitio dispara un webhook que nadie
+procesa. La cola marca 0, así que no se están acumulando — se pierden. Esto lleva así desde al
+menos el 20 de julio, fecha del último edit del escenario.
+
+**Camino recomendado para `E-1`:** reconstruir el escenario `Contacto Empresas` (5537665) como
+`E-1`, **conservando el hook 2521498**. Ventajas: no hay que tocar `api/interest.js`, la URL del
+sitio sigue funcionando, y es un escenario de Empresas, así que la restricción D-011 no aplica.
+Requiere confirmación de Ethan por ser una modificación sobre un escenario existente.
+
+### Decisiones tomadas para `E-1` (aprobadas por Ethan el 28-ago)
+
+| Punto | Decisión |
+|---|---|
+| Estructura de ramas | **`builtin:BasicIfElse` + `builtin:BasicMerge`** — verificados como disponibles. Una sola copia del reparto por turnos, la creación del Evento y los dos correos. |
+| Conexión de Gmail | **"My Gmail connection", ID 10032499** (la misma de `A-1` y `A-2.1`) |
+| Conexión de Airtable | ID 9689432 — es la única del team ⚠️ **expira el 23-oct-2026** |
+
+### Composición propuesta de `E-1`
+
+```
+gateway:CustomWebHook (hook 2521498)
+  └─ filtro: tipo = "registro_empresa"
+→ airtable:ActionSearchRecords v3   (Organizaciones, por correo, normalizado a minúsculas + trim)
+→ builtin:BasicIfElse
+   ├─ Sí existe → airtable:ActionUpdateRecords v3   (refrescar datos del contacto)
+   └─ No existe → airtable:ActionCreateRecord       (Organizaciones, Tipo=Empresa)
+                → airtable:ActionCreateRecord       (Contactos, vinculado)
+→ builtin:BasicMerge
+→ airtable:ActionGetRecord v3        (Config → "Último responsable asignado")
+→ airtable:ActionCreateRecord        (Eventos: Fase="01 Contacto", Responsable alternado)
+→ google-email:sendAnEmail v4        (Correo #1 → empresa: flyer + liga de Calendly)
+→ google-email:sendAnEmail v4        (Correo #2 → EZER: nuevo interesado)
+→ airtable:ActionUpdateRecords v3    (Config: guardar el nuevo turno)  ← retry:false
+```
+
+**Error handlers** (patrón copiado de `A-1`): `builtin:Break` con `retry: true, interval: "5"` en
+todos los módulos, **salvo** el `ActionUpdateRecords` final de Config, que va con `retry: false`
+para no arriesgar un doble avance de turno.
+
+**IDs de Airtable ya identificados:** base `appZA6fc9TRQz2upb` · Organizaciones `tblTGoIoCoRRr6dPf`
+· Contactos `tbldFi4FjJj0u7eVl` · Eventos `tblpxjGTQuC3zS4U6` · Config `tblc3ef3CHaAMLe32`.
+
+### 🔴 Lo que falta para poder construir
+
+1. **La URL del tipo de evento de Calendly para Empresas.** Va dentro del Correo #1, con
+   `?utm_content=<record_id>` anexado. Solo Ethan la tiene — no hay conector de Calendly.
+2. **Confirmación** para reconstruir el escenario 5537665 en vez de crear uno nuevo.
+3. **Activar las notificaciones push** (`/config`). Sin eso no hay forma de consultar a Ethan
+   a mitad de una construcción, que es justo lo que el flujo de trabajo acordado requiere.
+4. **El límite diario de ClickUp** se reinicia ~29-ago 18:00 para poder marcar tareas.
+
+---
