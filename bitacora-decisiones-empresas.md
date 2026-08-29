@@ -566,3 +566,34 @@ link de Calendly — lo que choca con la decisión D-002.
 3. Que el sitio deje de mandar correo y `E-1` se encargue de todo
 
 ---
+### D-014 · Una empresa SÍ puede tener varios eventos — no se pone candado
+
+**Decidido por Ethan el 29-ago.** El hallazgo de que cada POST crea un Evento nuevo, aun con el
+mismo correo, **es el comportamiento correcto**: una empresa puede hacer varios eventos de
+voluntariado. No se agrega candado sobre la creación del Evento.
+
+El candado que sí importa —y ya funciona— es el del **Contacto**: reenviar el formulario actualiza
+el contacto existente en vez de duplicarlo. Eso queda probado.
+
+### D-015 · Se quita el Calendly del correo del sitio; `E-1` es el único que lo manda
+
+**Situación:** `api/interest.js` mandaba un correo de bienvenida con el link de Calendly. Como ese
+correo sale **antes** de que exista el registro en Airtable, no podía llevar el `record_id`, y
+además duplicaba el Correo #1 que `E-1` iba a mandar.
+
+**Decidido:** quitar el bloque de Calendly del correo de registro del sitio. `E-1` manda el suyo,
+ya con el registro creado, y por tanto **puede anexar `?utm_content={{record_id}}`** — que es lo
+que exige D-002 para identificar quién agendó sin depender del correo del invitado.
+
+**Alcance del cambio de código:** solo las variantes de **registro** (texto y HTML). El bloque de
+Calendly del flujo de **catálogo/evento** se dejó intacto, porque ese camino no pasa por `E-1`
+(el filtro del escenario solo deja pasar `tipo = registro_empresa`).
+
+**Efecto secundario feliz:** el correo de registro ya decía *"no necesita hacer nada más: nosotros
+le contactaremos muy pronto"* y aun así mostraba un botón de agendar. Quitarlo **resuelve una
+contradicción** que ya existía en el texto, no solo el duplicado.
+
+⚠️ **Requiere redesplegar el sitio en Vercel** para surtir efecto. Mientras no se despliegue, el
+correo viejo con Calendly sigue saliendo.
+
+---
