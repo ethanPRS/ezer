@@ -480,3 +480,89 @@ para no arriesgar un doble avance de turno.
 4. **El límite diario de ClickUp** se reinicia ~29-ago 18:00 para poder marcar tareas.
 
 ---
+## 2026-08-29 · ✅ `E-1` CONSTRUIDO Y ACTIVO — Fase A
+
+Escenario **5537665** reconstruido como `E-1) Registro de Empresa`, conservando el hook 2521498.
+`isinvalid: false`, `isActive: true`. **Los registros del sitio ya no se pierden.**
+
+### Estructura final
+
+```
+gateway:CustomWebHook (hook 2521498)
+  └─ filtro: tipo = "registro_empresa"
+→ airtable:ActionSearchRecords  (Contactos, por Correo normalizado)
+→ builtin:BasicRouter
+   ├─ Ruta 1 · filtro "Ya existe"  → ActionUpdateRecords (Contactos: nombre + teléfono)
+   ├─ Ruta 2 · filtro "No existe"  → ActionCreateRecord (Organizaciones, Tipo=Empresa)
+   │                                → ActionCreateRecord (Contactos, vinculado)
+   └─ Ruta 3 · SIN filtro          → ActionSearchRecords (Contactos, re-lectura)
+                                    → ActionGetRecord (Config)
+                                    → ActionCreateRecord (Eventos)
+                                    → ActionUpdateRecords (Config)   ← retry:false
+```
+
+### D-012 · Se descarta `If-Else + Merge`: la API de Make lo rechaza
+
+Se intentaron **tres** estructuras de `BasicIfElse` + `BasicMerge` y la API las rechazó todas:
+
+1. Merge al nivel superior tras el If-Else → *"BasicMerge found after BasicIfElse with no merged branches"*
+2. Merge dentro de cada rama → *"BasicMerge must immediately follow a BasicIfElse"*
+3. Merge arriba + segunda rama como "else" puro sin filtro → mismo error que (1)
+
+**Solución adoptada:** `BasicRouter` con **tres** rutas, donde la tercera **no tiene filtro** y por
+tanto siempre corre al final. Ahí vive todo el flujo compartido.
+
+**Por qué es mejor que la alternativa:** logra el objetivo original —**cero duplicación** de la
+lógica compartida— sin depender del Merge. `A-3` resuelve lo mismo duplicando todo en cada rama;
+este patrón no. Es el patrón a reusar en los escenarios siguientes.
+
+⚠️ Requiere `sequential: true` en el metadata del escenario para garantizar que las rutas corran
+en orden y la tercera vea el resultado de las dos primeras.
+
+### D-013 · `useColumnId: true` obliga a referenciar la salida por ID de columna
+
+La primera prueba dejó el vínculo a Organización vacío. Causa: se mapeó
+`{{8.Organización[].id}}` usando el **nombre** del campo, pero con `useColumnId: true` la salida
+del módulo viene **por ID de columna**. Lo correcto es `` {{8.`fldxMJhApdpUOnZNe`}} `` — pasando el
+array completo, sin `[].id`.
+
+Aplica a **todos** los escenarios que se construyan con `useColumnId: true`.
+
+### Resultado de las pruebas (3 POST reales al webhook)
+
+| Caso | Resultado |
+|---|---|
+| Empresa nueva (Cemex) | ✅ Organización + Contacto + Evento creados, Fase `01 Contacto` |
+| Empresa nueva (FEMSA) | ✅ Vínculo a Organización correcto tras el fix D-013 |
+| **Mismo correo reenviado** | ✅ **NO duplicó el contacto** — lo actualizó con nombre y teléfono nuevos |
+| Reparto por turnos | ✅ Mia → Adri → Mia, y Config avanzó en cada corrida |
+| `capacitacion: "Sí"` | ✅ marcó la casilla "Incluye curso de sensibilización" |
+| Nombre del evento vacío | ✅ cayó al respaldo `"Voluntariado " + empresa` |
+
+Registros de prueba eliminados y Config restaurado a "Adri".
+
+### 🔴 Hallazgo abierto: el reenvío SÍ duplica el Evento
+
+El contacto no se duplica, pero **cada POST crea un Evento nuevo**. Si una empresa manda el
+formulario dos veces, quedan dos Eventos en Fase 01 para la misma organización.
+
+Puede ser correcto (una empresa puede hacer varios eventos al año) o puede ser un problema.
+**Decisión pendiente:** ¿se agrega un candado que evite crear un Evento si ya existe uno en Fase
+`01 Contacto` para esa organización? Bloquea el cierre de la tarea S2-6.
+
+### Lo que falta de `E-1` (Fase B)
+
+Los dos correos. **Y hay una complicación que descubrimos hoy:** `api/interest.js` **ya manda un
+correo de bienvenida** al interesado, con copia a voluntariado y con el link de Calendly incluido
+(`calendly.com/voluntariadocorporativo-ezer/reunion-de-voluntariado-corporativo`, línea 94).
+
+Si `E-1` manda su propio Correo #1, la empresa recibe **dos correos**. Además, el correo del sitio
+sale **antes** de que exista el registro en Airtable, así que no puede llevar el `record_id` en el
+link de Calendly — lo que choca con la decisión D-002.
+
+**Tres opciones, pendientes de decidir:**
+1. Quitar el link de Calendly del correo del sitio y que `E-1` mande el suyo con `record_id`
+2. Dejar el correo del sitio como está y renunciar al `record_id` (emparejar por correo, patrón `A-3`)
+3. Que el sitio deje de mandar correo y `E-1` se encargue de todo
+
+---

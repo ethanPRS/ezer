@@ -91,8 +91,7 @@ export default async function handler(req, res) {
         ${safeCourseUrl ? `<a href="${escapeHtml(safeCourseUrl)}" target="_blank" style="display:inline-block; padding:8px 16px; background:#15803D; color:#FFFFFF; border-radius:6px; text-decoration:none; font-weight:600; font-size:14px;">📚 Curso de Sensibilización</a>` : ''}
       </div>` : '';
 
-    // TODO: reemplazar por el link real de Calendly del equipo de voluntariado.
-    const calendlyUrl = 'https://calendly.com/ezer-voluntariado/reunion';
+    const calendlyUrl = 'https://calendly.com/voluntariadocorporativo-ezer/reunion-de-voluntariado-corporativo';
     const calendlyText = `Agenda una reunión con nuestro equipo aquí: ${calendlyUrl}`;
     const calendlyHtml = `
       <div style="margin-top:20px; padding:16px; background:#F8FAFC; border-radius:8px; border:1px solid #E5E7EB;">
