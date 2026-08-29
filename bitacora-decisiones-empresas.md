@@ -373,3 +373,50 @@ no de memoria.
 pero conviene decidir si se reusan o se archivan antes del Sprint 2.
 
 ---
+## 2026-08-28 · S1 · Patrones extraídos de `A-1` (lectura, sin editar)
+
+Leído por MCP el blueprint completo de `A-1` (217 KB, 18 módulos). Estos son los patrones
+verificados que Empresas va a reusar. **Versiones tomadas de un escenario real en producción**,
+no de documentación — es la referencia más confiable disponible.
+
+### Módulos y versiones confirmadas
+
+| Módulo | Versión |
+|---|---|
+| `airtable:ActionSearchRecords` | 3 |
+| `airtable:ActionGetRecord` | 3 |
+| `airtable:ActionUpdateRecords` | 3 |
+| `google-email:sendAnEmail` | 4 |
+| `builtin:BasicRouter` · `BasicFeeder` · `BasicAggregator` · `Break` | 1 |
+| `http:DownloadFile` | (usado para bajar el flyer del catálogo) |
+
+### Patrón de manejo de errores
+
+Handler `builtin:Break` en cada módulo, con dos variantes según el riesgo:
+
+- **`retry: true, interval: "5"`** — en Search, Get, DownloadFile y los envíos de Gmail.
+- **`retry: false`** — en el `ActionUpdateRecords` que **marca la casilla de candado**, después
+  del Aggregator. Correcto: reintentar el marcado del candado es justo lo que podría duplicar.
+
+### Patrón multi-contacto (el que SÍ se copia)
+
+`BasicFeeder` → `BasicRouter` → `sendAnEmail` (uno por contacto) → `BasicAggregator` →
+`ActionUpdateRecords` con `retry: false` para marcar la casilla una sola vez.
+
+⚠️ Este es el patrón correcto. **`A-2.1` no lo tiene bien aplicado** y por eso acumula 13 errores
+y 6 ejecuciones atoradas. Al construir Empresas se copia de `A-1`, nunca de `A-2.1` (D-011).
+
+### Hallazgo de diseño que hay que resolver antes de construir `E-1`
+
+En Make, **un Router no puede volver a converger**. `A-3` lo resuelve **duplicando** todo lo que
+va después en cada una de sus 3 rutas — por eso tiene 3 copias de `createATask` y `sendAnEmail`.
+
+Para `E-1` eso significa duplicar el reparto por turnos, la creación del Evento y los dos correos
+en ambas ramas (empresa existente / empresa nueva). Es el patrón probado de la casa, pero **duplica
+el mantenimiento**: cada cambio futuro en un correo hay que hacerlo dos veces, y olvidar una es
+exactamente cómo se producen inconsistencias.
+
+**Alternativa a evaluar:** `If-Else` + `Merge`, que sí converge y deja una sola copia de todo lo
+que sigue. Hay que verificar disponibilidad antes de comprometerla.
+
+---
