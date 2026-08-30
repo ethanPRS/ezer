@@ -646,3 +646,70 @@ Registro restaurado (`rec9GOvTOUUkR6IKr` → "Contacto VINC-1"), Evento de prueb
 Config de vuelta en "Adri".
 
 ---
+## 2026-08-29 · Sprint 3 · Campos de Airtable + `E-3` construido y probado
+
+### Campos nuevos en Eventos
+
+| Campo | Tipo | Para qué |
+|---|---|---|
+| `Beneficiarios de interés` | multipleSelects, 9 opciones | Cruce del motor de match contra `Sector de apoyo` |
+| `Meses de interés` | multipleSelects, 12 meses | Cruce contra `Meses disponibles` |
+| `Días desde el contacto` | formula `DATETIME_DIFF(NOW(), CREATED_TIME(), 'days')` | Dispara `E-3` |
+| `Seguimiento 5 días enviado` | checkbox | Candado del recordatorio |
+| `Correo del contacto` | lookup vía Organización | Destinatario de `E-3` |
+| `Accion E3` | formula, **nombre sin acentos** | Encapsula toda la decisión de `E-3` (ver D-017) |
+
+**Corrección a S3-7:** el plan pedía crear 4 campos de match. **Dos ya existían** — `Municipio` y
+`Número de asistentes`. Solo faltaban beneficiarios y meses.
+
+### 🔴 Hallazgo crítico para el motor de match: las escalas de voluntarios NO coinciden
+
+| Organizaciones · *Voluntarios que puede recibir* | Eventos · *Número de asistentes* |
+|---|---|
+| 1-10, 11-20, 21-30, 31-40, 41-50, 50+ | 1-5, 6-10, 11-15, 16-20, 21-25, 26-30, 31-40, 41-50, 51-75, 76-100, Más de 100 |
+
+Son **rangos distintos**: no se pueden cruzar directamente. La fórmula de puntuación (S7-5) tiene
+que convertir ambos a un número —por ejemplo el punto medio del rango— antes de comparar. Es
+justo el riesgo que anticipaba S7-6, ahora confirmado con datos reales.
+
+### D-017 · Los nombres de campo con acentos rompen las expresiones de Make
+
+**Síntoma:** el `Search Records` de `E-3` con la fórmula
+`AND({Fase} = "01 Contacto", {Días desde el contacto} >= 5)` **devolvió los 3 registros de la
+tabla**, ignorando por completo el filtro. Los filtros del Router tampoco frenaron el envío, y el
+correo reventó con `[400] Recipient address required`.
+
+**Se probaron tres variantes** antes de dar con el patrón: filtros por ID de columna, filtros por
+nombre acentuado, y finalmente la solución.
+
+**Solución adoptada:** un campo calculado en Airtable con **nombre estrictamente ASCII**
+(`Accion E3`) que encapsula toda la lógica de decisión y devuelve `"recordar"`, `"inactivar"` o
+vacío. Del lado de Make **ninguna expresión contiene acentos**:
+- fórmula de búsqueda: `{Accion E3} != ""`
+- filtro ruta A: `{{1.`Accion E3`}} = "recordar"`
+- filtro ruta B: `{{1.`Accion E3`}} = "inactivar"`
+
+Los acentos viven **dentro** de la fórmula de Airtable, donde sí funcionan.
+
+**Regla para los escenarios que faltan:** cuando la lógica de un escenario dependa de campos con
+acentos, encapsularla en un campo calculado de nombre ASCII y que Make solo lea ese. Como beneficio
+lateral, la condición se puede **verificar a ojo en Airtable** antes de correr nada.
+
+⚠️ La base está llena de nombres acentuados (`Organización`, `Asociación asignada`,
+`Sugerencias de asociación`, `Días…`). Esto va a reaparecer.
+
+### `E-3` probado — ambas rutas verificadas
+
+Escenario **6093624**, diario a las 15:00 UTC (9:00 Monterrey), activo.
+
+| Prueba | Resultado |
+|---|---|
+| Sin registros en Fase 01 | ✅ corrida limpia, no manda nada |
+| Ruta "recordar" | ✅ correo enviado + casilla marcada; `Accion E3` se vació sola |
+| Idempotencia | ✅ con la casilla marcada ya no vuelve a entrar |
+| Ruta "inactivar" | ✅ Fase → `Inactivo` + aviso interno; `Accion E3` se vació sola |
+
+La prueba se hizo bajando el umbral de la fórmula temporalmente (de `>=5` a `>=0`), ya restaurado.
+Registros de prueba eliminados.
+
+---
