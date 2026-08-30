@@ -791,3 +791,34 @@ uno arbitrariamente. Es la misma familia del hallazgo de unicidad de correo del 
 agrega en el Sprint 4, cuando ese formulario exista.
 
 ---
+### Aplicada la excepción D-019 — filtro en `A-3`, por API
+
+**Hecho el 29-ago.** Se agregó al módulo 4 de `A-3` (`ActionSearchRecords`, el que va justo después
+de `getAnEvent`):
+
+```json
+"filter": {"name": "Solo Asociaciones",
+  "conditions": [[{"a": "{{3.name}}", "b": "(Asociaciones)", "o": "text:contains"}]]}
+```
+
+Al ir sobre el módulo 4, **corta todo el flujo aguas abajo** cuando la reserva no es de Asociaciones.
+
+**Verificado tras aplicarlo:** 28 módulos intactos, las 3 rutas del Router, el `else: 1`, las
+conexiones, las posiciones del canvas y las etiquetas. `isinvalid: false`, activo.
+
+**Respaldo del blueprint original** en `respaldos-make/A-3_blueprint_2026-08-30_ANTES-del-filtro.json`.
+
+**Cómo se hizo con seguridad:** `scenarios_update` reemplaza el blueprint completo, y el de `A-3`
+pesa 106 KB — demasiado para transcribir sin riesgo. Se redujo a **16 KB** quitando solo las tres
+claves que Make regenera solo (`expect`, `interface`, `samples`), conservando `designer` y `restore`
+para no descuadrar el canvas ni perder las etiquetas.
+
+**Lo que se descubrió al leer `A-3` y sube la gravedad de D-018:** su Router tiene ruta *else*
+(`parameters: {"else": 1}` → la ruta 2). Si una empresa agendaba con un correo **que no estaba en
+Contactos**, `A-3` no solo escribía encima: **creaba una Asociación nueva desde cero**, con
+`Tipo = Asociación` y `Fase de asociación = Reunión agendada`. Peor que el caso que se detectó.
+
+**Reparación:** se restauró `recIxPA5vRKSOJPTY` (PRUEBA VINC-1) a su `Fecha de reunión` original
+del 3 de agosto, que la reserva de prueba había sobrescrito.
+
+---
