@@ -749,3 +749,45 @@ escenario estable en producción para agregar una condición es riesgo despropor
 en la interfaz de Make**, que lo hace de forma segura en dos minutos.
 
 ---
+### `E-2` construido — escenario 6093786, activo
+
+Webhook propio: **2750604** (`E-2 Calendly Empresas`). Tipos de evento confirmados por Ethan:
+`Reunión Ezer Voluntariado Corporativo (Asociaciones)` y `… (Empresas)`.
+
+```
+calendly:watchInvitees (hook 2750604)
+→ calendly:getAnEvent
+   └─ filtro: {{2.name}} contiene "(Empresas)"     ← ASCII puro, evita D-017
+→ airtable:ActionSearchRecords (Eventos, maxRecords 1)
+→ airtable:ActionUpdateRecords (Fase "02 Reunión" + Fecha de reunión)
+→ google-email  (confirmación a la empresa)
+→ google-email  (aviso interno a EZER)
+```
+
+### D-020 · Emparejamiento dual en una sola búsqueda, sin ramificar
+
+En vez de un Router entre "hay `utm_content`" y "no hay", la fórmula de Airtable cubre **ambos
+caminos a la vez**:
+
+```
+OR(
+  RECORD_ID() = "{{1.tracking.utm_content}}",
+  AND(LOWER({Correo del contacto} & "") = LOWER("{{1.email}}"), {Fase} = "01 Contacto")
+)
+```
+
+Si el UTM viene, empareja por ID. Si viene vacío, `RECORD_ID()=""` es falso para todos y cae al
+emparejamiento por correo restringido a Fase 01. **Un solo camino, sin Router, sin duplicar nada.**
+
+Todos los nombres de campo de la fórmula son ASCII (`Correo del contacto`, `Fase`), respetando D-017.
+
+El correo interno reporta **por cuál de los dos caminos emparejó**, así que la prueba de D-002 se
+verifica leyendo ese correo, sin tener que inspeccionar el payload.
+
+**Limitación conocida:** si un mismo correo tiene varios Eventos en Fase 01, `maxRecords: 1` elige
+uno arbitrariamente. Es la misma familia del hallazgo de unicidad de correo del 29-ago.
+
+**Pendiente:** la tarea de Google Tasks con la liga del formulario interno (patrón de `A-3`) se
+agrega en el Sprint 4, cuando ese formulario exista.
+
+---
