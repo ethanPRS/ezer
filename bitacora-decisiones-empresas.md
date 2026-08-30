@@ -713,3 +713,39 @@ La prueba se hizo bajando el umbral de la fórmula temporalmente (de `>=5` a `>=
 Registros de prueba eliminados.
 
 ---
+### D-018 · Los webhooks de Calendly no se pueden filtrar por tipo de evento
+
+**Verificado el 29-ago con una reserva real de Ethan.**
+
+Las suscripciones de webhook de Calendly se hacen a nivel **usuario u organización**, nunca por
+tipo de evento. Consecuencia: **toda reserva llega a todos los escenarios** que escuchen
+`invitee.created`, sin importar de qué tipo de evento sea.
+
+**Evidencia del daño:** Ethan agendó una reunión del tipo de evento de **Empresas**. `A-3`
+(Asociaciones) la procesó igual, emparejó su correo con el contacto `rec9GOvTOUUkR6IKr` y
+le escribió `Fecha de reunión = 31-ago 16:00` a la organización **`recIxPA5vRKSOJPTY`
+("PRUEBA VINC-1")**, que es una **Asociación**. Una reserva de Empresas corrompió un registro
+de Asociaciones.
+
+**Lo bueno:** el esquema de salida del trigger **sí incluye `tracking.utm_content`**, así que el
+mecanismo de D-002 es viable. Falta confirmar que se popule con una reserva que lleve el
+parámetro.
+
+**Nota técnica:** el trigger `calendly:watchInvitees` (app versión **2**, no 4) **no expone el tipo
+de evento**. Solo trae `event` como URI. Para conocer el tipo hay que encadenar `getAnEvent`
+— que es exactamente por lo que `A-3` tiene ese módulo en segunda posición.
+
+### D-019 · Excepción autorizada a D-011: un filtro en `A-3`
+
+**Autorizado por Ethan el 29-ago.** Se permite **una sola modificación** a `A-3`: agregar un filtro
+de tipo de evento después del módulo `getAnEvent`. No se tocan módulos, mapeos ni correos.
+
+**El resto de D-011 sigue vigente:** `A-1`, `A-2.1`, `A-2.2`, `A-4`, `A-5` y `A-6` intactos, y de
+`A-3` solo esta condición.
+
+**Cómo se aplica — y por qué a mano:** editar `A-3` por API obligaría a reemplazar su blueprint
+completo (28 módulos), porque `scenarios_update` no hace ediciones quirúrgicas. Reescribir un
+escenario estable en producción para agregar una condición es riesgo desproporcionado. **Se aplica
+en la interfaz de Make**, que lo hace de forma segura en dos minutos.
+
+---
