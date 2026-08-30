@@ -822,3 +822,51 @@ Contactos**, `A-3` no solo escribía encima: **creaba una Asociación nueva desd
 del 3 de agosto, que la reserva de prueba había sobrescrito.
 
 ---
+### D-021 · `text:contains` no funciona como filtro; usar `text:equal`
+
+**Detectado el 29-ago con evidencia cruzada.** Se filtró `A-3` y `E-2` con
+`{"o": "text:contains", "b": "(Asociaciones)"}` y `"(Empresas)"` respectivamente. Al agendar una
+reserva **de Empresas**, ambos escenarios corrieron con **2 operaciones** y se detuvieron:
+`A-3` bloqueó (correcto) y `E-2` **también bloqueó** (incorrecto — debía procesarla).
+
+Se confirmó vía `rpc_execute` / `listMyEvents` que el nombre real del evento **sí** es
+`Reunión Ezer Voluntariado Corporativo (Empresas)`. O sea: el nombre estaba bien y el operador no.
+
+**Conclusión:** `text:contains` evalúa siempre falso. El operador probado y funcional es
+**`text:equal`** — es el que usa el filtro `tipo = registro_empresa` de `E-1`, que sí funciona.
+
+**Consecuencia grave mientras estuvo mal:** `A-3` bloqueaba **todas** las reservas, incluidas las
+legítimas de Asociaciones. Estuvo así unos minutos.
+
+**Corregido en ambos:**
+
+| Escenario | Filtro |
+|---|---|
+| `E-2` | `{{2.name}}` **igual a** `Reunión Ezer Voluntariado Corporativo (Empresas)` |
+| `A-3` | `{{3.name}}` **distinto de** `Reunión Ezer Voluntariado Corporativo (Empresas)` |
+
+**Por qué `A-3` va invertido:** filtrar por "es Asociaciones" falla cerrado — si el nombre cambia,
+`A-3` deja de procesar todo. Filtrar por "no es Empresas" falla **abierto**: ante cualquier
+imprevisto `A-3` sigue trabajando como siempre, y a lo más deja pasar una de Empresas, que es el
+comportamiento que ya tenía antes. En un escenario en producción, fallar abierto es lo correcto.
+
+**Regla para lo que falta:** usar solo operadores verificados. `text:equal` y `exist`/`notexist`
+están probados en producción. Cualquier otro, probarlo antes de confiar en él.
+
+### Estado del Sprint 3 al cierre del 29-ago
+
+| Tarea | Estado |
+|---|---|
+| S3-1 Tipo de evento de Empresas en Calendly | ✅ ya existía; nombre confirmado por API |
+| S3-2 Probar el `utm_content` | ⏳ **pendiente de una reserva más** |
+| S3-3 Escenario `E-2` | ✅ construido y activo (6093786) |
+| S3-4 Correos de confirmación | ✅ incluidos en `E-2` |
+| S3-5 Escenario diario `E-3` | ✅ construido, activo y **probado en ambas rutas** |
+| S3-6 Pruebas del Bloque 2 | ⏳ depende de S3-2 |
+| S3-7 Campos de match en Airtable | ✅ hecho (2 de 4 ya existían) |
+
+**Para cerrar el sprint** falta una reserva de prueba con la liga que lleva `utm_content`. El evento
+`recAetb0HbVtNs2h7` sigue en Fase 01 esperando. El correo interno de `E-2` reporta por cuál camino
+emparejó, así que esa sola reserva confirma o descarta D-002.
+
+---
