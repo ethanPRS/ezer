@@ -1204,3 +1204,213 @@ La más crítica: **los pesos de las cuatro variables del motor de match**, ante
 requiere una fórmula, basta con ordenarlas por importancia y decir cuál es inaceptable si no coincide.
 
 ---
+
+---
+
+### D-025 · `E-2` se apagaba entero cuando la cita no tenía expediente
+
+**2 de septiembre de 2026.** Una reserva de Calendly tumbó el escenario completo. Fueron dos fallas
+encadenadas, y las dos son de diseño, no de datos.
+
+**La primera:** `E-2` buscaba el evento en Airtable y pasaba directo a actualizarlo **sin verificar
+que lo hubiera encontrado**. Cuando la búsqueda no devuelve nada, el módulo de actualización recibe
+un ID vacío y Airtable contesta `[422] parameter validation failed`.
+
+**La segunda, más grave:** el escenario tenía apagado *"permitir ejecuciones incompletas"*
+(`dlq: false`) mientras sus manejadores de error usaban `Break` con reintento. `Break` **necesita**
+poder guardar la ejecución incompleta para reintentarla después. Al no poder, Make no reintentó:
+**desactivó el escenario**. Un solo error de un solo registro apagó la automatización entera.
+
+**Cómo quedó:** un `BasicRouter` después de la búsqueda, con dos rutas —
+- *Sí existe el expediente* → actualiza a Fase 02, confirma a la empresa, avisa al equipo.
+- *No existe* → **no toca Airtable** y manda un correo interno con quién agendó, cuándo, y qué hacer
+  a mano. La cita no se pierde: se convierte en un aviso.
+
+Más `dlq: true` en la configuración del escenario.
+
+> **Regla que sale de aquí, aplicable a todos los escenarios:** después de cualquier búsqueda que
+> alimente a un módulo de escritura, va un filtro que verifique que hubo resultado. Y **todo
+> escenario que use `Break` necesita `dlq: true`**, si no el manejador de error hace lo contrario de
+> lo que se espera de él.
+
+**Pendiente:** `E-1`, `E-3` y `E-4` tienen el mismo `dlq: false`. Se prende desde la configuración
+del escenario en la interfaz de Make — no se hizo por API para no reescribir blueprints grandes.
+
+---
+
+### D-026 · PENDIENTE DE DECISIÓN · `E-1` descarta en silencio todo lo que no sea "Registro"
+
+**2 de septiembre de 2026.** Descubierto al investigar D-025.
+
+`api/interest.js` línea 65 decide el tipo así:
+
+```js
+const isRegistration = eventName.startsWith('Registro');
+```
+
+y manda al webhook `tipo: "registro_empresa"` solo en ese caso. Todo lo demás llega como
+`tipo: "evento"`. El módulo 2 de `E-1` filtra por `text:equal "registro_empresa"`, así que **una
+empresa que se interesa en un evento del catálogo, o que pide un evento en su municipio, entra al
+webhook y muere ahí**: sin expediente, sin aviso, y con la ejecución marcada como exitosa.
+
+Es la misma clase de falla que el webhook huérfano de julio, y **está viva en producción**.
+
+**La decisión que falta** — cuál de las dos:
+1. Abrir expediente igual que un registro, guardando en el Evento qué evento del catálogo pidió.
+2. Solo mandar un aviso interno al equipo, sin crear expediente.
+
+La duda de fondo es si esos formularios los usan **empresas** o también voluntarios individuales. Si
+son individuales, la opción 1 llenaría Organizaciones de personas físicas marcadas como "Empresa".
+
+**Mientras se decide:** para probar el flujo hay que usar el formulario de **Registro** del sitio.
+Es el único camino que `E-1` procesa hoy.
+
+---
+
+### D-027 · Dónde vive el motor de match — no se mueve nada a Supabase
+
+**2 de septiembre de 2026.** Llegó una especificación técnica externa
+(*"Motor de Match Asociación ↔ Empresa"*) con un prototipo en HTML autónomo. Se revisó contra lo que
+ya existe. Se acepta la lógica completa y **se rechaza la recomendación de infraestructura**.
+
+**Lo que se acepta:** los 7 criterios, las fórmulas de score por criterio, y los pesos por defecto
+(causa 25, municipio 20, voluntarios 15, mes 15, actividad 12, presupuesto 8, accesibilidad 5). El
+`evalAssoc` del prototipo se porta 1:1, sin tocar la lógica.
+
+**Lo que se rechaza:** *"mover la base de asociaciones de localStorage a Postgres/Supabase"*. Las
+asociaciones ya viven en Airtable y ahí corre todo el back office — A-1 a A-6, E-1 a E-4, convenios,
+seguimientos. Duplicarlas a Supabase crea **dos fuentes de verdad** que el equipo tendría que
+mantener a mano en dos lados. Se desincronizan en semanas. **Airtable se queda como única fuente.**
+
+**Dónde corre el cálculo — dos caminos, misma lógica:**
+1. **Script dentro de una automatización de Airtable.** El JS del prototipo se pega casi tal cual.
+   No hay endpoint, no hay pieza extra que se caiga. *Intentar este primero.* Verificar en el plan
+   Free que la acción de script exista y el tope de corridas mensuales.
+2. **`api/match.js` en el Vercel que ya existe**, junto a `api/interest.js`. Make le manda un JSON y
+   recibe el ranking. No es una página: nadie la abre en el navegador. Lleva llave compartida en el
+   header.
+
+**No se necesita ninguna herramienta nueva.** Airtable + Make + Vercel, las tres ya pagadas.
+
+**No se necesita apartado web.** La pantalla donde se decide es la ficha del evento en Airtable, que
+el equipo ya usa. El prototipo junta cálculo y pantalla en un archivo porque así se demuestra
+rápido; en producción solo se necesita el cerebro.
+
+**El motor sugiere, no asigna.** El vínculo final lo hace una persona — asignar mal una asociación
+cuesta una relación, y el sistema no sabe lo que el equipo sabe.
+
+#### Estado real de los campos (revisado el 2 de septiembre)
+
+De los 7 criterios, **4 ya existen en ambos lados con opciones idénticas**:
+
+| Criterio | Organizaciones | Eventos |
+|---|---|---|
+| Causa / beneficiarios | `fldnXJWhefLRh1fkp` (9) | `fldyfn8hzBXwu6i7L` (9) |
+| Municipio | `fld75px4qXGUE7XcQ` (51) | `fldGAset0my8u0rYp` (51) |
+| # voluntarios | `fldIAzag1KNz6Anyl` rangos | `fldIwXgx6WYViJ6nU` rangos |
+| Mes | `fldPjZm4HGdS2toNc` (12) | `flda6AkeaCdGIuF60` (12) |
+
+**Faltan 3:** `cuota` y `accesibilidad` no existen de ningún lado; `actividad` existe en
+Organizaciones (`fldnFZt142s15YK9P`, 5 opciones) pero **no en Eventos** ni como pregunta en Fillout.
+
+⚠️ **Las dos escalas de voluntarios no coinciden.** Organizaciones usa `1-10 / 11-20 / 21-30 /
+31-40 / 41-50 / 50+`; Eventos usa `1-5 / 6-10 / 11-15 / …`. Hay que convertir ambas a número antes
+de comparar o el criterio devuelve basura en silencio.
+
+#### El verdadero cuello de botella: la base está vacía
+
+De 37 registros con Tipo = Asociación, ~21 son reales. **Ninguna asociación real tiene los campos
+del match capturados** — solo tienen nombre. Los 4 registros con datos completos son de prueba, y
+uno de ellos trae *las 9 causas, los 12 meses y las 5 actividades* marcadas, que es relleno, no
+información.
+
+**Un motor de match sobre una base vacía devuelve 0% para todas.** El código puede quedar perfecto y
+no servir de nada.
+
+**Cómo llenarla sin quemar al equipo:** un formulario de Fillout para que **la asociación capture su
+propio perfil**, enviado por correo a las 21. Convierte ~5 h de llamadas en un envío, y es la misma
+pieza que se necesita de todos modos para dar de alta asociaciones nuevas.
+
+#### Esfuerzo estimado
+
+| Bloque | Horas |
+|---|---|
+| Campos nuevos en Airtable + fórmulas de conversión de rangos | 1.5 |
+| 3 preguntas nuevas al formulario de captura + que `E-4` las escriba | 1.0 |
+| El cálculo (script de Airtable o `api/match.js`) + pesos desde Config | 2.5 |
+| `E-6`: leer asociaciones → calcular → escribir top 3 + avisar | 2.5 |
+| Campos de salida en Eventos (top 3 y desglose) | 0.5 |
+| Pruebas con datos reales | 1.5 |
+| Formulario de perfil para asociaciones + envío a las 21 | 2.0 |
+| **Total** | **~11.5 h** |
+
+La fecha no la marcan esas horas: la marca **cuánto tardan las asociaciones en responder**.
+
+#### Efecto sobre la delegación a Ana Cristina
+
+La especificación **ya trae los pesos por defecto**, que era la decisión marcada como más crítica del
+proyecto y con fecha límite del 4 de octubre. Si Ana Cristina avala esos números, **queda desbloqueada
+sin junta**. Lo único que hay que confirmarle es que el orden refleje cómo deciden hoy a mano — sobre
+todo que *causa* pese más que *municipio*.
+
+---
+
+### D-028 · Cómo elige el equipo la asociación: correo → confirmación → candado
+
+**2 de septiembre de 2026.** Diseño acordado, pendiente de construir junto con `E-6`.
+
+**El recorrido.** Cuando el evento entra a *04 Conectar asociación*, el match corre solo y escribe el
+top 3 en la ficha. Al responsable le llega un correo con **tres botones, uno por asociación
+sugerida**, cada uno con su porcentaje. El botón lleva a un **formulario corto de Fillout** ya
+precargado que solo dice *"Vas a asignar Cardiochavitos al evento de Cemex. ¿Confirmas?"*. Al
+confirmar, un escenario vincula la asociación, avanza la fase y avisa al equipo.
+
+**Por qué Fillout y no una liga directa a Airtable.** El momento en que se elige asociación casi nunca
+es frente a la computadora. Un botón en el correo se responde en el momento; *"entra a Airtable"* se
+pospone. Además **quien elige no ocupa un lugar de colaborador** — el plan Free trae 5 y entre Mia,
+Adri, Ana Cris, Gabi y Ethan ya están los 5. Y queda registro de **quién eligió y cuándo**, que hoy
+no se guarda en ningún lado.
+
+**Por qué hay paso de confirmación y no un solo clic.** Los correos se reenvían y algunos filtros de
+seguridad abren las ligas solos para revisarlas. Si el botón asignara al abrirse, tarde o temprano se
+asigna una asociación que nadie eligió y nadie se entera. **Ninguna acción con consecuencia hacia
+afuera puede ejecutarse por abrir un link.**
+
+**Abrir el link no guarda nada.** Se puede abrir diez veces, cerrar y reenviar sin efecto. Lo que hay
+que blindar es **enviar**.
+
+#### El candado: gana la primera respuesta, no la última
+
+Sin protección gana la última y nadie se entera. El daño no es el dato: al vincular una asociación
+**le sale el convenio a esa asociación**. Si Mia pica Cardiochavitos y Adri pica Manos Unidas diez
+minutos después, **dos organizaciones reciben el convenio del mismo evento**. Airtable se queda con
+una; afuera quedan dos creyendo que les tocó. Eso no lo arregla un campo — hay que hablarle a una
+para decirle que no.
+
+**Campo sello:** `Asociacion elegida en` (fecha y hora, nombre sin acentos por D-017), más quién
+eligió. Antes de escribir, el escenario lo lee:
+
+- **Vacío** → vincula, sella fecha y persona, avanza fase, avisa.
+- **Con valor** → **no toca nada** y le contesta al que llegó tarde: *"Este evento ya tenía asociación
+  asignada: Cardiochavitos, elegida por Mia el 2 de septiembre a las 18:04. No se cambió nada. Si hay
+  que cambiarla, háblalo con Mia primero — a Cardiochavitos ya le salió el convenio."*
+
+Es el mismo patrón de `E-4` y `E-5`, pero aquí importa más porque del otro lado hay una asociación
+real esperando.
+
+**Envíos simultáneos:** cubierto por el **procesamiento secuencial** que ya traen todos los
+escenarios. Make los forma en fila y termina uno antes de empezar el siguiente, así que el segundo no
+puede leer el campo antes de que el primero lo selle. No hay ventana de carrera.
+
+**Cambiar a propósito:** el candado no es eterno, **pero tampoco es un botón**. Alguien con acceso a
+Airtable borra el sello y el evento vuelve a aceptar elección. El estorbo es intencional: obliga a que
+exista la conversación con la primera asociación antes del cambio, que es algo que ninguna
+automatización puede hacer.
+
+#### Pantalla de exploración — opcional, solo si la piden
+
+Único caso que justificaría una pantalla web: consultar sin que exista un evento (*"si llega una
+empresa de 40 voluntarios en García pidiendo medio ambiente, ¿a quién tenemos?"*). Se resuelve con el
+**mismo prototipo HTML** leyendo Airtable en vez de `localStorage` — no hace falta meterlo al portal
+ni construir un admin. **Primero el cálculo automático dentro del flujo**, que es lo que quita
+trabajo; la pantalla solo si alguien la pide de verdad.
