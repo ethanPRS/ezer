@@ -910,3 +910,47 @@ reproducciones — que es exactamente como se aisló aquí cuál de las dos rama
 Registros de prueba eliminados. **Tres escenarios de Empresas en producción: `E-1`, `E-2`, `E-3`.**
 
 ---
+## 2026-09-02 · Sprint 4 arrancado — 8 campos creados y spec del formulario
+
+### 8 campos nuevos en Eventos, sin los cuales `E-4` y `E-5` no se podían construir
+
+| Campo | Tipo | Para qué |
+|---|---|---|
+| `Cotizacion Doc ID` | texto | **Candado de idempotencia** de `E-4` |
+| `Cotización (Doc editable)` | url | Liga al Doc |
+| `Convenio Empresa Doc ID` | texto | Idem, para el convenio |
+| `Convenio Empresa (Doc editable)` | url | Liga al Doc |
+| `Fecha de cotizacion enviada` | fecha | **Candado contra doble envío** de `E-5` |
+| `Cotizacion en proceso de envio` | casilla | Candado temporal, patrón de `A-5` |
+| `Cotización PDF` | url | Adjunto del correo |
+| `Convenio Empresa PDF` | url | Adjunto del correo |
+
+**Convención de nombres aplicada:** los campos que Make **evalúa en filtros** van sin acentos
+(`Cotizacion Doc ID`, `Fecha de cotizacion enviada`, `Cotizacion en proceso de envio`); los que Make
+solo **escribe por ID de campo** conservan su acentuación correcta. Sale de D-017.
+
+**Nota de nomenclatura:** el convenio de Empresas se llama `Convenio Empresa …` a propósito, para no
+confundirlo con `Convenio Doc ID` de Organizaciones, que es el de Asociaciones y tiene otro ciclo.
+
+### El formulario escribe en DOS tablas
+
+Hallazgo al revisar el esquema: los datos fiscales (`RFC`, `Razón social`, `Uso CFDI`) viven en
+**Organizaciones**, no en Eventos. `E-4` tiene que resolver el vínculo Evento → Organización antes
+de escribirlos. El plan original no lo contemplaba.
+
+### Especificación lista
+
+`Documentos/spec-formulario-interno-empresas.md` — 12 preguntas en 4 secciones, cada una con su tipo,
+sus opciones exactas y su campo destino. La captura en Fillout queda mecánica.
+
+**Corrección al plan:** el plan pedía capturar seis variables de match. Son **cuatro**, y dos de
+ellas —municipio y número de voluntarios— ya se capturan como datos del evento. No hay preguntas
+duplicadas.
+
+### 🔴 Pendiente que bloquea el diseño de `E-4`
+
+**¿El "coordinador" es la misma persona que registró la empresa en el sitio?** El flujo manda la
+cotización "al coordinador", pero el único contacto que existe hoy es quien llenó el registro. Si
+pueden ser distintos, hacen falta dos preguntas más en el formulario y un campo en Airtable.
+
+---
