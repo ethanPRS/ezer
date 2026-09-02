@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avance del Flujo de Empresas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --ground:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F7;
+  --ink:#151A2B; --ink-2:#4A5468; --ink-3:#78839A;
+  --line:#DCE2EC; --line-2:#BFC9D9;
+  --navy:#1A2E6C; --navy-soft:#E5EAF6;
+  --flame:#C3371A; --flame-soft:#FBE8E3;
+  --ok:#17683D; --ok-soft:#E1F0E7;
+  --warn:#835500; --warn-soft:#FAEFD8;
+  --shadow:0 1px 2px rgba(21,26,43,.05), 0 6px 18px rgba(21,26,43,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+    --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+    --line:#293147; --line-2:#39435E;
+    --navy:#93A9EE; --navy-soft:#1A2340;
+    --flame:#FF8963; --flame-soft:#3A2019;
+    --ok:#6ED498; --ok-soft:#12301F;
+    --warn:#E5B75A; --warn-soft:#332708;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+  --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+  --line:#293147; --line-2:#39435E;
+  --navy:#93A9EE; --navy-soft:#1A2340;
+  --flame:#FF8963; --flame-soft:#3A2019;
+  --ok:#6ED498; --ok-soft:#12301F;
+  --warn:#E5B75A; --warn-soft:#332708;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:840px;margin:0 auto;padding:52px 26px 88px}
+p{margin:0 0 13px;max-width:66ch}
+h1,h2,h3,.eyebrow,.mono,.chip,.tag{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+h1{font-size:clamp(30px,4.5vw,44px);line-height:1.06;letter-spacing:-.022em;font-weight:800;margin:0 0 12px;text-wrap:balance}
+h2{font-size:23px;line-height:1.17;letter-spacing:-.015em;font-weight:700;margin:0;text-wrap:balance}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--flame);margin:0 0 12px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+header{border-bottom:3px solid var(--navy);padding-bottom:26px;margin-bottom:20px}
+.lede{font-size:18.5px;line-height:1.5;color:var(--ink-2);max-width:62ch;margin:0}
+
+/* titular de calendario */
+.headline{
+  background:var(--ok-soft);border:1px solid var(--line);border-left:4px solid var(--ok);
+  border-radius:0 10px 10px 0;padding:20px 24px;margin:26px 0 0;
+}
+.headline .big{
+  font-family:Archivo,sans-serif;font-weight:800;font-size:clamp(21px,3vw,27px);
+  letter-spacing:-.015em;line-height:1.2;color:var(--ok);margin:0 0 8px;text-wrap:balance;
+}
+.headline p{margin:0;font-size:15.5px;color:var(--ink-2);max-width:64ch}
+.cal{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
+.cal div{font-size:13.5px;color:var(--ink-2)}
+.cal b{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600;display:block;margin-bottom:2px}
+.cal .v{font-family:Archivo,sans-serif;font-weight:700;font-size:15.5px;color:var(--ink);font-variant-numeric:tabular-nums}
+
+section{margin-top:46px}
+.sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line-2);padding-bottom:9px;margin-bottom:22px}
+.sec-head .n{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--flame);letter-spacing:.08em;flex:none}
+
+/* automatizaciones en produccion — filas de estado, no tarjetas */
+.auto{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.row{background:var(--surface);display:grid;grid-template-columns:86px 1fr;gap:18px;padding:17px 20px;align-items:start}
+.row .code{
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;letter-spacing:.03em;
+  color:var(--ok);background:var(--ok-soft);border-radius:5px;padding:4px 0;text-align:center;
+}
+.row h3{font-family:Archivo,sans-serif;font-size:16px;font-weight:700;letter-spacing:-.01em;margin:1px 0 5px;line-height:1.25}
+.row p{font-size:14.5px;color:var(--ink-2);margin:0;max-width:58ch}
+.row .when{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);margin-top:7px;display:block}
+
+/* hallazgos */
+.find{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--flame);border-radius:0 10px 10px 0;padding:17px 21px;margin-bottom:14px;box-shadow:var(--shadow)}
+.find h3{font-family:Archivo,sans-serif;font-size:15.5px;font-weight:700;margin:0 0 6px;letter-spacing:-.008em;line-height:1.3}
+.find p{font-size:14.5px;color:var(--ink-2);margin:0 0 8px}
+.find p:last-child{margin-bottom:0}
+.find .fix{font-size:13.5px;color:var(--ok);font-weight:600;font-family:Archivo,sans-serif}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:460px}
+th{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;letter-spacing:.075em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:11px 16px;background:var(--surface-2);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+
+.tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.next{background:var(--navy-soft);color:var(--navy)}
+
+.ask{background:var(--warn-soft);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;padding:20px 24px}
+.ask h3{font-family:Archivo,sans-serif;font-size:17px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+.ask ol{margin:12px 0 0;padding-left:20px;font-size:15px;color:var(--ink-2)}
+.ask li{margin-bottom:9px}
+.ask li:last-child{margin-bottom:0}
+.ask b{color:var(--ink);font-weight:600}
+
+footer{margin-top:64px;padding-top:15px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-3);font-family:Archivo,sans-serif}
+
+@media (max-width:620px){
+  .wrap{padding:34px 17px 60px}
+  .row{grid-template-columns:1fr;gap:9px}
+  .row .code{width:86px}
+  body{font-size:15.5px}
+}
+@media print{
+  @page{size:letter;margin:1.7cm 1.5cm}
+  body{background:#fff;font-size:10.5pt}
+  .wrap{padding:0;max-width:none}
+  .find,.tw,.auto{box-shadow:none}
+  section{margin-top:28px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">EZER A.B.P. · La Casa del Voluntario</p>
+  <h1>Avance del Flujo de Empresas</h1>
+  <p class="lede">Reporte al 2 de septiembre de 2026. Tres automatizaciones ya trabajando en producción, y una fuga de registros que llevaba mes y medio abierta, ahora cerrada.</p>
+</header>
+
+<div class="headline">
+  <p class="big">Los sprints 2 y 3 estaban programados para cerrar el 11 de octubre. Cerraron hoy.</p>
+  <p>Casi <strong>seis semanas de adelanto</strong> sobre el plan de trabajo, sin recortar alcance ni saltarse pruebas: cada automatización se probó con casos reales antes de darse por terminada.</p>
+  <div class="cal">
+    <div><b>Programado</b><span class="v">11 oct 2026</span></div>
+    <div><b>Real</b><span class="v">2 sep 2026</span></div>
+    <div><b>Adelanto</b><span class="v">≈ 6 semanas</span></div>
+    <div><b>Entrega final</b><span class="v">14 mar 2027</span></div>
+  </div>
+</div>
+
+<section>
+  <div class="sec-head"><span class="n">01</span><h2>Lo que ya está funcionando</h2></div>
+  <p>Tres automatizaciones activas, corriendo sobre datos reales. Ninguna requiere que alguien del equipo esté pendiente.</p>
+  <div class="auto">
+    <div class="row">
+      <span class="code">E-1</span>
+      <div>
+        <h3>Registro de empresa</h3>
+        <p>Cuando una empresa se registra en el sitio, entra sola a Airtable sin duplicarse, se le asigna responsable alternando entre Mia y Adri, y recibe su correo de bienvenida con la liga para agendar.</p>
+        <span class="when">En producción desde el 29 de agosto</span>
+      </div>
+    </div>
+    <div class="row">
+      <span class="code">E-2</span>
+      <div>
+        <h3>Reunión agendada</h3>
+        <p>Al agendar por Calendly, el expediente avanza solo a la etapa de reunión y guarda la fecha. La empresa recibe su confirmación y el equipo un aviso con quién agendó y para cuándo.</p>
+        <span class="when">En producción desde el 30 de agosto</span>
+      </div>
+    </div>
+    <div class="row">
+      <span class="code">E-3</span>
+      <div>
+        <h3>Seguimiento e inactividad</h3>
+        <p>Todos los días revisa quién se registró y no agendó. A los 5 días le manda un recordatorio; a los 20 sin respuesta, marca el expediente como inactivo y avisa al equipo.</p>
+        <span class="when">En producción desde el 29 de agosto</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">02</span><h2>Dos problemas que estaban ocurriendo sin que nadie lo notara</h2></div>
+  <p>Los dos se encontraron al revisar el sistema para construir sobre él. Ninguno producía un mensaje de error, que es justamente por qué llevaban tanto tiempo pasando.</p>
+
+  <div class="find">
+    <h3>Los registros de empresas del sitio se estaban perdiendo</h3>
+    <p>La página web enviaba cada registro a un proceso que llevaba <strong>apagado desde el 20 de julio</strong>. Los datos no se guardaban en ningún lado y no quedaba rastro: el visitante recibía su correo de confirmación con normalidad, así que desde fuera todo parecía funcionar.</p>
+    <p class="fix">Corregido el 29 de agosto. Vale la pena revisar si hubo registros reales en ese mes y medio.</p>
+  </div>
+
+  <div class="find">
+    <h3>Una reunión de empresa creaba asociaciones falsas</h3>
+    <p>Como los avisos de Calendly no distinguen entre los dos tipos de reunión, el proceso de Asociaciones también atendía las citas de empresas. Cuando el correo no le resultaba conocido, <strong>creaba una asociación nueva desde cero</strong>, y cuando sí, le sobrescribía la fecha de reunión a una asociación existente.</p>
+    <p class="fix">Corregido el 29 de agosto, y el registro que se había alterado quedó restaurado.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">03</span><h2>Cómo va el proyecto completo</h2></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Etapa</th><th>Qué cubre</th><th class="num">Estado</th></tr></thead>
+      <tbody>
+        <tr><td>Captación y agenda</td><td>Del registro en el sitio a la reunión agendada, con seguimiento automático</td><td class="num"><span class="tag ok">Listo</span></td></tr>
+        <tr><td>Captura y cotización</td><td>Formulario posterior a la reunión, generación de la cotización y el convenio</td><td class="num"><span class="tag next">Sigue</span></td></tr>
+        <tr><td>Cobro</td><td>Datos fiscales, recibo del contador, comprobante de pago y confirmación</td><td class="num"><span class="tag next">Sigue</span></td></tr>
+        <tr><td>Conexión con la asociación</td><td>El motor que sugiere qué asociación hace match, con porcentaje y desglose</td><td class="num"><span class="tag next">Sigue</span></td></tr>
+        <tr><td>Evento y cierre</td><td>Preparación, recordatorios, fotografías y los tres formularios de feedback</td><td class="num"><span class="tag next">Sigue</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:16px;">La siguiente etapa arranca con el formulario interno de captura, que es lo que alimenta tanto la cotización como el motor de match. Al construirlo ya quedaron listos en Airtable los campos que ese motor necesita para cruzar empresas con asociaciones.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">04</span><h2>Lo que necesitamos de Dirección</h2></div>
+  <div class="ask">
+    <h3>Tres cosas, y solo la primera corre prisa</h3>
+    <ol>
+      <li><b>Confirmar la fecha de entrega del 14 de marzo de 2027.</b> Es la que resulta de una dedicación de 7 horas semanales sobre el alcance completo. Si la fecha necesita adelantarse, existe la opción de entregar en diciembre todo el ciclo hasta el cobro y dejar el resto para una segunda fase.</li>
+      <li><b>La revisión legal sigue pendiente desde julio:</b> convenio con empresa, carta de deslinde del voluntario y aviso de privacidad. Un abogado los revisa una sola vez y después se reutilizan. Se necesitan antes de marzo.</li>
+      <li><b>Definir quién toma las fotografías del evento y dónde se guardan.</b> Es la única pieza del cierre que sigue sin definirse.</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  Reporte de avance · 2 de septiembre de 2026 · EZER A.B.P. — La Casa del Voluntario<br>
+  Las tres automatizaciones están activas y operando. El detalle técnico de cada decisión queda registrado en la bitácora del proyecto.
+</footer>
+
+</div>
+</body>
+</html>
