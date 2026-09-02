@@ -987,3 +987,35 @@ puede hacer dos eventos con coordinadores distintos. Pertenece al Evento.
 del Evento, no como Contacto. Revisar esto si algún día se corrige el patrón multi-contacto.
 
 ---
+### Contenido del Sprint 4 listo — prompt de Fillout y las dos plantillas
+
+`Documentos/contenido-sprint4-formulario-y-plantillas.md` trae:
+
+1. **Prompt para la IA de Fillout** con las 15 preguntas, sus tipos y sus opciones exactas, más los
+   **3 ajustes que la IA no puede hacer**: el campo oculto `record_id`, verificar que no haya
+   "mejorado" las listas de opciones, y pasar el ID del formulario.
+2. **Plantilla de Cotización** con marcadores `{{...}}`.
+3. **Plantilla de Convenio EZER–Empresa**, marcada explícitamente como **pendiente de revisión
+   legal** y con dos cláusulas señaladas como incompletas (responsabilidad/seguro, y plazo de
+   cancelación).
+4. **Tabla de marcadores** con el origen exacto de cada valor.
+
+### 🔴 D-023 · El plan nunca definió de dónde sale el precio de la cotización
+
+Al redactar la plantilla salió a la luz: la tabla `Cotizaciones` tiene `Monto`, `Folio` y `Vigencia`,
+pero **nada en el flujo los llena**. El formulario no pregunta el precio y `E-4` no crea el registro
+de Cotización. La cotización saldría en blanco y la cláusula CUARTA del convenio también.
+
+Tres opciones planteadas: capturarlo en el formulario (A), calcularlo desde un tabulador en `Config`
+(B), o llenarlo a mano en el Doc (C).
+
+**Recomendación: A.** Supone lo mínimo sobre cómo cobran hoy, deja el monto en Airtable para poder
+reportarlo, y llena la cláusula del convenio sin trabajo extra. Migrar de A a B después es fácil; al
+revés no.
+
+**Bloquea:** cerrar la plantilla de Cotización y, por tanto, la construcción de `E-4`.
+
+**Relacionado:** el `{{folio}}` tampoco está definido. Se propone un autonumber con prefijo
+(`COT-2026-0001`), mismo criterio que el número de referencia del Sprint 6.
+
+---
