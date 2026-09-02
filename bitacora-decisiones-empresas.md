@@ -954,3 +954,36 @@ cotización "al coordinador", pero el único contacto que existe hoy es quien ll
 pueden ser distintos, hacen falta dos preguntas más en el formulario y un campo en Airtable.
 
 ---
+### D-022 · Son dos coordinadores distintos; el de la empresa va en el Evento
+
+**Resuelto por Ethan el 2 de septiembre.**
+
+| Coordinador | Quién es | Dónde vive |
+|---|---|---|
+| **De EZER** | Quien acompaña el evento; cambia de un evento a otro | Ya planeado como tarea del Sprint 13 |
+| **De la empresa** | Se captura en el formulario interno. **No necesariamente quien se registró en el sitio** | Tres campos nuevos en Eventos |
+
+Campos creados: `Coordinador empresa`, `Correo coordinador` (sin acentos, Make lo evalúa antes de
+enviar) y `Teléfono del coordinador`.
+
+**A este correo se manda la cotización** y, más adelante, los pasos a seguir tras confirmar el pago.
+Si va vacío, `E-5` cae al correo del contacto que se registró.
+
+### Por qué el coordinador NO se guarda como un Contacto más
+
+Se consideró crearlo como registro en **Contactos** ligado a la Organización — más normalizado y
+reusa el patrón de deduplicación de `E-1`. **Se descartó por un efecto secundario grave:**
+
+`Correo del contacto principal` de Organizaciones es un **rollup sobre todos sus contactos**. Un
+segundo contacto haría que devolviera **dos correos**, y eso rompería el envío de `E-3`, que lee ese
+valor a través del lookup `Correo del contacto`. Es **exactamente** el problema que hoy tiene a
+`A-2.1` con 13 errores y 6 ejecuciones atoradas en Asociaciones.
+
+**Razón adicional, y de modelo:** el coordinador es **por evento**, no por empresa. La misma empresa
+puede hacer dos eventos con coordinadores distintos. Pertenece al Evento.
+
+**Regla que queda:** mientras `Correo del contacto principal` siga siendo un rollup sin agregador,
+**una organización debe tener un solo contacto**. Cualquier persona adicional se guarda como campo
+del Evento, no como Contacto. Revisar esto si algún día se corrige el patrón multi-contacto.
+
+---

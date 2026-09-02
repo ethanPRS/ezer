@@ -1,6 +1,6 @@
 # Especificación — Formulario interno de captura (Empresas)
 
-**Sprint 4 · tarea S4-1** · Lo llena el equipo de EZER **después** de la reunión con la empresa.
+**Sprint 4 · tarea S4-1** · 15 preguntas en 5 secciones. Lo llena el equipo de EZER **después** de la reunión con la empresa.
 Su envío dispara el escenario `E-4`, que genera la Cotización y el Convenio como Docs editables.
 
 > Esta especificación existe para que la captura en Fillout sea mecánica: cada pregunta ya trae su
@@ -72,27 +72,56 @@ antes de compararlas — está anotado en la tarea del Sprint 7, no hay que reso
 
 ---
 
-## Sección 3 — Curso de sensibilización
+## Sección 3 — El coordinador de la empresa
+
+Quien va a coordinar el evento **por parte de la empresa**. Escribe en **Eventos**.
 
 | # | Pregunta | Tipo en Fillout | Campo destino |
 |---|---|---|---|
-| 9 | ¿Incluye curso de sensibilización? | Sí / No | `Incluye curso de sensibilización` (Eventos) |
+| 9 | Nombre del coordinador | Texto corto | `Coordinador empresa` |
+| 10 | Correo del coordinador | Correo electrónico | `Correo coordinador` |
+| 11 | Teléfono del coordinador | Teléfono | `Teléfono del coordinador` |
+
+⚠️ **No es necesariamente quien llenó el registro en el sitio.** Suele registrarse alguien de
+Recursos Humanos y coordinar otra persona. **A este correo se manda la cotización** y, más adelante,
+los pasos a seguir tras confirmar el pago.
+
+**Respaldo:** si el correo va vacío, `E-5` cae al correo del contacto que se registró. Conviene
+marcar la pregunta como obligatoria para no depender de ese respaldo.
+
+> **Por qué el coordinador NO se guarda como un Contacto más de la organización:** el campo
+> `Correo del contacto principal` de Organizaciones es un *rollup* sobre todos sus contactos. Meter
+> un segundo contacto haría que devolviera **dos correos**, y eso rompería el envío de `E-3` — es
+> exactamente el problema que hoy tiene fallando a `A-2.1` en Asociaciones. Además el coordinador es
+> **por evento**, no por empresa: la misma empresa puede hacer dos eventos con coordinadores
+> distintos.
+
+> **El coordinador de EZER es otra cosa** y se asigna aparte, ya planeado como tarea del Sprint 13.
+> Este formulario solo captura el de la empresa.
+
+---
+
+## Sección 4 — Curso de sensibilización
+
+| # | Pregunta | Tipo en Fillout | Campo destino |
+|---|---|---|---|
+| 12 | ¿Incluye curso de sensibilización? | Sí / No | `Incluye curso de sensibilización` (Eventos) |
 
 Esta casilla decide, mucho más adelante, si el flujo manda la liga del curso o se salta esa etapa.
 También debe reflejarse en el monto de la cotización.
 
 ---
 
-## Sección 4 — Datos fiscales
+## Sección 5 — Datos fiscales
 
 ⚠️ **Estas tres escriben en Organizaciones** (`tblTGoIoCoRRr6dPf`), no en Eventos. `E-4` tiene que
 resolver el vínculo Evento → Organización antes de escribirlas.
 
 | # | Pregunta | Tipo en Fillout | Campo destino |
 |---|---|---|---|
-| 10 | RFC | Texto corto | `RFC` |
-| 11 | Razón social | Texto corto | `Razón social` |
-| 12 | Uso de CFDI | Texto corto | `Uso CFDI` |
+| 13 | RFC | Texto corto | `RFC` |
+| 14 | Razón social | Texto corto | `Razón social` |
+| 15 | Uso de CFDI | Texto corto | `Uso CFDI` |
 
 ---
 
@@ -130,13 +159,10 @@ ignorando su filtro.
 
 ---
 
-## Pendiente de definir antes de construir `E-4`
+## Resuelto el 2 de septiembre
 
-**¿Quién es el "coordinador" del evento?** El flujo manda la cotización "al coordinador", pero hoy
-el único contacto que existe es quien llenó el registro en el sitio. Dos opciones:
+**El coordinador de la empresa se captura en el formulario** (sección 3) y no es necesariamente
+quien llenó el registro en el sitio. Se agregaron tres campos a Eventos: `Coordinador empresa`,
+`Correo coordinador` y `Teléfono del coordinador`.
 
-- **Son la misma persona** → no hace falta ningún campo, se usa el contacto existente
-- **Puede ser alguien distinto** → hay que agregar nombre y correo del coordinador al formulario, y
-  un campo en Airtable para guardarlos
-
-Afecta a quién se le manda la cotización, así que conviene resolverlo antes de armar el formulario.
+Con esto ya no queda nada pendiente de definir para construir `E-4`.
