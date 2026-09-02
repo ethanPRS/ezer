@@ -10,20 +10,10 @@ Dos motivos, y el segundo es el importante.
 Docs, Make no puede recibir `{{Nombre_Evento}}` como texto literal — lo interpretaría como una
 expresión suya. Por eso el blueprint de `A-4` tiene guardado `Nombre_Asociacion` **sin llaves**.
 
-### ⚠️ Esto implica un bug probable en las plantillas de Asociaciones
-
-Si la plantilla del Convenio de Asociaciones dice `{{Nombre_Asociacion}}` pero Make busca
-`Nombre_Asociacion`, **el reemplazo de Google Docs es por subcadena**: sustituye solo la palabra y
-**deja las llaves puestas**. El convenio generado diría:
-
-> `{{Fundación Vida Nueva Monterrey A.C.}}`
-
-**Vale la pena abrir uno de los convenios ya generados y verificarlo.** Si tiene las llaves, se
-arregla igual que aquí: quitarlas de la plantilla. Los convenios ya enviados no se pueden corregir,
-pero los siguientes salen limpios.
-
-`A-1` a `A-6` son de solo lectura, pero **esto es editar una plantilla de Google Docs, no un
-escenario de Make** — así que no entra en esa restricción.
+> **Sobre Asociaciones:** se verificó que sus convenios generados salen limpios, sin llaves. Sus
+> plantillas ya usan el formato correcto. Lo que hay que cambiar son las **dos plantillas nuevas de
+> Empresas**, que se pegaron con marcadores en minúsculas y entre llaves porque así venían en el
+> borrador entregado.
 
 ## Qué hacer
 

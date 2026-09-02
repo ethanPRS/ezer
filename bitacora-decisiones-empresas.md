@@ -1117,7 +1117,7 @@ referencias `{{módulo.`Campo Acentuado`}}` sí resuelven bien. `E-4` usa
    carpeta de Plantillas, las carpetas de evento quedarían anidadas donde no va.
 
 ---
-### 🔴 Bug probable en las plantillas de Asociaciones — llaves sobrantes
+### ✅ DESCARTADO · Bug de llaves sobrantes en Asociaciones — no existe
 
 **Detectado el 2 de septiembre**, al aclarar la convención de marcadores con Ethan.
 
@@ -1135,13 +1135,15 @@ Make y no admite llaves literales en ese campo.
 `Nombre_Asociacion` dentro de `{{Nombre_Asociacion}}`, lo reemplaza, y **deja las llaves**. El
 convenio generado diría `{{Fundación Vida Nueva Monterrey A.C.}}`.
 
-**Sin verificar todavía** — no hay conector de Google Docs para leer el documento. Hay que abrir un
-convenio ya generado y comprobarlo a ojo.
+**VERIFICADO POR ETHAN EL MISMO DÍA: los convenios de Asociaciones salen limpios, sin llaves.**
+La hipótesis era incorrecta y queda descartada. Las plantillas de Asociaciones ya usan los
+marcadores en el formato que Make espera.
 
-**Si se confirma:** se arregla quitando las llaves de la plantilla. **No entra en la restricción
-D-011**, porque es editar un Google Doc, no un escenario de Make. Los convenios ya enviados no se
-pueden corregir; los siguientes saldrían limpios.
+**Lo que sí queda en pie:** las dos plantillas nuevas de Empresas se pegaron con marcadores
+`{{minusculas}}`, porque así venían en el borrador que se entregó. Esos sí hay que cambiarlos a
+palabras con guión bajo — la lista está en `Documentos/marcadores-plantillas-docs.md`.
 
-**Para Empresas ya queda resuelto:** los marcadores van sin llaves desde el inicio.
+**Lección que sí vale:** el módulo de Google Docs busca **por subcadena**, así que un marcador debe
+ser una cadena que no aparezca en la prosa del documento. El guión bajo lo garantiza.
 
 ---
