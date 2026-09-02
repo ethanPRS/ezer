@@ -870,3 +870,43 @@ están probados en producción. Cualquier otro, probarlo antes de confiar en él
 emparejó, así que esa sola reserva confirma o descarta D-002.
 
 ---
+## 2026-09-02 · ✅ D-002 CONFIRMADO — Sprint 3 cerrado
+
+### El `utm_content` sí viaja en el webhook de Calendly
+
+Probado **sin necesidad de agendar otra vez**, reproduciendo (`scenarios_replay`) la ejecución de la
+reserva del 30 de agosto, ya con el filtro corregido de D-021.
+
+| Reproducción | Operaciones | Resultado |
+|---|---|---|
+| 1ª | 6 | El evento pasó de Fase `01 Contacto` → **`02 Reunión`**, con la fecha del 31-ago |
+| 2ª | 6 | Corrió completa **aunque el evento ya estaba en Fase 02** |
+
+**La segunda es la prueba concluyente.** La rama de emparejamiento por correo exige
+`Fase = "01 Contacto"`, condición que ya era falsa. La única vía posible para que el
+`Search Records` devolviera el registro era `RECORD_ID() = "{{1.tracking.utm_content}}"`.
+
+**Consecuencia:** D-002 queda confirmado. `E-2` empareja por ID de registro, que es robusto ante
+correos distintos, invitaciones reenviadas y contactos duplicados. La rama por correo se conserva
+como respaldo para quien agende desde una liga sin el parámetro.
+
+**Técnica que vale la pena recordar:** `scenarios_replay` re-ejecuta con los datos originales del
+trigger. Sirve para probar correcciones de escenarios con webhook **sin pedirle al usuario que
+repita la acción**, y permite diseñar pruebas discriminantes cambiando el estado de los datos entre
+reproducciones — que es exactamente como se aisló aquí cuál de las dos ramas emparejó.
+
+### Estado final del Sprint 3 — 7 de 7
+
+| Tarea | Estado |
+|---|---|
+| S3-1 Tipo de evento de Empresas | ✅ |
+| S3-2 Probar el `utm_content` | ✅ **confirmado** |
+| S3-3 Escenario `E-2` | ✅ activo (6093786) |
+| S3-4 Correos de confirmación | ✅ |
+| S3-5 Escenario diario `E-3` | ✅ activo (6093624), ambas rutas probadas |
+| S3-6 Pruebas del Bloque 2 | ✅ |
+| S3-7 Campos de match en Airtable | ✅ |
+
+Registros de prueba eliminados. **Tres escenarios de Empresas en producción: `E-1`, `E-2`, `E-3`.**
+
+---
