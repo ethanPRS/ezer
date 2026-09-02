@@ -1019,3 +1019,39 @@ revés no.
 (`COT-2026-0001`), mismo criterio que el número de referencia del Sprint 6.
 
 ---
+### D-023 RESUELTO · Monto fijo de $20,000, editable
+
+**Decisión de Ethan el 2 de septiembre.** Implementado en **tres capas**, para que nunca salga una
+cotización en blanco y a la vez el precio sea flexible:
+
+1. **Precargado en el formulario** — la pregunta 13 llega con `20000` puesto; el equipo lo cambia al
+   capturar si ese evento se cotizó distinto.
+2. **Respaldo en `E-4`** — si llega vacío de todas formas, el escenario lo pone en 20000.
+3. **Editable en Airtable** — el campo `Monto` se puede corregir a mano antes de enviar la
+   cotización, sin volver a llenar el formulario.
+
+| Campo creado | Tipo | Detalle |
+|---|---|---|
+| `Monto` | Moneda MXN, 2 decimales | Predeterminado $20,000 |
+| `Folio cotizacion` | Fórmula | `COT-AAAAMMDD-XXXX`, p. ej. `COT-20260902-S2H7` |
+
+El folio se compone de la fecha de creación del evento más los últimos 4 caracteres de su ID: único,
+ordenable por fecha y rastreable al registro. **Si se prefiere un consecutivo real**
+(`COT-2026-0001`), Airtable tiene el tipo *Autonumber*, pero **solo se puede crear desde la interfaz**
+— la API no lo expone. Son dos clics cuando se quiera.
+
+El formulario pasa de 15 a **16 preguntas**.
+
+### 🟡 Observación abierta: la tabla `Cotizaciones` quedó redundante
+
+Existe desde antes, con `Folio`, `Monto`, `Vigencia`, `PDF` y `Link Convenio`, ligada a Eventos.
+**Nada del flujo la llena**, y con `Monto` y `Folio cotizacion` ahora en Eventos, su información
+está duplicada.
+
+**La única razón para conservarla** sería que una empresa pudiera tener **varias cotizaciones para
+el mismo evento** — una con curso y otra sin él, o una revisión de precio con histórico. Si eso pasa
+en la práctica, la tabla tiene sentido y habría que usarla en serio; si no, sobra.
+
+**No decidir esto solo:** preguntar al equipo antes de borrar nada. No bloquea el Sprint 4.
+
+---

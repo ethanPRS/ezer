@@ -50,14 +50,17 @@ No necesariamente es quien llenó el registro en la página."
 10. "Correo del coordinador" — correo electrónico, obligatorio
 11. "Teléfono del coordinador" — teléfono, opcional
 
-SECCIÓN 4 — Curso de sensibilización
+SECCIÓN 4 — Curso e inversión
 12. "¿Incluye curso de sensibilización?" — opción única Sí / No, obligatorio
+13. "Monto total de la cotización (MXN)" — número decimal, obligatorio,
+    con valor predeterminado 20000. Texto de ayuda: "El estándar son $20,000.
+    Cámbialo si este evento se cotizó distinto." 
 
 SECCIÓN 5 — Datos fiscales
 Texto de ayuda de la sección: "Para poder emitir el recibo deducible."
-13. "RFC" — texto corto, obligatorio
-14. "Razón social" — texto corto, obligatorio
-15. "Uso de CFDI" — texto corto, obligatorio
+14. "RFC" — texto corto, obligatorio
+15. "Razón social" — texto corto, obligatorio
+16. "Uso de CFDI" — texto corto, obligatorio
 
 Mensaje al terminar: "Listo. Ya se están generando la cotización y el convenio de esta
 empresa. En unos segundos aparecen en Airtable."
@@ -75,7 +78,7 @@ En la configuración del formulario, agrega un *hidden field* / *URL parameter* 
 sabe dónde escribir.
 
 **2 · Revisar las opciones de los desplegables**
-La IA suele "mejorar" las listas. Verifica que las opciones de las preguntas **4, 5, 7 y 8** quedaran
+La IA suele "mejorar" las listas. Verifica que las opciones de las preguntas **4, 5, 7 y 8**, y que la **13 traiga 20000 precargado**, quedaran
 **idénticas** a las de arriba, carácter por carácter. Si difieren, el motor de match del Sprint 8
 devolverá 0% y parecerá un error del sistema cuando en realidad es de los datos.
 
@@ -146,8 +149,7 @@ Vigencia de esta cotización: 30 días naturales
 
 | Concepto | Importe |
 |---|---|
-| `{{concepto_1}}` | `{{importe_1}}` |
-| `{{concepto_2}}` | `{{importe_2}}` |
+| Coordinación integral del evento de voluntariado corporativo | |
 | **Total** | **`{{monto_total}}`** |
 
 Los importes están expresados en pesos mexicanos. EZER A.B.P. es una asociación de beneficencia
@@ -313,34 +315,52 @@ Monterrey, Nuevo León, a `{{fecha_emision}}`.
 | `{{rfc}}` | Organizaciones · `RFC` |
 | `{{uso_cfdi}}` | Organizaciones · `Uso CFDI` |
 | `{{fecha_emision}}` | Fecha en que corre `E-4` |
-| `{{folio}}` | 🔴 **Sin definir** |
-| `{{concepto_1}}` `{{importe_1}}` `{{concepto_2}}` `{{importe_2}}` `{{monto_total}}` | 🔴 **Sin definir** |
+| `{{folio}}` | Eventos · `Folio cotizacion` (automático, `COT-AAAAMMDD-XXXX`) |
+| `{{monto_total}}` | Eventos · `Monto` (predeterminado $20,000, editable) |
 
 ---
 
-# 🔴 Lo que falta decidir: de dónde sale el precio
+# ✅ Resuelto: el precio
 
-**El plan nunca lo definió, y sin eso la cotización sale en blanco.** Tres caminos:
+**Decisión del 2 de septiembre — monto fijo de $20,000 MXN, editable.**
 
-**A · Lo captura el equipo en el formulario.**
-Se agregan dos o tres preguntas más a la sección 1 (monto por voluntario, monto del curso, o
-directamente el total) y un campo de moneda en Airtable. Es lo más simple y lo más flexible: cada
-cotización puede tener su precio. Requiere que el equipo ya sepa el precio al terminar la reunión.
+Se implementó en dos capas para que nunca salga una cotización en blanco:
 
-**B · Se calcula solo.**
-Una tarifa base por voluntario o por jornada, más el costo del curso si aplica, guardadas en la
-tabla `Config`. `E-4` hace la multiplicación. Más elegante y sin errores de dedo, pero **exige que
-exista un tabulador de precios**, y que cambiarlo sea un proceso.
+1. **Precargado en el formulario.** La pregunta 13 llega con `20000` puesto. El equipo lo cambia ahí
+   mismo si ese evento se cotizó distinto.
+2. **Respaldo en `E-4`.** Si el campo llega vacío de todos modos, el escenario lo pone en 20000.
 
-**C · Se llena a mano en el Doc.**
-La cotización se genera con los espacios en blanco y el equipo escribe los importes antes de
-enviarla. Cero desarrollo, pero el monto **nunca queda en Airtable** — así que no se puede reportar
-cuánto se ha cotizado ni cuánto se ha cobrado, y la cláusula CUARTA del convenio queda vacía.
+Y una tercera vía siempre disponible: **editarlo en Airtable** antes de mandar la cotización. El
+campo `Monto` es editable a mano, así que un cambio de precio de último minuto no requiere volver a
+llenar el formulario.
 
-**Recomendación: A.** Es la que menos supone sobre cómo cobran hoy, deja el monto en Airtable para
-poder reportarlo, y llena la cláusula del convenio sin trabajo extra. Si más adelante el precio se
-estandariza, migrar de A a B es fácil; al revés no.
+## Campos creados
 
-**Lo mismo con el folio.** Puede ser un autonumber de Airtable con prefijo — por ejemplo
-`COT-2026-0001` — igual que el número de referencia del Sprint 6. Si te parece, lo creo con ese
-formato y queda resuelto.
+| Campo | Tipo | Valor |
+|---|---|---|
+| `Monto` | Moneda MXN | Predeterminado $20,000, editable en tres lugares |
+| `Folio cotizacion` | Fórmula | `COT-AAAAMMDD-XXXX` — ej. `COT-20260902-S2H7` |
+
+El folio se arma de la fecha de creación del evento más los últimos 4 caracteres de su ID: es único,
+ordenable por fecha y rastreable al registro exacto. **Si prefieres un consecutivo real**
+(`COT-2026-0001`, `-0002`…), Airtable tiene el tipo de campo *Autonumber*, pero solo se puede crear a
+mano desde la interfaz — la API no lo expone. Son dos clics y lo cambiamos cuando quieras.
+
+---
+
+# 🟡 Observación: la tabla `Cotizaciones` quedó redundante
+
+Existe una tabla `Cotizaciones` con `Folio`, `Monto`, `Vigencia`, `PDF` y `Link Convenio`, ligada a
+Eventos. **Nada del flujo la llena**, y con los campos que acabamos de crear en Eventos, toda esa
+información ya vive ahí.
+
+Dos caminos, y no urge decidir hoy:
+
+- **Dejarla como está** y no usarla. Cuesta cero, pero un campo muerto en la base confunde a quien
+  llegue después.
+- **Borrarla**, ya que su contenido está duplicado en Eventos.
+
+La única razón para conservarla sería que una empresa pudiera tener **varias cotizaciones para el
+mismo evento** — por ejemplo, una versión con curso y otra sin él, o una revisión de precio con
+histórico. Si eso pasa en la práctica, la tabla tiene sentido y habría que usarla en serio; si no,
+sobra. **Vale la pena preguntárselo al equipo antes de borrar nada.**
