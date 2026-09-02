@@ -1055,3 +1055,65 @@ en la práctica, la tabla tiene sentido y habría que usarla en serio; si no, so
 **No decidir esto solo:** preguntar al equipo antes de borrar nada. No bloquea el Sprint 4.
 
 ---
+## 2026-09-02 · `E-4` construido — escenario 6134761, activo
+
+Webhook Fillout **2766332** sobre el formulario `tPVivQZG99us`. Plantillas y carpeta ya conectadas.
+
+```
+fillout:newSubmission
+→ airtable:ActionSearchRecords (Eventos, RECORD_ID() = record_id)
+→ builtin:BasicRouter
+   ├─ Ruta 1 · "record_id valido"
+   │    → Update Eventos (13 campos + Fase 03 + Monto)
+   │    → Update Organizaciones (RFC, Razón social, Uso CFDI)   ← filtro: tiene organización ligada
+   │    → [filtro: sin cotización aún]  createAFolder (carpeta del evento)
+   │    → createADocumentFromTemplate  (Cotización)
+   │    → createADocumentFromTemplate  (Convenio)
+   │    → Update Eventos (Doc IDs, ligas y ID de carpeta)
+   └─ Ruta 2 · "record_id invalido" → correo de alerta al equipo
+```
+
+### D-024 · Los marcadores `{{...}}` chocan con la sintaxis de Make
+
+`{{ }}` es el delimitador de expresiones de Make, así que **no puede buscar `{{razon_social}}` como
+texto literal** dentro del Doc. `A-4` ya lo había resuelto usando palabras con guión bajo
+(`Nombre_Asociacion`); se adopta la misma convención.
+
+Lista de reemplazo en `Documentos/marcadores-plantillas-docs.md`. **Hasta que se apliquen, `E-4`
+genera los documentos con los marcadores sin sustituir.**
+
+**Dos reglas para marcadores nuevos:** que no aparezcan como palabra normal en la prosa (por eso el
+guión bajo), y que se escriban de corrido sin formato mixto — si Docs parte la palabra en fragmentos
+con distinto formato, el reemplazo de la API no la encuentra.
+
+### D-017 refinado · el problema de los acentos es más acotado de lo que se pensó
+
+`A-3` usa `{{4.`Organización`}}` en un filtro y **funciona**. Lo que falla es el acento **dentro de
+la cadena de fórmula de Airtable** que se manda por Make, no las referencias `{{}}` a la salida de
+un módulo.
+
+Enunciado corregido: **las fórmulas de Airtable que se pasan por Make deben ser ASCII puro.** Las
+referencias `{{módulo.`Campo Acentuado`}}` sí resuelven bien. `E-4` usa
+`{{2.`Organización`[1]}}` con confianza sobre esta base.
+
+### Detalles del build
+
+- **Validación defensiva:** la búsqueda por `RECORD_ID()` va antes de tocar nada, y el Router manda
+  a un correo de alerta si el ID no existe — con **los datos capturados dentro del correo**, para no
+  perder lo que el equipo ya escribió.
+- **Candado de idempotencia:** carpeta y documentos van detrás del filtro `Cotizacion Doc ID` vacío.
+  Reenviar el formulario actualiza los datos **sin duplicar archivos**.
+- **`record_id` con respaldo:** `ifempty(urlParams.record_id; answers.2hFN)` — sirve tanto si Fillout
+  lo entrega como parámetro de URL como si lo entrega desde el campo oculto.
+- **Datos fiscales:** el filtro "tiene organización ligada" evita que truene un evento huérfano; su
+  handler es `Resume`, no `Break`, porque no poder guardar el RFC no debe frenar la generación de
+  documentos.
+
+### 🟡 Pendientes de este build
+
+1. **Falta la pregunta del monto en el formulario.** Se armó con la versión de 15 preguntas. `E-4`
+   pone $20,000 por defecto y se edita en Airtable. Si se agrega la pregunta, es remapear un campo.
+2. **La carpeta padre `1dmaUIEttm6HAOOXpaoUcNHuFIJ8QtsAk`** se asumió como raíz de eventos. Si es la
+   carpeta de Plantillas, las carpetas de evento quedarían anidadas donde no va.
+
+---
