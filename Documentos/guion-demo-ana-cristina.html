@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guion de la Demo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --ground:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F7;
+  --ink:#151A2B; --ink-2:#4A5468; --ink-3:#78839A;
+  --line:#DCE2EC; --line-2:#BFC9D9;
+  --navy:#1A2E6C; --navy-soft:#E5EAF6;
+  --flame:#C3371A; --flame-soft:#FBE8E3;
+  --ok:#17683D; --ok-soft:#E1F0E7;
+  --warn:#835500; --warn-soft:#FAEFD8;
+  --shadow:0 1px 2px rgba(21,26,43,.05), 0 6px 18px rgba(21,26,43,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+    --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+    --line:#293147; --line-2:#39435E;
+    --navy:#93A9EE; --navy-soft:#1A2340;
+    --flame:#FF8963; --flame-soft:#3A2019;
+    --ok:#6ED498; --ok-soft:#12301F;
+    --warn:#E5B75A; --warn-soft:#332708;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+  --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+  --line:#293147; --line-2:#39435E;
+  --navy:#93A9EE; --navy-soft:#1A2340;
+  --flame:#FF8963; --flame-soft:#3A2019;
+  --ok:#6ED498; --ok-soft:#12301F;
+  --warn:#E5B75A; --warn-soft:#332708;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:52px 26px 88px}
+p{margin:0 0 12px;max-width:64ch}
+h1,h2,h3,.eyebrow,.mono,.min,.kbd{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+h1{font-size:clamp(30px,4.5vw,44px);line-height:1.06;letter-spacing:-.022em;font-weight:800;margin:0 0 12px;text-wrap:balance}
+h2{font-size:23px;line-height:1.17;letter-spacing:-.015em;font-weight:700;margin:0;text-wrap:balance}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--flame);margin:0 0 12px}
+.mono,code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+code{background:var(--surface-2);padding:1px 6px;border-radius:4px;font-size:13px}
+
+header{border-bottom:3px solid var(--navy);padding-bottom:26px;margin-bottom:28px}
+.lede{font-size:18.5px;line-height:1.5;color:var(--ink-2);max-width:60ch;margin:0}
+
+.prep{background:var(--warn-soft);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;padding:19px 23px;margin-bottom:10px}
+.prep h3{font-family:Archivo,sans-serif;font-size:16.5px;font-weight:700;margin:0 0 9px}
+.prep ol{margin:0;padding-left:20px;font-size:15px;color:var(--ink-2)}
+.prep li{margin-bottom:8px}
+.prep li:last-child{margin-bottom:0}
+.prep b{color:var(--ink);font-weight:600}
+
+section{margin-top:44px}
+.sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line-2);padding-bottom:9px;margin-bottom:20px}
+.sec-head .n{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--flame);letter-spacing:.08em;flex:none}
+
+/* pasos del guion */
+.beat{display:grid;grid-template-columns:78px 1fr;gap:18px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 21px;margin-bottom:13px;box-shadow:var(--shadow);break-inside:avoid;page-break-inside:avoid}
+.beat .rail{display:flex;flex-direction:column;align-items:center;gap:6px}
+.beat .num{width:34px;height:34px;line-height:34px;text-align:center;border-radius:9px;background:var(--navy);color:var(--surface);font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:700}
+.min{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-3);letter-spacing:.04em;white-space:nowrap}
+.beat h3{font-family:Archivo,sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.01em;margin:3px 0 8px;line-height:1.25}
+.beat p{font-size:15px;color:var(--ink-2);margin:0 0 9px;max-width:58ch}
+.beat p:last-child{margin-bottom:0}
+.do{background:var(--surface-2);border-radius:8px;padding:11px 15px;margin:10px 0;font-size:14px;color:var(--ink-2)}
+.do b{font-family:Archivo,sans-serif;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);font-weight:700;display:block;margin-bottom:4px}
+.say{border-left:3px solid var(--flame);padding:2px 0 2px 14px;margin:11px 0;font-size:15px;color:var(--ink);font-style:italic}
+
+.note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:0 8px 8px 0;padding:14px 18px;margin:0 0 16px;box-shadow:var(--shadow)}
+.note.flame{border-left-color:var(--flame);background:var(--flame-soft)}
+.note .t{font-family:Archivo,sans-serif;font-weight:700;font-size:13.5px;display:block;margin-bottom:5px}
+.note p{margin:0 0 9px;font-size:14.5px;color:var(--ink-2)}
+.note p:last-child{margin-bottom:0}
+
+footer{margin-top:60px;padding-top:15px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-3);font-family:Archivo,sans-serif}
+@media (max-width:600px){.wrap{padding:34px 17px 60px}.beat{grid-template-columns:1fr;gap:10px}body{font-size:15.5px}}
+@media print{@page{size:letter;margin:1.7cm 1.5cm}body{background:#fff;font-size:10.5pt}.wrap{padding:0;max-width:none}.beat,.note{box-shadow:none}section{margin-top:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">EZER A.B.P. · Uso interno</p>
+  <h1>Guion de la Demo</h1>
+  <p class="lede">Doce minutos para enseñarle a Ana Cristina el sistema funcionando de verdad — y salir con sus decisiones tomadas, que es lo que ahora frena el proyecto.</p>
+</header>
+
+<div class="prep">
+  <h3>Antes de que entre — 10 minutos de preparación</h3>
+  <ol>
+    <li><b>Haz un registro de ensayo.</b> Corre el paso 2 completo tú solo, con otro correo. Sirve de plan B: si algo falla en vivo, enseñas el registro del ensayo y sigues como si nada.</li>
+    <li><b>Ten cuatro pestañas abiertas</b> y en este orden: la página de EZER, Airtable en la tabla Eventos, tu correo, y Make.</li>
+    <li><b>Usa un correo que puedas abrir enfrente de ella.</b> El impacto está en ver llegar el correo en vivo.</li>
+    <li><b>Borra los tres registros viejos con "PRUEBA"</b> de la tabla Eventos, o al menos filtra la vista para que no salgan. Una tabla limpia se ve como un sistema en producción; una llena de pruebas, como un experimento.</li>
+  </ol>
+</div>
+
+<section>
+  <div class="sec-head"><span class="n">GUION</span><h2>Los seis momentos</h2></div>
+
+  <div class="beat">
+    <div class="rail"><span class="num">1</span><span class="min">1 min</span></div>
+    <div>
+      <h3>Abre con el problema, no con la solución</h3>
+      <p>No empieces enseñando pantallas. Empieza con algo que le importe.</p>
+      <div class="say">"Desde el 20 de julio, cada empresa que se registraba en nuestra página se estaba perdiendo. El correo de confirmación sí le llegaba, así que desde fuera todo parecía normal — pero el dato no llegaba a ningún lado. Eso ya está resuelto, y te voy a enseñar cómo funciona ahora."</div>
+      <p>Esto engancha porque es un problema real de negocio, no una función técnica.</p>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="rail"><span class="num">2</span><span class="min">3 min</span></div>
+    <div>
+      <h3>Registra una empresa en vivo</h3>
+      <div class="do"><b>Qué haces</b>Abre la página de EZER y llena el formulario de contacto como si fueras una empresa interesada. Usa un nombre reconocible — <code>Cemex</code>, <code>FEMSA</code> — para que ella lo identifique de inmediato en la tabla.</div>
+      <div class="do"><b>Luego</b>Cambia a Airtable, tabla Eventos, y refresca.</div>
+      <p>Aparecen <strong>tres registros creados solos</strong>: la organización, el contacto y el evento. Señálale el campo <strong>Responsable</strong>.</p>
+      <div class="say">"Fíjate en esto: el sistema le asignó a Mia. La siguiente empresa que entre le toca a Adri, y luego otra vez a Mia. Se reparte solo, nadie tiene que estar decidiendo."</div>
+      <div class="do"><b>Cierra el momento</b>Abre tu correo. Ahí está la bienvenida, con el flyer del catálogo adjunto y el botón para agendar.</div>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="rail"><span class="num">3</span><span class="min">2 min</span></div>
+    <div>
+      <h3>Agenda desde ese mismo correo</h3>
+      <div class="do"><b>Qué haces</b>Pica el botón "Agendar mi reunión" del correo que acaba de llegar y aparta cualquier horario.</div>
+      <p>Regresa a Airtable y refresca. El evento pasó solo de <strong>01 Contacto</strong> a <strong>02 Reunión</strong>, y guardó la fecha.</p>
+      <div class="say">"Nadie movió eso. El sistema supo que esta reunión era de esta empresa exacta, aunque hubiera cien empresas más en la tabla."</div>
+      <p>Si pregunta cómo lo sabe: la liga que va en el correo lleva la identidad del expediente escondida adentro. Es la pieza que más trabajo costó y la que hace que nada se confunda.</p>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="rail"><span class="num">4</span><span class="min">2 min</span></div>
+    <div>
+      <h3>Lo que trabaja cuando nadie está viendo</h3>
+      <div class="do"><b>Qué haces</b>Abre Make y muéstrale la lista de escenarios. Señala <code>E-3</code>: <strong>9 ejecuciones, cero errores</strong>.</div>
+      <div class="say">"Este corre todos los días a las nueve de la mañana, sin que nadie lo prenda. Revisa quién se registró y no ha agendado. A los cinco días le manda un recordatorio; a los veinte sin respuesta, marca el expediente como inactivo y les avisa a ustedes."</div>
+      <p>Este momento vale porque enseña que el sistema <strong>no depende de que alguien se acuerde</strong>. Es el argumento más fuerte frente a un proceso manual.</p>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="rail"><span class="num">5</span><span class="min">2 min</span></div>
+    <div>
+      <h3>Lo que sigue: la cotización</h3>
+      <div class="do"><b>Qué haces</b>Abre el formulario de captura y las dos plantillas en Docs, lado a lado.</div>
+      <div class="say">"Después de la reunión con la empresa, el equipo llena este formulario. Con eso el sistema genera solo la cotización y el convenio, ya con los datos de esa empresa, en su propia carpeta de Drive. Nadie copia y pega nada."</div>
+      <div class="note flame" style="margin-top:12px;">
+        <span class="t">Sé honesto sobre el estado</span>
+        <p>Esta parte está construida pero <strong>no probada de punta a punta</strong>. Dilo así: "está armado, lo pruebo esta semana". Prometer de más aquí te cuesta credibilidad después, y no la necesitas: lo de los momentos 2 a 4 ya es suficientemente fuerte.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="beat">
+    <div class="rail"><span class="num">6</span><span class="min">2 min</span></div>
+    <div>
+      <h3>Cierra con lo que la necesitas</h3>
+      <p>Este es el momento de verdad de la junta. Todo lo anterior fue para llegar aquí con credibilidad.</p>
+      <div class="say">"Ya viste que la parte técnica va rápido — vamos como seis semanas adelantados. Lo que ahora frena el proyecto no es programar: son las decisiones de contenido, y esas son tuyas."</div>
+      <div class="do"><b>Qué haces</b>Sácale el documento de decisiones y déjaselo. No lo leas completo enfrente de ella: señálale las tres que corren prisa y agenda un rato para las demás.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">CIERRE</span><h2>Las tres que no puedes dejar de pedirle</h2></div>
+
+  <div class="note flame">
+    <span class="t">1 · Los pesos del motor de match — antes del 4 de octubre</span>
+    <p>Es la decisión más importante de todo el proyecto. El sistema va a comparar lo que pide la empresa contra lo que ofrece cada asociación en cuatro cosas: <strong>municipio, número de voluntarios, tipo de beneficiario y fechas</strong>.</p>
+    <p>No le pidas una fórmula. Pídele que <strong>ordene esas cuatro de más a menos importante</strong>, y que diga cuál es inaceptable si no coincide. Con eso basta para construirlo.</p>
+  </div>
+
+  <div class="note">
+    <span class="t">2 · Aprobar la cotización y el convenio — antes del 13 de septiembre</span>
+    <p>Sobre todo el plazo de cancelación, que hoy está en blanco, y si el monto de $20,000 es el estándar correcto o debería salir de un tabulador.</p>
+  </div>
+
+  <div class="note">
+    <span class="t">3 · Destrabar la revisión legal — pendiente desde julio</span>
+    <p>Convenio, carta de deslinde y aviso de privacidad. Un abogado los ve <strong>una sola vez</strong> y después se reutilizan siempre. Es la tarea más vieja sin resolver, y ahora bloquea noviembre.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">SI ALGO FALLA</span><h2>Plan B</h2></div>
+  <div class="note">
+    <span class="t">Si el registro no aparece en Airtable</span>
+    <p>Dale unos segundos y refresca otra vez — el sistema tarda entre 5 y 15 segundos. Si sigue sin salir, enseña el registro del ensayo que hiciste antes y sigue con el guion.</p>
+  </div>
+  <div class="note">
+    <span class="t">Si el correo tarda</span>
+    <p>Gmail a veces se demora un minuto. Sigue al paso 4 —lo de Make no depende del correo— y regresas al correo cuando llegue.</p>
+  </div>
+  <div class="note">
+    <span class="t">Si pregunta algo que no sabes</span>
+    <p>"Déjame confirmarlo y te digo hoy mismo." Es mejor respuesta que improvisar, y con el ritmo que llevan, cumplirlo es fácil.</p>
+  </div>
+</section>
+
+<footer>
+  Guion preparado para la sesión con Ana Cristina · 2 de septiembre de 2026<br>
+  Los cuatro procesos del flujo de Empresas están activos y sin errores al momento de escribir esto.
+</footer>
+
+</div>
+</body>
+</html>
