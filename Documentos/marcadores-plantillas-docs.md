@@ -2,11 +2,28 @@
 
 ## Por qué hay que cambiarlos
 
-Los marcadores con dobles llaves (`{{razon_social}}`) **no funcionan**: `{{ }}` es el delimitador de
-expresiones de **Make**, así que no puede buscarlos como texto literal dentro del documento.
+Dos motivos, y el segundo es el importante.
 
-`A-4` en Asociaciones ya resolvió esto usando **palabras sueltas con guión bajo**. `E-4` está
-construido con esa convención.
+**1 · Los acentos y las llaves.** Los marcadores deben ir sin acentos y **sin dobles llaves**.
+
+**2 · `{{ }}` es el delimitador de expresiones de Make.** En el campo "buscar" del módulo de Google
+Docs, Make no puede recibir `{{Nombre_Evento}}` como texto literal — lo interpretaría como una
+expresión suya. Por eso el blueprint de `A-4` tiene guardado `Nombre_Asociacion` **sin llaves**.
+
+### ⚠️ Esto implica un bug probable en las plantillas de Asociaciones
+
+Si la plantilla del Convenio de Asociaciones dice `{{Nombre_Asociacion}}` pero Make busca
+`Nombre_Asociacion`, **el reemplazo de Google Docs es por subcadena**: sustituye solo la palabra y
+**deja las llaves puestas**. El convenio generado diría:
+
+> `{{Fundación Vida Nueva Monterrey A.C.}}`
+
+**Vale la pena abrir uno de los convenios ya generados y verificarlo.** Si tiene las llaves, se
+arregla igual que aquí: quitarlas de la plantilla. Los convenios ya enviados no se pueden corregir,
+pero los siguientes salen limpios.
+
+`A-1` a `A-6` son de solo lectura, pero **esto es editar una plantilla de Google Docs, no un
+escenario de Make** — así que no entra en esa restricción.
 
 ## Qué hacer
 
