@@ -1147,3 +1147,60 @@ palabras con guión bajo — la lista está en `Documentos/marcadores-plantillas
 ser una cadena que no aparezca en la prosa del documento. El guión bajo lo garantiza.
 
 ---
+## 2026-09-02 · Re-baseline por velocidad medida — entrega al 8 de noviembre de 2026
+
+### La medición
+
+| | |
+|---|---|
+| Trabajo del plan completado | **28.5 h** (S0 parcial, S2, S3, y ~5 h de S4) |
+| Horas reales invertidas | **~9 h** en 4 sesiones (28-ago, 29-ago, 30-ago, 2-sep) |
+| **Velocidad medida** | **≈ 3.2× lo estimado** |
+
+### Por qué el resto NO se acelera igual
+
+Proyectar 3.2× sobre todo lo que falta sería deshonesto: la velocidad se midió justamente en la
+parte donde la skill de Make más ayuda. Se aplicaron factores por tipo de trabajo:
+
+| Tipo | Plan | Factor | Real | Razón |
+|---|---|---|---|---|
+| Automatización | 37.25 h | 0.30 | 11.2 h | Es donde la skill construye por API |
+| Configuración | 27.25 h | 0.70 | 19.1 h | Fillout, Calendly, Docs: clics humanos |
+| Pruebas | 23.50 h | 0.55 | 12.9 h | El `replay` ayuda, verificar sigue siendo humano |
+| Diseño | 7.50 h | 1.00 | 7.5 h | Criterio humano, no baja |
+| Otros | 6.75 h | — | 3.1 h | |
+| **Total** | **102.25 h** | | **≈ 54 h reales** | |
+
+A 7 h/semana: **≈ 7.7 semanas**.
+
+### Calendario nuevo — sprints de 1 semana
+
+La cadencia pasa de 2 semanas a **1 semana por sprint**, que es lo que la velocidad real sostiene.
+
+| | Antes | Ahora |
+|---|---|---|
+| Sprints restantes | 11 de 2 semanas | 10 de 1 semana |
+| **Entrega** | **14 de marzo de 2027** | **8 de noviembre de 2026** |
+
+**Cuatro meses de adelanto.** Los pendientes de Asociaciones (`S1`) pasan a ser un track paralelo de
+baja prioridad, no un sprint que bloquee: 5 de sus 6 tareas ya existían de julio o están limitadas
+por D-011.
+
+### Lo que puede echar atrás esta fecha
+
+1. **El motor de match (S8) es trabajo novedoso**, no copiar un patrón. Es donde la skill ayuda
+   menos y donde la estimación es más incierta. **Conviene re-medir después del Sprint 8** antes de
+   comprometer la fecha con Dirección.
+2. **Las decisiones de contenido pasaron a ser el cuello de botella**, no la programación. Por eso
+   se armó el documento de delegación a Ana Cristina.
+3. **La revisión legal** sigue pendiente desde julio y ahora bloquea noviembre en vez de marzo.
+
+### Documento de delegación a Ana Cristina
+
+`Documentos/delegacion-ana-cristina.html` — 12 decisiones agrupadas en documentos, correos, reglas
+de negocio y contenido nuevo. Cada una con **fecha límite y qué bloquea si no llega**.
+
+La más crítica: **los pesos de las cuatro variables del motor de match**, antes del 4 de octubre. No
+requiere una fórmula, basta con ordenarlas por importancia y decir cuál es inaceptable si no coincide.
+
+---

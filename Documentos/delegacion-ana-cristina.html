@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decisiones de Ana Cristina</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --ground:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F7;
+  --ink:#151A2B; --ink-2:#4A5468; --ink-3:#78839A;
+  --line:#DCE2EC; --line-2:#BFC9D9;
+  --navy:#1A2E6C; --navy-soft:#E5EAF6;
+  --flame:#C3371A; --flame-soft:#FBE8E3;
+  --ok:#17683D; --ok-soft:#E1F0E7;
+  --warn:#835500; --warn-soft:#FAEFD8;
+  --shadow:0 1px 2px rgba(21,26,43,.05), 0 6px 18px rgba(21,26,43,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+    --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+    --line:#293147; --line-2:#39435E;
+    --navy:#93A9EE; --navy-soft:#1A2340;
+    --flame:#FF8963; --flame-soft:#3A2019;
+    --ok:#6ED498; --ok-soft:#12301F;
+    --warn:#E5B75A; --warn-soft:#332708;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1120; --surface:#151B2C; --surface-2:#1C2338;
+  --ink:#E8EBF3; --ink-2:#AAB4C8; --ink-3:#7B87A1;
+  --line:#293147; --line-2:#39435E;
+  --navy:#93A9EE; --navy-soft:#1A2340;
+  --flame:#FF8963; --flame-soft:#3A2019;
+  --ok:#6ED498; --ok-soft:#12301F;
+  --warn:#E5B75A; --warn-soft:#332708;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Source Serif 4","Iowan Old Style",Georgia,serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:840px;margin:0 auto;padding:52px 26px 88px}
+p{margin:0 0 13px;max-width:66ch}
+h1,h2,h3,.eyebrow,.mono,.due,.tag{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+h1{font-size:clamp(30px,4.5vw,44px);line-height:1.06;letter-spacing:-.022em;font-weight:800;margin:0 0 12px;text-wrap:balance}
+h2{font-size:23px;line-height:1.17;letter-spacing:-.015em;font-weight:700;margin:0;text-wrap:balance}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--flame);margin:0 0 12px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+header{border-bottom:3px solid var(--navy);padding-bottom:26px;margin-bottom:30px}
+.lede{font-size:18.5px;line-height:1.5;color:var(--ink-2);max-width:62ch;margin:0}
+
+.intro{background:var(--navy-soft);border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:0 10px 10px 0;padding:19px 23px;margin-bottom:8px}
+.intro p{margin:0 0 11px;font-size:15.5px;color:var(--ink-2)}
+.intro p:last-child{margin-bottom:0}
+.intro b{color:var(--ink);font-weight:600}
+
+section{margin-top:44px}
+.sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line-2);padding-bottom:9px;margin-bottom:20px}
+.sec-head .n{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--flame);letter-spacing:.08em;flex:none}
+
+.item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 21px;margin-bottom:13px;box-shadow:var(--shadow);break-inside:avoid;page-break-inside:avoid}
+.item .top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px;margin-bottom:7px}
+.item h3{font-family:Archivo,sans-serif;font-size:16.5px;font-weight:700;letter-spacing:-.01em;margin:0;line-height:1.25;flex:1 1 260px}
+.due{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:3px 10px;border-radius:20px;white-space:nowrap;background:var(--surface-2);color:var(--ink-2)}
+.due.urg{background:var(--flame-soft);color:var(--flame)}
+.due.soon{background:var(--warn-soft);color:var(--warn)}
+.item p{font-size:14.5px;color:var(--ink-2);margin:0 0 9px;max-width:60ch}
+.item p:last-child{margin-bottom:0}
+.item .risk{font-size:13.5px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:9px;margin-top:11px}
+.item .risk b{font-family:Archivo,sans-serif;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--flame);font-weight:700;display:block;margin-bottom:3px}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:480px}
+th{font-family:Archivo,sans-serif;font-size:11px;font-weight:700;letter-spacing:.075em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:11px 15px;background:var(--surface-2);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 15px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13px}
+
+footer{margin-top:60px;padding-top:15px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--ink-3);font-family:Archivo,sans-serif}
+
+@media (max-width:600px){.wrap{padding:34px 17px 60px}body{font-size:15.5px}}
+@media print{@page{size:letter;margin:1.7cm 1.5cm}body{background:#fff;font-size:10.5pt}.wrap{padding:0;max-width:none}.item,.tw{box-shadow:none}section{margin-top:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">EZER A.B.P. · Voluntariado Corporativo</p>
+  <h1>Decisiones de Ana Cristina</h1>
+  <p class="lede">Lo que el sistema no puede decidir solo: qué dicen los documentos, qué dicen los correos, y las reglas de negocio que la automatización va a ejecutar sin preguntar.</p>
+</header>
+
+<div class="intro">
+  <p>La automatización del flujo de Empresas avanza rápido — tres procesos ya operando y un cuarto en construcción. <b>Lo que la limita ahora no es la programación: son las decisiones de contenido y criterio.</b></p>
+  <p>Cada punto de esta lista es algo que <b>Ana Cristina aprueba o define</b>, y que el sistema después ejecuta idéntico cientos de veces. Un correo mal redactado se manda mal siempre; una regla mal definida se aplica mal siempre.</p>
+  <p>Están ordenados <b>por fecha en que se necesitan</b>. La columna del final de cada punto dice qué pasa si no llega a tiempo.</p>
+</div>
+
+<section>
+  <div class="sec-head"><span class="n">01</span><h2>Los documentos que ve la empresa</h2></div>
+
+  <div class="item">
+    <div class="top"><h3>Plantilla de Cotización</h3><span class="due urg">Antes del 13 de septiembre</span></div>
+    <p>Ya está redactada y el sistema genera el documento solo. Falta que Ana Cristina apruebe <strong>qué dice</strong>: la lista de lo que incluye el servicio, el tono, y si la vigencia de 30 días es la correcta.</p>
+    <p>También hay una decisión de negocio adentro: hoy el monto está en <strong>$20,000 fijos</strong>, editable caso por caso. Si existe un tabulador real —por número de voluntarios, por jornadas— conviene decirlo ahora.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>Se manda una cotización que nadie revisó, o el flujo se detiene justo antes de cobrar.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>Plantilla de Convenio EZER–Empresa</h3><span class="due urg">Antes del 13 de septiembre</span></div>
+    <p>Hay un borrador funcionando, pero <strong>no ha pasado por revisión legal</strong> y tiene dos cláusulas incompletas a propósito: el alcance de la responsabilidad sobre los voluntarios, y el plazo de cancelación.</p>
+    <p>Ana Cristina define la parte de negocio —cuántos días de anticipación para cancelar, si hay reembolso— y coordina que un abogado revise el resto.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>El convenio no se puede mandar a una empresa real. Es el documento que protege a EZER si algo pasa en un evento.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>Revisión legal: convenio, deslinde y aviso de privacidad</h3><span class="due urg">Pendiente desde julio</span></div>
+    <p>Los tres formatos los revisa un abogado <strong>una sola vez</strong> y después se reutilizan en todos los eventos. Es la tarea más antigua sin resolver del proyecto.</p>
+    <p>La carta de deslinde es la que firma cada voluntario antes del evento; sin ella, EZER queda expuesta.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>Bloquea la etapa de preparación del evento, y con ella el cierre del proyecto en noviembre.</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">02</span><h2>Los correos, fase por fase</h2></div>
+  <p>El flujo manda alrededor de <strong>dieciséis correos distintos</strong>. Todos están redactados y funcionando, pero ninguno tiene aprobación final. Se revisan por bloques, conforme se construyen.</p>
+
+  <div class="item">
+    <div class="top"><h3>Bloque de captación — 5 correos</h3><span class="due soon">Esta semana</span></div>
+    <p>Bienvenida a la empresa, aviso interno del nuevo registro, confirmación de reunión agendada, recordatorio a los 5 días, y aviso de empresa inactiva a los 20.</p>
+    <p><strong>Estos ya se están mandando</strong> — el flujo está vivo. La revisión aquí es sobre correos que ya salieron, así que corre más prisa que las demás.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>Las empresas siguen recibiendo textos sin aprobar.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>Bloque de cobro — 6 correos</h3><span class="due">Del 13 al 27 de septiembre</span></div>
+    <p>Envío de cotización, seguimiento a 7 días, confirmación de datos fiscales, aviso al contador, envío del recibo, y confirmación de pago recibido.</p>
+    <p>Aquí hay uno especialmente delicado: el correo que le pide a la empresa <strong>sus datos bancarios y su constancia fiscal</strong>. El tono tiene que dar confianza.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>Se retrasa la etapa donde el flujo empieza a cobrar.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>Bloque de evento y cierre — 5 correos</h3><span class="due">Octubre</span></div>
+    <p>Reporte de opciones de asociación, recordatorios previos al evento, correo de fotos y feedback, agradecimiento con reporte de impacto, y reactivación a los 5 meses.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>No bloquea la construcción, pero sí el arranque real con empresas.</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">03</span><h2>Reglas de negocio que el sistema va a aplicar solo</h2></div>
+
+  <div class="item">
+    <div class="top"><h3>Cuánto pesa cada variable al conectar una asociación</h3><span class="due urg">Antes del 4 de octubre</span></div>
+    <p><strong>Es la decisión más importante de toda la lista.</strong> El sistema va a comparar lo que pide la empresa contra lo que ofrece cada asociación en cuatro variables: municipio, número de voluntarios, tipo de beneficiario y fechas disponibles. Con eso calcula un porcentaje de compatibilidad.</p>
+    <p>Falta definir <strong>qué tanto pesa cada una</strong>. ¿Que el municipio no coincida es igual de grave que una diferencia de dos voluntarios? ¿Debajo de qué porcentaje una asociación ya no vale la pena mostrarla?</p>
+    <p>No hace falta una fórmula: basta con ordenar las cuatro variables de más a menos importante y decir cuál es inaceptable si no coincide.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>El motor de match no se puede construir, y es la pieza central del flujo.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>¿Una asociación puede atender a más de una empresa a la vez?</h3><span class="due soon">Antes del 4 de octubre</span></div>
+    <p>Define qué asociaciones aparecen como opción. Si una asociación ya tiene un evento asignado, ¿sigue disponible para otra empresa o se retira de la lista hasta terminar?</p>
+    <div class="risk"><b>Si no llega a tiempo</b>El sistema podría ofrecer asociaciones saturadas, o esconder asociaciones que sí podían.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>Cómo elige la empresa con qué asociación trabajar</h3><span class="due">Antes del 18 de octubre</span></div>
+    <p>Está decidido que EZER manda un correo con las 2 o 3 mejores opciones y su porcentaje, cada una con un botón para elegirla. Falta aprobar <strong>cuánta información se le enseña a la empresa</strong>: ¿ve el porcentaje? ¿ve por qué una encaja mejor que otra? ¿ve el nombre de las que no se le propusieron?</p>
+    <div class="risk"><b>Si no llega a tiempo</b>Se construye con un criterio supuesto y hay que rehacerlo.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>Quién toma las fotos del evento y dónde se guardan</h3><span class="due">Antes del 2 de noviembre</span></div>
+    <p>La única pieza del cierre que sigue sin definirse. Quién fotografía, con qué equipo, y si las fotos suben a la carpeta del evento en Drive o a otro lado.</p>
+    <p>Importa porque el correo de cierre le manda a la empresa <strong>la liga de la carpeta de fotos</strong>. Si nadie las subió, esa liga llega vacía.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>El correo de cierre se manda apuntando a una carpeta vacía.</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">04</span><h2>Contenido que hay que escribir desde cero</h2></div>
+
+  <div class="item">
+    <div class="top"><h3>Los tres formularios de feedback</h3><span class="due">Antes del 2 de noviembre</span></div>
+    <p>Al cerrar el evento se levantan tres opiniones distintas por código QR: la de <strong>la asociación</strong>, la de <strong>la empresa</strong> y la de <strong>los participantes</strong>. Son tres cuestionarios diferentes porque cada uno vio cosas distintas.</p>
+    <p>Ana Cristina define qué se le pregunta a cada quién. Conviene que sean cortos: un QR el día del evento compite con las ganas de irse a casa.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>No se puede cerrar el ciclo ni medir el impacto.</div>
+  </div>
+
+  <div class="item">
+    <div class="top"><h3>Qué lleva el reporte de impacto</h3><span class="due">Antes del 2 de noviembre</span></div>
+    <p>El correo de agradecimiento a la empresa incluye un mini reporte del impacto logrado. Falta definir qué se le enseña: ¿número de beneficiarios? ¿horas de voluntariado? ¿fotos? ¿el testimonio de la asociación?</p>
+    <p>Es lo último que la empresa lee del evento, y lo que va a recordar cuando les toquen la puerta el año siguiente.</p>
+    <div class="risk"><b>Si no llega a tiempo</b>Se manda un agradecimiento genérico y se desaprovecha el mejor momento para renovar.</div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="n">05</span><h2>Resumen por fecha</h2></div>
+  <div class="tw">
+    <table>
+      <thead><tr><th class="num">Para cuándo</th><th>Qué se necesita</th><th>Bloquea</th></tr></thead>
+      <tbody>
+        <tr><td class="num">Esta semana</td><td>Revisar los 5 correos de captación</td><td>Ya se están mandando</td></tr>
+        <tr><td class="num">13 de septiembre</td><td>Aprobar cotización y convenio · plazo de cancelación</td><td>La etapa de cobro</td></tr>
+        <tr><td class="num">27 de septiembre</td><td>Revisar los 6 correos de cobro</td><td>El cobro automatizado</td></tr>
+        <tr><td class="num">4 de octubre</td><td><strong>Los pesos del motor de match</strong> · asociaciones simultáneas</td><td>La pieza central del flujo</td></tr>
+        <tr><td class="num">18 de octubre</td><td>Qué ve la empresa al elegir asociación</td><td>La etapa de conexión</td></tr>
+        <tr><td class="num">2 de noviembre</td><td>Los 3 feedbacks · el reporte de impacto · las fotos</td><td>El cierre del evento</td></tr>
+        <tr><td class="num">Cuanto antes</td><td><strong>La revisión legal</strong> — pendiente desde julio</td><td>La preparación del evento</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  Preparado para EZER A.B.P. — La Casa del Voluntario · 2 de septiembre de 2026<br>
+  Las fechas corresponden al calendario de trabajo vigente, con entrega estimada el 8 de noviembre de 2026.
+</footer>
+
+</div>
+</body>
+</html>
