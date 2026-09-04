@@ -1238,32 +1238,58 @@ del escenario en la interfaz de Make — no se hizo por API para no reescribir b
 
 ---
 
-### D-026 · PENDIENTE DE DECISIÓN · `E-1` descarta en silencio todo lo que no sea "Registro"
+### D-026 RESUELTO · Selector explícito de persona/empresa en catálogo y municipio
 
-**2 de septiembre de 2026.** Descubierto al investigar D-025.
+**2–4 de septiembre de 2026.** Descubierto al investigar D-025; resuelto el 4.
 
-`api/interest.js` línea 65 decide el tipo así:
+`api/interest.js` línea 65 decidía el tipo así:
 
 ```js
 const isRegistration = eventName.startsWith('Registro');
 ```
 
-y manda al webhook `tipo: "registro_empresa"` solo en ese caso. Todo lo demás llega como
+y mandaba al webhook `tipo: "registro_empresa"` solo en ese caso. Todo lo demás llegaba como
 `tipo: "evento"`. El módulo 2 de `E-1` filtra por `text:equal "registro_empresa"`, así que **una
-empresa que se interesa en un evento del catálogo, o que pide un evento en su municipio, entra al
-webhook y muere ahí**: sin expediente, sin aviso, y con la ejecución marcada como exitosa.
+empresa que se interesa en un evento del catálogo, o que pide un evento en su municipio, entraba al
+webhook y se descartaba ahí**, sin abrir expediente en Airtable — con la ejecución marcada como
+exitosa. Precisión sobre el aviso: **no era invisible del todo**, porque el correo directo del sitio
+(`transporter.sendMail`) siempre lleva `cc: adminEmail` sin pasar por Make — el equipo sí recibía un
+correo. Lo que faltaba era la automatización completa: Responsable asignado, recordatorio a 5 días,
+inactivación a 20 (`E-3`). Una empresa entrando por ahí quedaba fuera de todo ese ciclo.
 
-Es la misma clase de falla que el webhook huérfano de julio, y **está viva en producción**.
+**La pregunta pendiente era si esos formularios los usan empresas o también voluntarios
+individuales.** Respuesta del 4 de septiembre: **ambos** — el mismo formulario de catálogo y el de
+municipio reciben tanto personas físicas como empresas reales. Eso descarta tratar todo `tipo:
+"evento"` como empresa (ensuciaría Organizaciones con personas) y descarta ignorarlo (perdería
+empresas reales).
 
-**La decisión que falta** — cuál de las dos:
-1. Abrir expediente igual que un registro, guardando en el Evento qué evento del catálogo pidió.
-2. Solo mandar un aviso interno al equipo, sin crear expediente.
+**Se investigó primero si el campo `company` ya existente podía servir de señal.** No sirve: está
+marcado `required` en los dos formularios con la etiqueta "Empresa / Organización", así que una
+persona individual puede — y probablemente va a — escribir su propio nombre, "N/A" o "Particular"
+ahí. Es texto libre obligatorio para los dos casos; no hay forma confiable de inferir el tipo a
+partir de su contenido.
 
-La duda de fondo es si esos formularios los usan **empresas** o también voluntarios individuales. Si
-son individuales, la opción 1 llenaría Organizaciones de personas físicas marcadas como "Empresa".
+**Solución implementada:** un selector explícito **"¿Te registras como? \* → Persona individual /
+Empresa u Organización"**, agregado como el primer campo (justo después de municipio, o de primero)
+en los dos formularios de `EventCatalog.tsx` — `RequestEventModal` (municipio) e `InterestModal`
+(catálogo). El campo `company` ahora es **condicional**: solo aparece, y solo es obligatorio, cuando
+se elige "Empresa u Organización". Se manda como `registrantType: 'individual' | 'empresa'` en el
+payload a `/api/interest`.
 
-**Mientras se decide:** para probar el flujo hay que usar el formulario de **Registro** del sitio.
-Es el único camino que `E-1` procesa hoy.
+`api/interest.js` calcula:
+
+```js
+const isCompanySubmission = isRegistration || registrantType === 'empresa';
+```
+
+y el webhook usa `tipo: isCompanySubmission ? "registro_empresa" : "evento"`. El formulario de
+Registro (`CompanyRegistration.tsx`) no se tocó — sigue siendo siempre empresa por `isRegistration`,
+sin necesitar el selector.
+
+**No se tocó nada en Make.** El filtro de `E-1` (`{{1.tipo}} = "registro_empresa"`) ya es genérico;
+con el payload corregido, cualquier empresa que entre por catálogo o municipio ahora abre expediente
+igual que un registro directo, con el nombre del evento o municipio de interés ya capturado en
+`1.evento`. Verificado con `npm run build` — sin errores.
 
 ---
 

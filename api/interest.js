@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { name, phone, company, email, eventName, description, wantsTraining, municipio, projects, comments, flyerUrl, courseUrl, requestType } = req.body;
+  const { name, phone, company, email, eventName, description, wantsTraining, municipio, projects, comments, flyerUrl, courseUrl, requestType, registrantType } = req.body;
 
   if (!name || !phone || !email || !eventName) {
     return res.status(400).json({ message: 'Name, phone, email, and eventName are required' });
@@ -64,6 +64,10 @@ export default async function handler(req, res) {
 
     const isRegistration = eventName.startsWith('Registro');
     const isMunicipioRequest = requestType === 'municipio' || eventName.startsWith('Solicitud de evento en municipio');
+    // El formulario de Registro es siempre empresa. En catálogo y municipio,
+    // persona y empresa comparten el mismo formulario (D-026): solo el
+    // selector explícito de registrantType distingue una de otra.
+    const isCompanySubmission = isRegistration || registrantType === 'empresa';
     const municipioName = municipio || 'No especificado';
 
     const userSubject = isRegistration
@@ -224,7 +228,7 @@ ezer-eventos.vercel.app`;
               "Content-Type": "application/json"
           },
           body: JSON.stringify({
-              tipo: isRegistration ? "registro_empresa" : "evento",
+              tipo: isCompanySubmission ? "registro_empresa" : "evento",
               nombre: name,
               correo: email,
               telefono: phone,

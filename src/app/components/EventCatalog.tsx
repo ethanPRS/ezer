@@ -354,6 +354,7 @@ export function EventCatalog() {
 
 function RequestEventModal({ defaultMunicipio, onClose }: { defaultMunicipio: string, onClose: () => void }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [registrantType, setRegistrantType] = useState<'individual' | 'empresa' | ''>('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -374,7 +375,8 @@ function RequestEventModal({ defaultMunicipio, onClose }: { defaultMunicipio: st
       eventName: `Solicitud de evento en municipio: ${municipio}`,
       municipio: municipio,
       comments: baseDescription,
-      requestType: 'municipio'
+      requestType: 'municipio',
+      registrantType: formData.get('registrantType')
     };
 
     try {
@@ -469,14 +471,31 @@ function RequestEventModal({ defaultMunicipio, onClose }: { defaultMunicipio: st
               </div>
 
               <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>¿Te registras como? *</label>
+                <select
+                  required
+                  name="registrantType"
+                  value={registrantType}
+                  onChange={(e) => setRegistrantType(e.target.value as 'individual' | 'empresa' | '')}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB', backgroundColor: 'white' }}
+                >
+                  <option value="" disabled>Selecciona una opción</option>
+                  <option value="individual">Persona individual</option>
+                  <option value="empresa">Empresa / Organización</option>
+                </select>
+              </div>
+
+              <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Tu Nombre completo *</label>
                 <input required name="name" type="text" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }} placeholder="Tu nombre" />
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Empresa / Organización *</label>
-                <input required name="company" type="text" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }} placeholder="Nombre de tu empresa" />
-              </div>
+              {registrantType === 'empresa' && (
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Empresa / Organización *</label>
+                  <input required name="company" type="text" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }} placeholder="Nombre de tu empresa" />
+                </div>
+              )}
 
               <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Teléfono *</label>
@@ -682,6 +701,7 @@ function DescriptionModal({ event, onClose }: { event: Event, onClose: () => voi
 
 function InterestModal({ event, defaultWantsTraining = false, onClose }: { event: Event, defaultWantsTraining?: boolean, onClose: () => void }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [registrantType, setRegistrantType] = useState<'individual' | 'empresa' | ''>('');
   const eventName = event.title;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -699,6 +719,7 @@ function InterestModal({ event, defaultWantsTraining = false, onClose }: { event
       eventName,
       flyerUrl: event.flyer_url || null,
       courseUrl: event.sensibilization_course_url || null,
+      registrantType: formData.get('registrantType'),
     };
 
     try {
@@ -791,14 +812,31 @@ function InterestModal({ event, defaultWantsTraining = false, onClose }: { event
               </div>
 
               <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>¿Te registras como? *</label>
+                <select
+                  required
+                  name="registrantType"
+                  value={registrantType}
+                  onChange={(e) => setRegistrantType(e.target.value as 'individual' | 'empresa' | '')}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB', backgroundColor: 'white' }}
+                >
+                  <option value="" disabled>Selecciona una opción</option>
+                  <option value="individual">Persona individual</option>
+                  <option value="empresa">Empresa / Organización</option>
+                </select>
+              </div>
+
+              <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Tu Nombre completo *</label>
                 <input required name="name" type="text" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }} placeholder="Tu nombre" />
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Empresa / Organización *</label>
-                <input required name="company" type="text" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }} placeholder="Nombre de tu empresa" />
-              </div>
+              {registrantType === 'empresa' && (
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Empresa / Organización *</label>
+                  <input required name="company" type="text" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #D1D5DB' }} placeholder="Nombre de tu empresa" />
+                </div>
+              )}
 
               <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#4B5563', marginBottom: '4px' }}>Teléfono *</label>
