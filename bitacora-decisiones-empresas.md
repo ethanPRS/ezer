@@ -1414,3 +1414,15 @@ empresa de 40 voluntarios en García pidiendo medio ambiente, ¿a quién tenemos
 **mismo prototipo HTML** leyendo Airtable en vez de `localStorage` — no hace falta meterlo al portal
 ni construir un admin. **Primero el cálculo automático dentro del flujo**, que es lo que quita
 trabajo; la pantalla solo si alguien la pide de verdad.
+
+---
+
+### D-029 · `dlq: true` aplicado por API a `E-1`, `E-3` y `E-4`
+
+**4 de septiembre de 2026.** Pendiente de D-025, resuelto sin pasar por la interfaz: ya tenía los
+tres blueprints completos de la sesión anterior, así que se reenviaron con `dlq: true` en
+`metadata.scenario` y el resto del flujo intacto. Confirmado uno por uno después del envío —
+`isinvalid: false` en los tres, sin tocar lógica ni conexiones.
+
+Con esto los cuatro escenarios de Empresas (`E-1` a `E-4`) quedan con la misma protección que ya
+tiene `E-2`: un error suelto se reintenta en vez de apagar el escenario completo.
